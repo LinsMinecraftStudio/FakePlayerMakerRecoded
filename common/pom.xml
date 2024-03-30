@@ -19,8 +19,16 @@
 
     <dependencies>
         <dependency>
+            <groupId>io.papermc.paper</groupId>
+            <artifactId>paper-api</artifactId>
+        </dependency>
+        <dependency>
             <groupId>io.github.linsminecraftstudio</groupId>
             <artifactId>Polymer-Core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.mojang</groupId>
+            <artifactId>authlib</artifactId>
         </dependency>
     </dependencies>
 </project>

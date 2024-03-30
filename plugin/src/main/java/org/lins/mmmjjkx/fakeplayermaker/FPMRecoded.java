@@ -2,13 +2,16 @@ package org.lins.mmmjjkx.fakeplayermaker;
 
 import io.github.linsminecraftstudio.polymer.command.PolymerCommand;
 import io.github.linsminecraftstudio.polymer.objects.plugin.PolymerPlugin;
+import org.lins.mmmjjkx.fakeplayermaker.commands.FPMMainCommand;
 
 import java.util.List;
 
 public final class FPMRecoded extends PolymerPlugin {
+    public static FPMRecoded INSTANCE;
+
     @Override
     public void onPlEnable() {
-
+        INSTANCE = this;
     }
 
     @Override
@@ -18,9 +21,7 @@ public final class FPMRecoded extends PolymerPlugin {
 
     @Override
     public List<PolymerCommand> registerCommands() {
-        return List.of(
-
-        );
+        return List.of(new FPMMainCommand());
     }
 
     @Override
