@@ -13,6 +13,8 @@
     <modules>
         <module>plugin</module>
         <module>common</module>
+        <module>implementations/impl-common</module>
+        <module>implementations/v1_19_R3</module>
     </modules>
 
     <properties>
@@ -90,6 +92,12 @@
                 <groupId>com.mojang</groupId>
                 <artifactId>authlib</artifactId>
                 <version>3.3.39</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-all</artifactId>
+                <version>4.1.108.Final</version>
                 <scope>provided</scope>
             </dependency>
         </dependencies>

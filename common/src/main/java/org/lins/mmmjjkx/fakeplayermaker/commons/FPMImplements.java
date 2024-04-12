@@ -3,6 +3,7 @@ package org.lins.mmmjjkx.fakeplayermaker.commons;
 import com.mojang.authlib.GameProfile;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
+import org.jetbrains.annotations.NotNull;
 
 public abstract class FPMImplements {
     private static final FPMImplements current;
@@ -33,7 +34,11 @@ public abstract class FPMImplements {
         return current;
     }
 
-    public abstract Object createPlayer(GameProfile profile, String levelName);
+    public abstract @NotNull Object createPlayer(@NotNull GameProfile profile, @NotNull String levelName);
 
-    public abstract void removePlayer(Object player);
+    public abstract void setupConnection(@NotNull Object player);
+
+    public abstract void addPlayer(@NotNull Object player);
+
+    public abstract void removePlayer(@NotNull Object player);
 }
