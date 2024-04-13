@@ -1,4 +1,4 @@
-package org.lins.mmmjjkx.fakeplayermaker.impls.v1_19_R3;
+package org.lins.mmmjjkx.fakeplayermaker.impls.v1_20_R1;
 
 import io.github.linsminecraftstudio.polymer.utils.IterableUtil;
 import io.papermc.paper.adventure.ChatProcessor;
@@ -21,7 +21,7 @@ public final class ActionImpl extends PlayerActionImplements {
     @Override
     public void mountNearest(Object player, int radius) {
         ServerPlayer serverPlayer = (ServerPlayer) player;
-        ServerLevel level = serverPlayer.getLevel();
+        ServerLevel level = serverPlayer.serverLevel();
         AABB boundingBox = serverPlayer.getBoundingBox();
         List<Entity> rideable = IterableUtil.getAllMatches(level.getEntities(serverPlayer, boundingBox.inflate(3, 2, 3)), e ->
                 e instanceof Minecart || e instanceof AbstractHorse || e instanceof Boat);

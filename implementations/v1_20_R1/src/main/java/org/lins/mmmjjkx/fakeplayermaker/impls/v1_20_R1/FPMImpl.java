@@ -1,4 +1,4 @@
-package org.lins.mmmjjkx.fakeplayermaker.impls.v1_19_R3;
+package org.lins.mmmjjkx.fakeplayermaker.impls.v1_20_R1;
 
 import com.mojang.authlib.GameProfile;
 import net.minecraft.network.Connection;
@@ -9,8 +9,8 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.PlayerList;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
-import org.bukkit.craftbukkit.v1_19_R3.CraftWorld;
-import org.bukkit.craftbukkit.v1_19_R3.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_20_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_20_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.lins.mmmjjkx.fakeplayermaker.commons.FPMImplements;

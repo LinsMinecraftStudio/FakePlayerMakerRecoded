@@ -1,9 +1,11 @@
 package org.lins.mmmjjkx.fakeplayermaker.commons;
 
+import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 
 public abstract class PlayerActionImplements {
+    @Getter
     private static final PlayerActionImplements current;
 
     static {
@@ -28,11 +30,11 @@ public abstract class PlayerActionImplements {
         }
     }
 
-    public static PlayerActionImplements getCurrent() {
-        return current;
-    }
-
     public abstract void mountNearest(Object player, int radius);
 
     public abstract void dismount(Object player);
+
+    public abstract void lookAt(Object player, double x, double y, double z);
+
+    public abstract void chat(Object player, String message);
 }
