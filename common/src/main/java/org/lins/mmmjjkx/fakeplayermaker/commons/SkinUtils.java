@@ -55,4 +55,10 @@ public class SkinUtils {
         }
         return Pair.of("", "");
     }
+
+    public static void setSkin(Player bk, String url, String signature) {
+        PlayerProfile playerProfile = bk.getPlayerProfile();
+        playerProfile.setProperty(new ProfileProperty("textures", url, signature));
+        bk.setPlayerProfile(playerProfile);
+    }
 }

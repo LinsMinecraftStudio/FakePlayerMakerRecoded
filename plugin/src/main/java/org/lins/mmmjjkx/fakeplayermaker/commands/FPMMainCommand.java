@@ -3,7 +3,9 @@ package org.lins.mmmjjkx.fakeplayermaker.commands;
 import io.github.linsminecraftstudio.polymer.command.presets.HelpMessager;
 import io.github.linsminecraftstudio.polymer.command.presets.sub.SubHelpMessager;
 import io.github.linsminecraftstudio.polymer.command.presets.sub.SubReloadCommand;
+import org.bukkit.command.CommandSender;
 import org.lins.mmmjjkx.fakeplayermaker.FPMRecoded;
+import org.lins.mmmjjkx.fakeplayermaker.commands.sub.ChatCommand;
 import org.lins.mmmjjkx.fakeplayermaker.commands.sub.RemoveCommand;
 import org.lins.mmmjjkx.fakeplayermaker.commands.sub.SpawnCommand;
 
@@ -18,7 +20,8 @@ public class FPMMainCommand extends HelpMessager {
         registerSubCommand(new FPMHelpSubCommand());
         registerSubCommand(new RemoveCommand());
         registerSubCommand(new SpawnCommand());
-        registerSubCommand(new SubReloadCommand(FPMRecoded.INSTANCE));
+        registerSubCommand(new FPMReloadSubCommand());
+        registerSubCommand(new ChatCommand());
     }
 
     @Override
@@ -32,7 +35,21 @@ public class FPMMainCommand extends HelpMessager {
         }
 
         public String getHelpDescription() {
-            return FPMRecoded.INSTANCE.getMessageHandler().get(null, "command..help");
+            return FPMRecoded.INSTANCE.getMessageHandler().get(null, "command.help");
+        }
+    }
+
+    private static class FPMReloadSubCommand extends SubReloadCommand {
+        public FPMReloadSubCommand() {
+            super(FPMRecoded.INSTANCE);
+        }
+
+        @Override
+        public void execute(CommandSender sender, String alias) {
+            if (this.hasPermission()) {
+                FPMRecoded.INSTANCE.reload();
+                FPMRecoded.INSTANCE.getMessageHandler().sendMessage(sender, "command.reload-success");
+            }
         }
     }
 }

@@ -18,8 +18,7 @@ public abstract class FPMImplements {
         current = findCurrent();
     }
 
-    protected FPMImplements() {
-    }
+    public FPMImplements() {}
 
     private static FPMImplements findCurrent() {
         Server server = Bukkit.getServer();

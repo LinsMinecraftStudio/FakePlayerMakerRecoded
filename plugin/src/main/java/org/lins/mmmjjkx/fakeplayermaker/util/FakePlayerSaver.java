@@ -4,7 +4,6 @@ import com.mojang.authlib.GameProfile;
 import io.github.linsminecraftstudio.polymer.objects.plugin.file.SingleFileStorage;
 import io.github.linsminecraftstudio.polymer.utils.ObjectConverter;
 import org.apache.commons.lang3.tuple.Pair;
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -28,6 +27,7 @@ public class FakePlayerSaver extends SingleFileStorage {
         super(fpm, new File(fpm.getDataFolder(), "fakeplayers.yml"));
 
         fakePlayers = new HashMap<>();
+        setup();
     }
 
     public void saveFakePlayer(Object player) {
@@ -52,7 +52,7 @@ public class FakePlayerSaver extends SingleFileStorage {
         for (String name : getKeys(false)) {
             ConfigurationSection section = getConfigurationSection(name);
             if (section == null) {
-                section = createSection(name);
+                continue;
             }
             String uuid_str = section.getString("uuid");
             UUID uuid = uuid_str == null? UUID.randomUUID() : UUID.fromString(uuid_str);
@@ -60,12 +60,19 @@ public class FakePlayerSaver extends SingleFileStorage {
             String signature = section.getString("skin_signature");
 
             String location_str = section.getString("location");
-            String owner_str = section.getString("owner");
+            String owner_str = section.getString("owner", "");
 
-            //who is the owner?
-            UUID owner = owner_str == null ? NO_OWNER_UUID : UUID.fromString(owner_str);
+            UUID owner = owner_str.isBlank() ? NO_OWNER_UUID : UUID.fromString(owner_str);
 
             Object player = IMPL.createPlayer(new GameProfile(uuid, name), "", owner);
+            Player bk = IMPL.toBukkit(player);
+            if (location_str != null) {
+                bk.teleport(ObjectConverter.toLocation(location_str));
+            }
+            if (url != null && !url.isBlank() && !signature.isBlank()) {
+                SkinUtils.setSkin(bk, url, signature);
+            }
+            fakePlayers.put(name, player);
         }
     }
 
@@ -73,12 +80,8 @@ public class FakePlayerSaver extends SingleFileStorage {
         set(name, null);
     }
 
-    public Object getOnlineFakePlayer(String name) {
-        Player bk = Bukkit.getPlayer(name);
-        if (bk != null) {
-            return IMPL.toNms(bk);
-        }
-        return null;
+    public Object getFakePlayer(String name) {
+        return fakePlayers.get(name);
     }
 
     public Map<String, Object> getFakePlayers() {
@@ -90,5 +93,10 @@ public class FakePlayerSaver extends SingleFileStorage {
         super.reload(refresh);
 
         fakePlayers.clear();
+        setup();
+    }
+
+    public void reload() {
+        reload(getConfiguration());
     }
 }

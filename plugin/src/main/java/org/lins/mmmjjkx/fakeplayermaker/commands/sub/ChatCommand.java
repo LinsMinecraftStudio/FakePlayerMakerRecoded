@@ -17,7 +17,7 @@ public class ChatCommand extends SubCommand {
 
     @Override
     public Map<Integer, List<String>> tabCompletion(CommandSender commandSender) {
-        return Map.of(0, List.of("the message"));
+        return Map.of(1, FPMRecoded.fakePlayerManager.getFakePlayerNames(), 2, List.of("message(use %sp% instead of spaces)"));
     }
 
     @Override
@@ -27,6 +27,11 @@ public class ChatCommand extends SubCommand {
 
     @Override
     public void execute(CommandSender commandSender, String s) {
+        String player = getArg(0);
+        String message = getArg(1);
 
+        if (player == null || message == null) {
+
+        }
     }
 }

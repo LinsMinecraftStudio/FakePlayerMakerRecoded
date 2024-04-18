@@ -17,7 +17,7 @@ public class RemoveCommand extends SubCommand {
 
     @Override
     public Map<Integer, List<String>> tabCompletion(CommandSender commandSender) {
-        return Map.of();
+        return Map.of(0, List.of("player"));
     }
 
     @Override

@@ -12,6 +12,8 @@ public abstract class PlayerActionImplements {
         current = findCurrent();
     }
 
+    public PlayerActionImplements() {}
+
     private static PlayerActionImplements findCurrent() {
         Server server = Bukkit.getServer();
         String serverClassName = server.getClass().getName();
