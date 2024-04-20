@@ -1,14 +1,15 @@
 package org.lins.mmmjjkx.fakeplayermaker.commands.sub;
 
 import io.github.linsminecraftstudio.polymer.command.PolymerCommand;
-import io.github.linsminecraftstudio.polymer.command.SubCommand;
 import org.bukkit.command.CommandSender;
 import org.lins.mmmjjkx.fakeplayermaker.FPMRecoded;
+import org.lins.mmmjjkx.fakeplayermaker.commands.FPMSubCmd;
+import org.lins.mmmjjkx.fakeplayermaker.commons.PlayerActionImplements;
 
 import java.util.List;
 import java.util.Map;
 
-public class ChatCommand extends SubCommand {
+public class ChatCommand extends FPMSubCmd {
     public ChatCommand() {
         super("chat");
 
@@ -30,8 +31,14 @@ public class ChatCommand extends SubCommand {
         String player = getArg(0);
         String message = getArg(1);
 
-        if (player == null || message == null) {
+        if (player == null) {
+            FPMRecoded.INSTANCE.getMessageHandler().sendMessage(commandSender, "command.no_player");
+            return;
+        }
 
+        Object fakePlayer = getFakePlayer(commandSender, player);
+        if (fakePlayer != null) {
+            PlayerActionImplements.getCurrent().chat(fakePlayer, message);
         }
     }
 }

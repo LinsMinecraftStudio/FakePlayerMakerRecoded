@@ -1,41 +1,53 @@
 package org.lins.mmmjjkx.fakeplayermaker.commands;
 
-import io.github.linsminecraftstudio.polymer.command.presets.HelpMessager;
+import io.github.linsminecraftstudio.polymer.command.PolymerCommand;
 import io.github.linsminecraftstudio.polymer.command.presets.sub.SubHelpMessager;
 import io.github.linsminecraftstudio.polymer.command.presets.sub.SubReloadCommand;
 import org.bukkit.command.CommandSender;
+import org.jetbrains.annotations.NotNull;
 import org.lins.mmmjjkx.fakeplayermaker.FPMRecoded;
-import org.lins.mmmjjkx.fakeplayermaker.commands.sub.ChatCommand;
-import org.lins.mmmjjkx.fakeplayermaker.commands.sub.RemoveCommand;
-import org.lins.mmmjjkx.fakeplayermaker.commands.sub.SpawnCommand;
+import org.lins.mmmjjkx.fakeplayermaker.commands.sub.*;
 
 import java.util.List;
 
-public class FPMMainCommand extends HelpMessager {
-    public FPMMainCommand() {
-        super(FPMRecoded.INSTANCE, "fakeplayermaker");
+public class FPMMainCommand extends PolymerCommand {
+    public static final FPMMainCommand INSTANCE = new FPMMainCommand();
 
-        setAliases(List.of("fpm", "fakeplayer", "fakeplayermaker"));
+    protected FPMMainCommand() {
+        super("fakeplayermaker", FPMRecoded.INSTANCE,List.of("fpm", "fakeplayer"));
 
-        registerSubCommand(new FPMHelpSubCommand());
+        registerSubCommand(new FPMHelpSubCommand(this));
         registerSubCommand(new RemoveCommand());
         registerSubCommand(new SpawnCommand());
         registerSubCommand(new FPMReloadSubCommand());
         registerSubCommand(new ChatCommand());
+        registerSubCommand(new SneakCommand());
+        registerSubCommand(new LeaveCommand());
+        registerSubCommand(new JoinCommand());
     }
 
     @Override
     public String getHelpDescription() {
-        return FPMRecoded.INSTANCE.getMessageHandler().get(null, "description.help");
+        return FPMRecoded.INSTANCE.getMessageHandler().get(null, "command.help.help");
+    }
+
+    @Override
+    public String requirePlugin() {
+        return "";
+    }
+
+    @Override
+    public void execute(CommandSender commandSender, String s) {
+        FPMRecoded.INSTANCE.getMessageHandler().sendMessage(commandSender, "command.info", FPMRecoded.INSTANCE.getPluginVersion(), "mmmjjkx(lijinhong11)");
     }
 
     private static class FPMHelpSubCommand extends SubHelpMessager {
-        public FPMHelpSubCommand() {
-            super(FPMRecoded.INSTANCE);
+        public FPMHelpSubCommand(@NotNull PolymerCommand command) {
+            super(command);
         }
 
         public String getHelpDescription() {
-            return FPMRecoded.INSTANCE.getMessageHandler().get(null, "command.help");
+            return FPMRecoded.INSTANCE.getMessageHandler().get(null, "command.help.help");
         }
     }
 

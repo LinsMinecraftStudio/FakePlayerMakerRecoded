@@ -3,9 +3,10 @@ package org.lins.mmmjjkx.fakeplayermaker.util;
 import com.mojang.authlib.GameProfile;
 import io.github.linsminecraftstudio.polymer.objects.plugin.file.SingleFileStorage;
 import io.github.linsminecraftstudio.polymer.utils.ObjectConverter;
+import lombok.Getter;
+import lombok.SneakyThrows;
 import org.apache.commons.lang3.tuple.Pair;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.lins.mmmjjkx.fakeplayermaker.FPMRecoded;
 import org.lins.mmmjjkx.fakeplayermaker.commons.FPMImplements;
@@ -17,6 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+@Getter
 public class FakePlayerSaver extends SingleFileStorage {
     public static final UUID NO_OWNER_UUID = UUID.fromString("00000000-0000-0000-0000-000000000000");
 
@@ -30,6 +32,7 @@ public class FakePlayerSaver extends SingleFileStorage {
         setup();
     }
 
+    @SneakyThrows
     public void saveFakePlayer(Object player) {
         GameProfile profile = IMPL.getGameProfile(player);
         ConfigurationSection section = createSection(profile.getName());
@@ -46,6 +49,8 @@ public class FakePlayerSaver extends SingleFileStorage {
             section.set("skin_signature", signature);
         }
         section.set("location", ObjectConverter.toLocationString(bk.getLocation()));
+
+        reload();
     }
 
     private void setup() {
@@ -80,23 +85,10 @@ public class FakePlayerSaver extends SingleFileStorage {
         set(name, null);
     }
 
-    public Object getFakePlayer(String name) {
-        return fakePlayers.get(name);
-    }
-
-    public Map<String, Object> getFakePlayers() {
-        return fakePlayers;
-    }
-
-    @Override
-    protected void reload(YamlConfiguration refresh) {
-        super.reload(refresh);
+    public void reload() {
+        super.reload();
 
         fakePlayers.clear();
         setup();
-    }
-
-    public void reload() {
-        reload(getConfiguration());
     }
 }

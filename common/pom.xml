@@ -6,7 +6,7 @@
 
     <parent>
         <groupId>me.mmmjjkx</groupId>
-        <artifactId>FPMRecoded</artifactId>
+        <artifactId>FPMRecodedContainer</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 

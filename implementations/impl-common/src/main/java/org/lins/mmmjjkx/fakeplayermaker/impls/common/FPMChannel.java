@@ -11,8 +11,8 @@ public class FPMChannel extends AbstractChannel {
 
     public FPMChannel() {
         super(null);
-        config = new DefaultChannelConfig(this);
         metadata = new ChannelMetadata(false);
+        config = new DefaultChannelConfig(this);
     }
 
     @Override

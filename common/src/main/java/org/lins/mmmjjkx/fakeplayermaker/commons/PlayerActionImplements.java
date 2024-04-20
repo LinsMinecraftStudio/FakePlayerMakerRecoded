@@ -39,4 +39,8 @@ public abstract class PlayerActionImplements {
     public abstract void lookAt(Object player, double x, double y, double z);
 
     public abstract void chat(Object player, String message);
+
+    public abstract void sneak(Object player, boolean sneak);
+
+    public abstract void setupValues(Object player, ValueCollection values);
 }

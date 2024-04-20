@@ -1,0 +1,15 @@
+default-spawn-location:
+  world: world
+  x: 0
+  y: 64
+  z: 0
+  yaw: 0
+  pitch: 0
+
+# Total mc name length limit is 16 characters!
+namePrefix: "fak_"
+randomNameLength: 10
+
+#Fake player settings
+invulnerable: true
+max-health: 20

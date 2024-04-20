@@ -1,9 +1,13 @@
 name: "FakePlayerMaker-Recoded"
-version: "1.0"
+version: "${project.version}"
 main: org.lins.mmmjjkx.fakeplayermaker.FPMRecoded
 api-version: "1.19"
-loader: "org.lins.mmmjjkx.fakeplayermaker.loader.FPMRecodedLoader"
 authors: ["mmmjjkx"]
 description: "create fake players in minecraft"
 website: "https://github.com/LinsMinecraftStudio/FakePlayerMaker-Recoded"
-depend: ["Polymer"]
+dependencies:
+  server:
+    Polymer:
+      required: true
+      load: BEFORE
+      join-classpath: true

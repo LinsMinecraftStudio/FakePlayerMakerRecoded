@@ -1,17 +1,22 @@
 package org.lins.mmmjjkx.fakeplayermaker.impls.v1_20_R3;
 
 import com.mojang.authlib.GameProfile;
+import io.netty.channel.DefaultEventLoop;
+import io.netty.channel.EventLoop;
+import net.minecraft.network.BandwidthDebugMonitor;
 import net.minecraft.network.Connection;
+import net.minecraft.network.ConnectionProtocol;
 import net.minecraft.network.protocol.PacketFlow;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.CommonListenerCookie;
 import net.minecraft.server.players.PlayerList;
+import net.minecraft.util.SampleLogger;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
-import org.bukkit.craftbukkit.v1_20_R2.CraftWorld;
-import org.bukkit.craftbukkit.v1_20_R2.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_20_R3.CraftWorld;
+import org.bukkit.craftbukkit.v1_20_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.lins.mmmjjkx.fakeplayermaker.commons.FPMImplements;
@@ -20,6 +25,7 @@ import org.lins.mmmjjkx.fakeplayermaker.impls.common.FPMChannel;
 import java.util.UUID;
 
 public final class FPMImpl extends FPMImplements {
+    private final EventLoop LOOP = new DefaultEventLoop();
 
     @Override
     public @NotNull Object createPlayer(@NotNull GameProfile profile, @NotNull String levelName, @NotNull UUID owner) {
@@ -38,7 +44,15 @@ public final class FPMImpl extends FPMImplements {
         FPMChannel channel = new FPMChannel();
         ServerPlayer serverPlayer = (ServerPlayer) player;
 
+        LOOP.register(channel);
+
         Connection connection = new Connection(PacketFlow.SERVERBOUND);
+
+        channel.attr(Connection.ATTRIBUTE_SERVERBOUND_PROTOCOL).set(ConnectionProtocol.PLAY.codec(PacketFlow.SERVERBOUND));
+        channel.attr(Connection.ATTRIBUTE_CLIENTBOUND_PROTOCOL).set(ConnectionProtocol.PLAY.codec(PacketFlow.CLIENTBOUND));
+
+        Connection.configureSerialization(channel.pipeline(), PacketFlow.SERVERBOUND, new BandwidthDebugMonitor(new SampleLogger()));
+
         connection.channel = channel;
 
         serverPlayer.connection = new FPMConnection(MinecraftServer.getServer(), connection, serverPlayer);

@@ -1,24 +1,33 @@
 package org.lins.mmmjjkx.fakeplayermaker.commands.sub;
 
-import io.github.linsminecraftstudio.polymer.command.SubCommand;
+import io.github.linsminecraftstudio.polymer.command.PolymerCommand;
 import org.bukkit.command.CommandSender;
-import org.jetbrains.annotations.NotNull;
+import org.bukkit.entity.Player;
 import org.lins.mmmjjkx.fakeplayermaker.FPMRecoded;
+import org.lins.mmmjjkx.fakeplayermaker.commands.FPMSubCmd;
+import org.lins.mmmjjkx.fakeplayermaker.commons.FPMImplements;
 import org.lins.mmmjjkx.fakeplayermaker.commons.PlayerActionImplements;
 
 import java.util.List;
 import java.util.Map;
 
-public class SneakCommand extends SubCommand {
+public class SneakCommand extends FPMSubCmd {
     private final PlayerActionImplements IMPL = PlayerActionImplements.getCurrent();
 
-    public SneakCommand(@NotNull String name) {
-        super(name);
+    public SneakCommand() {
+        super("sneak");
+
+        addArgument("player", PolymerCommand.ArgumentType.REQUIRED);
     }
 
     @Override
     public Map<Integer, List<String>> tabCompletion(CommandSender commandSender) {
         return Map.of(1, List.of("player"));
+    }
+
+    @Override
+    public String getHelpDescription() {
+        return FPMRecoded.INSTANCE.getMessageHandler().get(null, "command.help.sneak");
     }
 
     @Override
@@ -28,12 +37,12 @@ public class SneakCommand extends SubCommand {
             return;
         }
 
-        Object player = FPMRecoded.fakePlayerSaver.getFakePlayer(playerName);
+        Object player = getFakePlayer(commandSender, playerName);
         if (player == null) {
-            FPMRecoded.INSTANCE.getMessageHandler().sendMessage(commandSender, "player_not_found");
             return;
         }
 
-        
+        Player bk = FPMImplements.getCurrent().toBukkit(player);
+        IMPL.sneak(player, !bk.isSneaking());
     }
 }

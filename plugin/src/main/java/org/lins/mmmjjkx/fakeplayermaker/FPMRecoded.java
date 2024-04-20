@@ -36,7 +36,7 @@ public final class FPMRecoded extends PolymerPlugin implements FPMPlugin {
 
     @Override
     public List<PolymerCommand> registerCommands() {
-        return List.of(new FPMMainCommand());
+        return List.of(FPMMainCommand.INSTANCE);
     }
 
     @Override
@@ -44,6 +44,7 @@ public final class FPMRecoded extends PolymerPlugin implements FPMPlugin {
         super.reload();
 
         fakePlayerSaver.reload();
+        fakePlayerManager.reload();
     }
 
     @Override

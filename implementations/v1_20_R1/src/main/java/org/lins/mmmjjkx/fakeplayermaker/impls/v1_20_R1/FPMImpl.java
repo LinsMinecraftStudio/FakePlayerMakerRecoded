@@ -1,7 +1,10 @@
 package org.lins.mmmjjkx.fakeplayermaker.impls.v1_20_R1;
 
 import com.mojang.authlib.GameProfile;
+import io.netty.channel.DefaultEventLoop;
+import io.netty.channel.EventLoop;
 import net.minecraft.network.Connection;
+import net.minecraft.network.ConnectionProtocol;
 import net.minecraft.network.protocol.PacketFlow;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
@@ -19,6 +22,7 @@ import org.lins.mmmjjkx.fakeplayermaker.impls.common.FPMChannel;
 import java.util.UUID;
 
 public final class FPMImpl extends FPMImplements {
+    private final EventLoop LOOP = new DefaultEventLoop();
 
     @Override
     public @NotNull Object createPlayer(@NotNull GameProfile profile, @NotNull String levelName, @NotNull UUID owner) {
@@ -37,8 +41,14 @@ public final class FPMImpl extends FPMImplements {
         FPMChannel channel = new FPMChannel();
         ServerPlayer serverPlayer = (ServerPlayer) player;
 
+        LOOP.register(channel);
+
         Connection connection = new Connection(PacketFlow.SERVERBOUND);
         connection.channel = channel;
+
+        Connection.configureSerialization(channel.pipeline(), PacketFlow.SERVERBOUND);
+
+        connection.setProtocol(ConnectionProtocol.PLAY);
 
         serverPlayer.connection = new FPMConnection(MinecraftServer.getServer(), connection, serverPlayer);
     }

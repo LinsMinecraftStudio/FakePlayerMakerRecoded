@@ -1,0 +1,14 @@
+player_not_joined: "&cThe fake player has not joined the server yet. Please use /fpm join <player> to let him join the server."
+player_not_found: "&cThe fake player you entered does not exist."
+command:
+  reload-success: "&aPlugin reloaded successfully."
+  no_player: "&cYou must enter a fake player name."
+  info: "&aRunning FakePlayerMaker-Recoded v%1$s by %2$s.<newline>&bRun /fpm help to get help."
+  help:
+    help: "Get the help message of the plugin"
+    chat: "Let a fake player chat in the server(chat context is unsigned)"
+    spawn: "Spawn a fake player of your own"
+    remove: "Remove a fake player from the server and delete his data(only FPM)"
+    leave: "Let a fake player leave the server"
+    join: "Let a fake player join the server"
+    sneak: "Toggle sneak mode for a fake player"
