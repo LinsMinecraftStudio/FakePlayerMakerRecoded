@@ -6,7 +6,7 @@
 
     <groupId>me.mmmjjkx</groupId>
     <artifactId>FPMRecodedContainer</artifactId>
-    <version>1.0</version>
+    <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>FPMRecoded</name>
@@ -23,7 +23,7 @@
     <properties>
         <java.version>17</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <revision>1.0-SNAPSHOT</revision>
+        <revision>1.0</revision>
     </properties>
 
   <build>
