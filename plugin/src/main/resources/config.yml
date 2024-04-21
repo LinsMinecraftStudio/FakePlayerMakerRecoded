@@ -1,3 +1,5 @@
+language: en-US
+
 default-spawn-location:
   world: world
   x: 0
