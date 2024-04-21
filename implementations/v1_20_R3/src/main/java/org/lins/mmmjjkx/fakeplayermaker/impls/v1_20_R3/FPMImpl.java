@@ -3,11 +3,13 @@ package org.lins.mmmjjkx.fakeplayermaker.impls.v1_20_R3;
 import com.mojang.authlib.GameProfile;
 import io.netty.channel.DefaultEventLoop;
 import io.netty.channel.EventLoop;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.network.BandwidthDebugMonitor;
 import net.minecraft.network.Connection;
 import net.minecraft.network.ConnectionProtocol;
 import net.minecraft.network.protocol.PacketFlow;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ChunkMap;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.CommonListenerCookie;
@@ -62,6 +64,7 @@ public final class FPMImpl extends FPMImplements {
     public void addPlayer(@NotNull Object player) {
         PlayerList playerList = MinecraftServer.getServer().getPlayerList();
         ServerPlayer serverPlayer = (ServerPlayer) player;
+
         playerList.placeNewPlayer(serverPlayer.connection.connection, serverPlayer, CommonListenerCookie.createInitial(serverPlayer.gameProfile));
     }
 
@@ -69,7 +72,16 @@ public final class FPMImpl extends FPMImplements {
     public void removePlayer(@NotNull Object player) {
         PlayerList playerList = MinecraftServer.getServer().getPlayerList();
         ServerPlayer serverPlayer = (ServerPlayer) player;
+
+        setupConnection(player);
+
         playerList.remove(serverPlayer);
+
+        ServerLevel world = serverPlayer.serverLevel();
+        ChunkMap chunkMap = world.chunkSource.chunkMap;
+
+        Int2ObjectMap<ChunkMap.TrackedEntity> entityMap = chunkMap.entityMap;
+        entityMap.remove(serverPlayer.getId());
     }
 
     @Override

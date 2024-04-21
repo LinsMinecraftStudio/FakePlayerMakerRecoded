@@ -3,6 +3,7 @@ package org.lins.mmmjjkx.fakeplayermaker.util;
 import com.mojang.authlib.GameProfile;
 import org.apache.commons.lang3.tuple.Pair;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.lins.mmmjjkx.fakeplayermaker.FPMRecoded;
 import org.lins.mmmjjkx.fakeplayermaker.commons.FPMImplements;
@@ -49,6 +50,14 @@ public class FakePlayerManager {
                 FPMRecoded.INSTANCE.getConfig().getBoolean("invulnerable", true),
                 FPMRecoded.INSTANCE.getConfig().getDouble("maxHealth", 20)
         );
+
+        GameProfile profile = IMPL.getGameProfile(player);
+        Location location = FPMRecoded.fakePlayerSaver.getReadyToTeleport().get(profile);
+
+        if (location != null) {
+            Player bk = IMPL.toBukkit(player);
+            bk.teleport(location);
+        }
 
         PlayerActionImplements.getCurrent().setupValues(player, collection);
     }

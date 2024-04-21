@@ -18,7 +18,7 @@ public class ChatCommand extends FPMSubCmd {
 
     @Override
     public Map<Integer, List<String>> tabCompletion(CommandSender commandSender) {
-        return Map.of(1, FPMRecoded.fakePlayerManager.getFakePlayerNames(), 2, List.of("message(use %sp% instead of spaces)"));
+        return Map.of(0, FPMRecoded.fakePlayerManager.getFakePlayerNames(), 1, List.of("message(use %sp% instead of spaces)"));
     }
 
     @Override
@@ -28,17 +28,23 @@ public class ChatCommand extends FPMSubCmd {
 
     @Override
     public void execute(CommandSender commandSender, String s) {
-        String player = getArg(0);
-        String message = getArg(1);
+        if (hasPermission()) {
+            String player = getArg(0);
+            String message = getArg(1);
 
-        if (player == null) {
-            FPMRecoded.INSTANCE.getMessageHandler().sendMessage(commandSender, "command.no_player");
-            return;
-        }
+            if (player == null) {
+                FPMRecoded.INSTANCE.getMessageHandler().sendMessage(commandSender, "command.no_player");
+                return;
+            }
 
-        Object fakePlayer = getFakePlayer(commandSender, player);
-        if (fakePlayer != null) {
-            PlayerActionImplements.getCurrent().chat(fakePlayer, message);
+            if (message == null) {
+                return;
+            }
+
+            Object fakePlayer = getFakePlayer(commandSender, player);
+            if (fakePlayer != null) {
+                PlayerActionImplements.getCurrent().chat(fakePlayer, message.replaceAll("%sp%", " "));
+            }
         }
     }
 }

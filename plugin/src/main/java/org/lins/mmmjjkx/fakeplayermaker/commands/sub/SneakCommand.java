@@ -22,7 +22,7 @@ public class SneakCommand extends FPMSubCmd {
 
     @Override
     public Map<Integer, List<String>> tabCompletion(CommandSender commandSender) {
-        return Map.of(1, List.of("player"));
+        return Map.of(0, FPMRecoded.fakePlayerManager.getFakePlayerNames());
     }
 
     @Override
@@ -32,17 +32,19 @@ public class SneakCommand extends FPMSubCmd {
 
     @Override
     public void execute(CommandSender commandSender, String s) {
-        String playerName = getArg(0);
-        if (playerName == null) {
-            return;
-        }
+        if (hasPermission()) {
+            String playerName = getArg(0);
+            if (playerName == null) {
+                return;
+            }
 
-        Object player = getFakePlayer(commandSender, playerName);
-        if (player == null) {
-            return;
-        }
+            Object player = getFakePlayer(commandSender, playerName);
+            if (player == null) {
+                return;
+            }
 
-        Player bk = FPMImplements.getCurrent().toBukkit(player);
-        IMPL.sneak(player, !bk.isSneaking());
+            Player bk = FPMImplements.getCurrent().toBukkit(player);
+            IMPL.sneak(player, !bk.isSneaking());
+        }
     }
 }

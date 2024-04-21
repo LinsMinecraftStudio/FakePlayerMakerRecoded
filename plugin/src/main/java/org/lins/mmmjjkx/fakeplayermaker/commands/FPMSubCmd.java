@@ -15,6 +15,10 @@ public abstract class FPMSubCmd extends SubCommand {
         super(name);
     }
 
+    public FPMSubCmd(@NotNull String name, @NotNull String... aliases) {
+        super(name, aliases);
+    }
+
     protected Object getFakePlayer(CommandSender sender, String playerName) {
         Pair<Boolean, Object> fakePlayerPair = FPMRecoded.fakePlayerManager.getFakePlayer(playerName);
 

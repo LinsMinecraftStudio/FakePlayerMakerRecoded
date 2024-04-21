@@ -5,6 +5,7 @@ import io.github.linsminecraftstudio.polymer.objects.plugin.PolymerPlugin;
 import org.lins.mmmjjkx.fakeplayermaker.commands.FPMMainCommand;
 import org.lins.mmmjjkx.fakeplayermaker.commons.FPMPlugin;
 import org.lins.mmmjjkx.fakeplayermaker.commons.Instances;
+import org.lins.mmmjjkx.fakeplayermaker.listeners.AutoRespawn;
 import org.lins.mmmjjkx.fakeplayermaker.util.FakePlayerManager;
 import org.lins.mmmjjkx.fakeplayermaker.util.FakePlayerSaver;
 
@@ -27,11 +28,23 @@ public final class FPMRecoded extends PolymerPlugin implements FPMPlugin {
         INSTANCE = this;
         fakePlayerSaver = new FakePlayerSaver(this);
         fakePlayerManager = new FakePlayerManager();
+
+        new AutoRespawn();
+
+        getLogger().info("""
+                 _____     _        ____  _                       __  __       _            \s
+                |  ___|_ _| | _____|  _ \\| | __ _ _   _  ___ _ __|  \\/  | __ _| | _____ _ __\s
+                | |_ / _` | |/ / _ \\ |_) | |/ _` | | | |/ _ \\ '__| |\\/| |/ _` | |/ / _ \\ '__|
+                |  _| (_| |   <  __/  __/| | (_| | |_| |  __/ |  | |  | | (_| |   <  __/ |  \s
+                |_|  \\__,_|_|\\_\\___|_|   |_|\\__,_|\\__, |\\___|_|  |_|  |_|\\__,_|_|\\_\\___|_|  \s
+                                                  |___/                                     \s
+                
+                Powered by Polymer, and made by mmmjjkx(lijinhong11).
+                """);
     }
 
     @Override
     public void onPlDisable() {
-
     }
 
     @Override

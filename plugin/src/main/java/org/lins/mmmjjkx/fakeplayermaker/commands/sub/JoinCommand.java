@@ -20,7 +20,7 @@ public class JoinCommand extends FPMSubCmd {
 
     @Override
     public Map<Integer, List<String>> tabCompletion(CommandSender commandSender) {
-        return Map.of(1, FPMRecoded.fakePlayerManager.getFakePlayerNames());
+        return Map.of(0, FPMRecoded.fakePlayerManager.getFakePlayerNames());
     }
 
     @Override
@@ -30,23 +30,25 @@ public class JoinCommand extends FPMSubCmd {
 
     @Override
     public void execute(CommandSender commandSender, String s) {
-        String playerName = getArg(0);
-        if (playerName == null) {
-            FPMRecoded.INSTANCE.getMessageHandler().sendMessage(commandSender, "command.no_player");
-            return;
-        }
+        if (hasPermission()) {
+            String playerName = getArg(0);
+            if (playerName == null) {
+                FPMRecoded.INSTANCE.getMessageHandler().sendMessage(commandSender, "command.no_player");
+                return;
+            }
 
-        Object fakePlayer = getFakePlayer(commandSender, playerName);
-        if (fakePlayer == null) {
-            return;
-        }
+            Object fakePlayer = getFakePlayer(commandSender, playerName);
+            if (fakePlayer == null) {
+                return;
+            }
 
-        Player player = FPMImplements.getCurrent().toBukkit(fakePlayer);
-        if (Bukkit.getPlayer(player.getUniqueId()) != null) {
-            FPMRecoded.INSTANCE.getMessageHandler().sendMessage(commandSender, "player_already_joined");
-            return;
-        }
+            Player player = FPMImplements.getCurrent().toBukkit(fakePlayer);
+            if (Bukkit.getPlayer(player.getUniqueId()) != null) {
+                FPMRecoded.INSTANCE.getMessageHandler().sendMessage(commandSender, "player_already_joined");
+                return;
+            }
 
-        FPMRecoded.fakePlayerManager.join(playerName);
+            FPMRecoded.fakePlayerManager.join(playerName);
+        }
     }
 }

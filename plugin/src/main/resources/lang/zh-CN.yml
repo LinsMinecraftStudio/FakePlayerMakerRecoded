@@ -1,0 +1,26 @@
+player_not_joined: "&c假人尚未加入服务器。请使用/fpm join＜player＞让他加入服务器。"
+player_not_found: "&c无法找到该假人"
+player_already_joined: "&c该假人已经加入了服务器。"
+command:
+  skin_changed: "&a假人的皮肤已更换。"
+  skin_error: "&c更换假人皮肤时出现错误。请稍后再试。"
+  reload-success: "&a插件已重新加载。"
+  no_player: "&c你必须输入一个假人的名称！"
+  no_skin_name: "&c你必须输入一个皮肤名称！"
+  info: |-
+    &a正在运行 FakePlayerMaker-Recoded v%1$s 作者 %2$s. 
+    &b输入 /fpm help 获取帮助.
+  help:
+    chat: "让玩家在服务器里聊天(聊天内容没有签名)"
+    spawn: "创建一个你自己的假人并进入游戏"
+    remove: "从服务器上删除一个假人并删除他的数据（仅FPM）"
+    leave: "让假人退出服务器"
+    join: "让假人进入服务器"
+    sneak: "切换假人的潜行状态"
+    skin: "切换假人的皮肤"
+    dismount: "让假人脱离坐骑"
+    mount: "让假人坐在坐骑上"
+    removeall: "从服务器上删除所有假人并删除他们的数据（仅FPM）"
+    reload: "重载插件"
+    teleport: "传送至一个假人"
+    teleporthere: "让假人传送到你的位置"

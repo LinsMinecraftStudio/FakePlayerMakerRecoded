@@ -13,3 +13,5 @@ randomNameLength: 10
 #Fake player settings
 invulnerable: true
 max-health: 20
+mount-distance: 3
+auto-respawn: true

@@ -1,29 +1,22 @@
 package org.lins.mmmjjkx.fakeplayermaker.commands.sub;
 
-import io.github.linsminecraftstudio.polymer.command.PolymerCommand;
-import org.apache.commons.lang3.tuple.Pair;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.lins.mmmjjkx.fakeplayermaker.FPMRecoded;
 import org.lins.mmmjjkx.fakeplayermaker.commands.FPMSubCmd;
+import org.lins.mmmjjkx.fakeplayermaker.commons.FPMImplements;
 
 import java.util.List;
 import java.util.Map;
 
-public class RemoveCommand extends FPMSubCmd {
-    public RemoveCommand() {
-        super("remove");
-
-        addArgument("player", PolymerCommand.ArgumentType.REQUIRED);
+public class RespawnCommand extends FPMSubCmd {
+    public RespawnCommand() {
+        super("respawn");
     }
 
     @Override
     public Map<Integer, List<String>> tabCompletion(CommandSender commandSender) {
         return Map.of(0, FPMRecoded.fakePlayerManager.getFakePlayerNames());
-    }
-
-    @Override
-    public String getHelpDescription() {
-        return FPMRecoded.INSTANCE.getMessageHandler().get(null, "command.help.remove");
     }
 
     @Override
@@ -36,13 +29,13 @@ public class RemoveCommand extends FPMSubCmd {
                 return;
             }
 
-            Pair<Boolean, Object> player = FPMRecoded.fakePlayerManager.getFakePlayer(playerName);
-            if (player.getRight() == null) {
-                FPMRecoded.INSTANCE.getMessageHandler().sendMessage(commandSender, "player_not_found");
+            Object player = getFakePlayer(commandSender, playerName);
+            if (player == null) {
                 return;
             }
 
-            FPMRecoded.fakePlayerManager.remove(playerName);
+            Player bk = FPMImplements.getCurrent().toBukkit(player);
+            bk.spigot().respawn();
         }
     }
 }

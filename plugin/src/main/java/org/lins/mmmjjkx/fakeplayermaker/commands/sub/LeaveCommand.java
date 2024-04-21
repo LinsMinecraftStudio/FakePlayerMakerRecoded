@@ -18,7 +18,7 @@ public class LeaveCommand extends FPMSubCmd {
 
     @Override
     public Map<Integer, List<String>> tabCompletion(CommandSender commandSender) {
-        return Map.of(0, List.of("player"));
+        return Map.of(0, FPMRecoded.fakePlayerManager.getFakePlayerNames());
     }
 
     @Override
@@ -28,19 +28,21 @@ public class LeaveCommand extends FPMSubCmd {
 
     @Override
     public void execute(CommandSender commandSender, String s) {
-        String playerName = getArg(0);
+        if (hasPermission()) {
+            String playerName = getArg(0);
 
-        if (playerName == null) {
-            FPMRecoded.INSTANCE.getMessageHandler().sendMessage(commandSender, "command.no_player");
-            return;
+            if (playerName == null) {
+                FPMRecoded.INSTANCE.getMessageHandler().sendMessage(commandSender, "command.no_player");
+                return;
+            }
+
+            Pair<Boolean, Object> player = FPMRecoded.fakePlayerManager.getFakePlayer(playerName);
+            if (player.getRight() == null) {
+                FPMRecoded.INSTANCE.getMessageHandler().sendMessage(commandSender, "player_not_found");
+                return;
+            }
+
+            FPMRecoded.fakePlayerManager.leave(playerName);
         }
-
-        Pair<Boolean, Object> player = FPMRecoded.fakePlayerManager.getFakePlayer(playerName);
-        if (player.getRight() == null) {
-            FPMRecoded.INSTANCE.getMessageHandler().sendMessage(commandSender, "player_not_found");
-            return;
-        }
-
-        FPMRecoded.fakePlayerManager.leave(playerName);
     }
 }

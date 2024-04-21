@@ -1,9 +1,15 @@
 player_not_joined: "&cThe fake player has not joined the server yet. Please use /fpm join <player> to let him join the server."
 player_not_found: "&cThe fake player you entered does not exist."
+player_already_joined: "&cThe fake player has already joined the server."
 command:
+  skin_changed: "&aThe fake player's skin has been changed."
+  skin_error: "&cAn error occurred while changing the fake player's skin. Please try again later."
   reload-success: "&aPlugin reloaded successfully."
   no_player: "&cYou must enter a fake player name."
-  info: "&aRunning FakePlayerMaker-Recoded v%1$s by %2$s.<newline>&bRun /fpm help to get help."
+  no_skin_name: "&cYou must enter a skin name."
+  info: |- 
+    &aRunning FakePlayerMaker-Recoded v%1$s by %2$s. 
+    &bRun /fpm help to get help.
   help:
     help: "Get the help message of the plugin"
     chat: "Let a fake player chat in the server(chat context is unsigned)"
@@ -12,3 +18,10 @@ command:
     leave: "Let a fake player leave the server"
     join: "Let a fake player join the server"
     sneak: "Toggle sneak mode for a fake player"
+    skin: "Change the skin of a fake player"
+    dismount: "Let a fake player dismount"
+    mount: "Let a fake player mount"
+    removeall: "Remove all fake players from the server and delete their data(only FPM)"
+    reload: "Reload the plugin"
+    teleport: "Teleport to a fake player"
+    teleporthere: "Teleport a fake player to you"

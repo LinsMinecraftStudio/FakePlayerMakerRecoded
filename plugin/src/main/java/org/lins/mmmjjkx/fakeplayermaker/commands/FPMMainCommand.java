@@ -24,11 +24,13 @@ public class FPMMainCommand extends PolymerCommand {
         registerSubCommand(new SneakCommand());
         registerSubCommand(new LeaveCommand());
         registerSubCommand(new JoinCommand());
-    }
-
-    @Override
-    public String getHelpDescription() {
-        return FPMRecoded.INSTANCE.getMessageHandler().get(null, "command.help.help");
+        registerSubCommand(new SkinCommand());
+        registerSubCommand(new TeleportCommand());
+        registerSubCommand(new TeleportHereCommand());
+        registerSubCommand(new MountCommand());
+        registerSubCommand(new DismountCommand());
+        registerSubCommand(new RemoveAllCommand());
+        registerSubCommand(new RespawnCommand());
     }
 
     @Override
@@ -62,6 +64,11 @@ public class FPMMainCommand extends PolymerCommand {
                 FPMRecoded.INSTANCE.reload();
                 FPMRecoded.INSTANCE.getMessageHandler().sendMessage(sender, "command.reload-success");
             }
+        }
+
+        @Override
+        public String getHelpDescription() {
+            return FPMRecoded.INSTANCE.getMessageHandler().get(null, "command.help.reload");
         }
     }
 }

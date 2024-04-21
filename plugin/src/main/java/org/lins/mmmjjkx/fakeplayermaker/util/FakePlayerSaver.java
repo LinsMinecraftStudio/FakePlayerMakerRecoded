@@ -6,6 +6,9 @@ import io.github.linsminecraftstudio.polymer.utils.ObjectConverter;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.tuple.Pair;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.lins.mmmjjkx.fakeplayermaker.FPMRecoded;
@@ -24,11 +27,13 @@ public class FakePlayerSaver extends SingleFileStorage {
 
     private static final FPMImplements IMPL = FPMImplements.getCurrent();
     private final Map<String, Object> fakePlayers;
+    private final Map<GameProfile, Location> readyToTeleport;
 
     public FakePlayerSaver(FPMRecoded fpm) {
         super(fpm, new File(fpm.getDataFolder(), "fakeplayers.yml"));
 
         fakePlayers = new HashMap<>();
+        readyToTeleport = new HashMap<>();
         setup();
     }
 
@@ -49,8 +54,6 @@ public class FakePlayerSaver extends SingleFileStorage {
             section.set("skin_signature", signature);
         }
         section.set("location", ObjectConverter.toLocationString(bk.getLocation()));
-
-        reload();
     }
 
     private void setup() {
@@ -60,7 +63,10 @@ public class FakePlayerSaver extends SingleFileStorage {
                 continue;
             }
             String uuid_str = section.getString("uuid");
-            UUID uuid = uuid_str == null? UUID.randomUUID() : UUID.fromString(uuid_str);
+            UUID uuid = uuid_str == null ? UUID.randomUUID() : UUID.fromString(uuid_str);
+
+            section.set("uuid", uuid.toString());
+
             String url = section.getString("skin");
             String signature = section.getString("skin_signature");
 
@@ -69,12 +75,16 @@ public class FakePlayerSaver extends SingleFileStorage {
 
             UUID owner = owner_str.isBlank() ? NO_OWNER_UUID : UUID.fromString(owner_str);
 
-            Object player = IMPL.createPlayer(new GameProfile(uuid, name), "", owner);
+            World first = Bukkit.getWorlds().get(0);
+
+            GameProfile profile = new GameProfile(uuid, name);
+
+            Object player = IMPL.createPlayer(profile, first.getName(), owner);
             Player bk = IMPL.toBukkit(player);
             if (location_str != null) {
-                bk.teleport(ObjectConverter.toLocation(location_str));
+                readyToTeleport.put(profile, ObjectConverter.toLocation(location_str));
             }
-            if (url != null && !url.isBlank() && !signature.isBlank()) {
+            if (url != null && !url.isBlank() && (signature != null && !signature.isBlank())) {
                 SkinUtils.setSkin(bk, url, signature);
             }
             fakePlayers.put(name, player);
@@ -83,6 +93,7 @@ public class FakePlayerSaver extends SingleFileStorage {
 
     public void removeFakePlayer(String name) {
         set(name, null);
+        fakePlayers.remove(name);
     }
 
     public void reload() {
