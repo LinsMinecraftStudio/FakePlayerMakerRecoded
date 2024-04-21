@@ -11,6 +11,7 @@ command:
     &aRunning FakePlayerMaker-Recoded v%1$s by %2$s. 
     &bRun /fpm help to get help.
   help:
+    respawn: "Respawn a fake player"
     help: "Get the help message of the plugin"
     chat: "Let a fake player chat in the server(chat context is unsigned)"
     spawn: "Spawn a fake player of your own"

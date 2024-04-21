@@ -1,5 +1,6 @@
 package org.lins.mmmjjkx.fakeplayermaker.commands.sub;
 
+import io.github.linsminecraftstudio.polymer.command.PolymerCommand;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.lins.mmmjjkx.fakeplayermaker.FPMRecoded;
@@ -12,11 +13,17 @@ import java.util.Map;
 public class RespawnCommand extends FPMSubCmd {
     public RespawnCommand() {
         super("respawn");
+
+        addArgument("player", PolymerCommand.ArgumentType.REQUIRED);
     }
 
     @Override
     public Map<Integer, List<String>> tabCompletion(CommandSender commandSender) {
         return Map.of(0, FPMRecoded.fakePlayerManager.getFakePlayerNames());
+    }
+
+    public String getHelpDescription() {
+        return FPMRecoded.INSTANCE.getMessageHandler().get(null, "command.help.respawn");
     }
 
     @Override

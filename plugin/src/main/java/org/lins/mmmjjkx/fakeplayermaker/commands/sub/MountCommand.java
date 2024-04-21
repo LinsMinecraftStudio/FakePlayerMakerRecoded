@@ -1,5 +1,6 @@
 package org.lins.mmmjjkx.fakeplayermaker.commands.sub;
 
+import io.github.linsminecraftstudio.polymer.command.PolymerCommand;
 import org.bukkit.command.CommandSender;
 import org.lins.mmmjjkx.fakeplayermaker.FPMRecoded;
 import org.lins.mmmjjkx.fakeplayermaker.commands.FPMSubCmd;
@@ -11,13 +12,14 @@ import java.util.Map;
 public class MountCommand extends FPMSubCmd {
     public MountCommand() {
         super("mount");
+
+        addArgument("player", PolymerCommand.ArgumentType.REQUIRED);
     }
 
     @Override
     public String getHelpDescription() {
         return FPMRecoded.INSTANCE.getMessageHandler().get(null, "command.help.mount");
     }
-
 
     @Override
     public Map<Integer, List<String>> tabCompletion(CommandSender commandSender) {

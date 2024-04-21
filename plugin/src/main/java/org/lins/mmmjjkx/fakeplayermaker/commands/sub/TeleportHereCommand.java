@@ -1,5 +1,6 @@
 package org.lins.mmmjjkx.fakeplayermaker.commands.sub;
 
+import io.github.linsminecraftstudio.polymer.command.PolymerCommand;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.lins.mmmjjkx.fakeplayermaker.FPMRecoded;
@@ -12,6 +13,8 @@ import java.util.Map;
 public class TeleportHereCommand extends FPMSubCmd {
     public TeleportHereCommand() {
         super("teleporthere", "tphere");
+
+        addArgument("player", PolymerCommand.ArgumentType.REQUIRED);
     }
 
     @Override

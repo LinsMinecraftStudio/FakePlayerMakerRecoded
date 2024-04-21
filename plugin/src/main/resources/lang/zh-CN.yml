@@ -11,6 +11,8 @@ command:
     &a正在运行 FakePlayerMaker-Recoded v%1$s 作者 %2$s. 
     &b输入 /fpm help 获取帮助.
   help:
+    respawn: "让假人重生"
+    help: "显示帮助信息"
     chat: "让玩家在服务器里聊天(聊天内容没有签名)"
     spawn: "创建一个你自己的假人并进入游戏"
     remove: "从服务器上删除一个假人并删除他的数据（仅FPM）"
