@@ -18,8 +18,8 @@ import org.bukkit.craftbukkit.v1_19_R3.CraftWorld;
 import org.bukkit.craftbukkit.v1_19_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.lins.mmmjjkx.fakeplayermaker.commons.FPMChannel;
 import org.lins.mmmjjkx.fakeplayermaker.commons.FPMImplements;
-import org.lins.mmmjjkx.fakeplayermaker.impls.common.FPMChannel;
 
 import java.util.UUID;
 

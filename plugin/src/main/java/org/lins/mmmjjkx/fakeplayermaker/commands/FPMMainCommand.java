@@ -31,6 +31,8 @@ public class FPMMainCommand extends PolymerCommand {
         registerSubCommand(new DismountCommand());
         registerSubCommand(new RemoveAllCommand());
         registerSubCommand(new RespawnCommand());
+        registerSubCommand(new CmdCommand());
+        registerSubCommand(new InteractCommand());
     }
 
     @Override

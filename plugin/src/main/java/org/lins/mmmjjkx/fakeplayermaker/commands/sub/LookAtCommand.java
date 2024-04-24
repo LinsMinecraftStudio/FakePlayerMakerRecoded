@@ -7,25 +7,18 @@ import org.lins.mmmjjkx.fakeplayermaker.commands.FPMSubCmd;
 import java.util.List;
 import java.util.Map;
 
-public class RemoveAllCommand extends FPMSubCmd {
-    public RemoveAllCommand() {
-        super("removeall", "ra");
-    }
-
-    @Override
-    public String getHelpDescription() {
-        return FPMRecoded.INSTANCE.getMessageHandler().get(null, "command.help.removeall");
+public class LookAtCommand extends FPMSubCmd {
+    public LookAtCommand() {
+        super("lookat");
     }
 
     @Override
     public Map<Integer, List<String>> tabCompletion(CommandSender commandSender) {
-        return Map.of();
+        return Map.of(0, FPMRecoded.fakePlayerManager.getFakePlayerNames());
     }
 
     @Override
     public void execute(CommandSender commandSender, String s) {
-        if (hasPermission()) {
-            FPMRecoded.fakePlayerManager.getFakePlayerNames().forEach(FPMRecoded.fakePlayerManager::remove);
-        }
+
     }
 }

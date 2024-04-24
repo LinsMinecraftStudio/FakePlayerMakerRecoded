@@ -42,5 +42,7 @@ public abstract class PlayerActionImplements {
 
     public abstract void sneak(Object player, boolean sneak);
 
-    public abstract void setupValues(Object player, ValueCollection values);
+    public abstract void setupValues(Object player, SetupValueCollection values);
+
+    public abstract void interact(Object player, InteractHand hand);
 }

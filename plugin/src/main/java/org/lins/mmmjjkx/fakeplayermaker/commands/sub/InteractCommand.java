@@ -5,6 +5,7 @@ import org.bukkit.command.CommandSender;
 import org.lins.mmmjjkx.fakeplayermaker.FPMRecoded;
 import org.lins.mmmjjkx.fakeplayermaker.commands.FPMSubCmd;
 import org.lins.mmmjjkx.fakeplayermaker.commons.InteractHand;
+import org.lins.mmmjjkx.fakeplayermaker.commons.PlayerActionImplements;
 
 import java.util.Arrays;
 import java.util.List;
@@ -52,9 +53,7 @@ public class InteractCommand extends FPMSubCmd {
                 return;
             }
 
-        /*
-        PlayerActionImplements.getCurrent().interact(player, hand);
-         */
+            PlayerActionImplements.getCurrent().interact(player, hand);
         }
     }
 }

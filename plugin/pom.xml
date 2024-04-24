@@ -47,12 +47,6 @@
         <!-- implementation dependencies -->
         <dependency>
             <groupId>me.mmmjjkx</groupId>
-            <artifactId>impl-common</artifactId>
-            <version>1.0-SNAPSHOT</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>me.mmmjjkx</groupId>
             <artifactId>impl-v1_19_R3</artifactId>
             <version>1.0-SNAPSHOT</version>
             <scope>compile</scope>

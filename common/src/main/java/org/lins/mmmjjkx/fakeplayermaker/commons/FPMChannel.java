@@ -1,4 +1,4 @@
-package org.lins.mmmjjkx.fakeplayermaker.impls.common;
+package org.lins.mmmjjkx.fakeplayermaker.commons;
 
 import io.netty.channel.*;
 
@@ -20,7 +20,7 @@ public class FPMChannel extends AbstractChannel {
         return new AbstractUnsafe() {
             @Override
             public void connect(SocketAddress socketAddress, SocketAddress socketAddress1, ChannelPromise channelPromise) {
-                channelPromise.setSuccess();
+                safeSetSuccess(channelPromise);
             }
         };
     }
@@ -58,6 +58,7 @@ public class FPMChannel extends AbstractChannel {
 
     @Override
     protected void doWrite(ChannelOutboundBuffer channelOutboundBuffer) {
+        channelOutboundBuffer.remove();
     }
 
     @Override

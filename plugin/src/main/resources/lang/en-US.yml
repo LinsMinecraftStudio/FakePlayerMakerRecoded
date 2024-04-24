@@ -7,10 +7,13 @@ command:
   reload-success: "&aPlugin reloaded successfully."
   no_player: "&cYou must enter a fake player name."
   no_skin_name: "&cYou must enter a skin name."
+  no_command: "&cYou must enter a command to execute."
+  not_allowed_command: "&cYou are not allowed to execute this command using fake players."
   info: |- 
     &aRunning FakePlayerMaker-Recoded v%1$s by %2$s. 
     &bRun /fpm help to get help.
   help:
+    cmd: "Let a fake player perform a command"
     respawn: "Respawn a fake player"
     help: "Get the help message of the plugin"
     chat: "Let a fake player chat in the server(chat context is unsigned)"

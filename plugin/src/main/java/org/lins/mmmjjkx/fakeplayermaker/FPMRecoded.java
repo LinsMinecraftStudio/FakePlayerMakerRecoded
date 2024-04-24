@@ -2,6 +2,8 @@ package org.lins.mmmjjkx.fakeplayermaker;
 
 import io.github.linsminecraftstudio.polymer.command.PolymerCommand;
 import io.github.linsminecraftstudio.polymer.objects.plugin.PolymerPlugin;
+import io.github.linsminecraftstudio.polymer.utils.ObjectConverter;
+import io.github.linsminecraftstudio.polymer.utils.OtherUtils;
 import org.lins.mmmjjkx.fakeplayermaker.commands.FPMMainCommand;
 import org.lins.mmmjjkx.fakeplayermaker.commons.FPMPlugin;
 import org.lins.mmmjjkx.fakeplayermaker.commons.Instances;
@@ -41,6 +43,20 @@ public final class FPMRecoded extends PolymerPlugin implements FPMPlugin {
         fakePlayerSaver = new FakePlayerSaver(this);
         fakePlayerManager = new FakePlayerManager();
 
+        if (getConfig().getBoolean("checkUpdate")) {
+            new OtherUtils.Updater(111767, (ver, success) -> {
+                if (success) {
+                    if (ver.equals(getPluginVersion())) {
+                        getComponentLogger().info(ObjectConverter.toComponent("&aYou are using the latest version!"));
+                    } else {
+                        getLogger().warning("There is a new version available! New version: " + ver + " | Your version: " + getPluginVersion());
+                    }
+                } else {
+                    getComponentLogger().warn(ObjectConverter.toComponent("&4Failed to check for updates!"));
+                }
+            });
+        }
+
         new AutoRespawn();
     }
 
@@ -63,7 +79,7 @@ public final class FPMRecoded extends PolymerPlugin implements FPMPlugin {
 
     @Override
     public String requireVersion() {
-        return "1.4.4";
+        return "1.4.5";
     }
 
     @Override

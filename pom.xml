@@ -13,11 +13,12 @@
     <modules>
         <module>plugin</module>
         <module>common</module>
-        <module>implementations/impl-common</module>
         <module>implementations/v1_19_R3</module>
         <module>implementations/v1_20_R1</module>
         <module>implementations/v1_20_R2</module>
         <module>implementations/v1_20_R3</module>
+
+        <module>bungee</module>
     </modules>
 
     <properties>
@@ -89,7 +90,7 @@
             <dependency>
                 <groupId>io.github.linsminecraftstudio</groupId>
                 <artifactId>Polymer-Core</artifactId>
-                <version>1.4.4-SNAPSHOT</version>
+                <version>1.4.5-SNAPSHOT</version>
                 <scope>provided</scope>
             </dependency>
             <dependency>

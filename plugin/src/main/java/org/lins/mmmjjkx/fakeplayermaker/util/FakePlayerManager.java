@@ -1,6 +1,8 @@
 package org.lins.mmmjjkx.fakeplayermaker.util;
 
 import com.mojang.authlib.GameProfile;
+import io.github.linsminecraftstudio.polymer.utils.ObjectConverter;
+import net.kyori.adventure.text.Component;
 import org.apache.commons.lang3.tuple.Pair;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -8,7 +10,7 @@ import org.bukkit.entity.Player;
 import org.lins.mmmjjkx.fakeplayermaker.FPMRecoded;
 import org.lins.mmmjjkx.fakeplayermaker.commons.FPMImplements;
 import org.lins.mmmjjkx.fakeplayermaker.commons.PlayerActionImplements;
-import org.lins.mmmjjkx.fakeplayermaker.commons.ValueCollection;
+import org.lins.mmmjjkx.fakeplayermaker.commons.SetupValueCollection;
 
 import java.util.List;
 import java.util.Map;
@@ -46,7 +48,7 @@ public class FakePlayerManager {
         IMPL.setupConnection(player);
         IMPL.addPlayer(player);
 
-        ValueCollection collection = new ValueCollection(
+        SetupValueCollection collection = new SetupValueCollection(
                 FPMRecoded.INSTANCE.getConfig().getBoolean("invulnerable", true),
                 FPMRecoded.INSTANCE.getConfig().getDouble("maxHealth", 20)
         );
@@ -58,6 +60,8 @@ public class FakePlayerManager {
             Player bk = IMPL.toBukkit(player);
             bk.teleport(location);
         }
+
+        setupDisplayName(player);
 
         PlayerActionImplements.getCurrent().setupValues(player, collection);
     }
@@ -110,5 +114,15 @@ public class FakePlayerManager {
         }
 
         return Pair.of(true, player);
+    }
+
+    private void setupDisplayName(Object player) {
+        Player player1 = IMPL.toBukkit(player);
+        String displayNamePrefix = FPMRecoded.INSTANCE.getConfig().getString("displayNamePrefix", "");
+
+        Component component = ObjectConverter.toComponent(displayNamePrefix);
+        component = component.append(Component.text(player1.getName()));
+
+        player1.displayName(component);
     }
 }

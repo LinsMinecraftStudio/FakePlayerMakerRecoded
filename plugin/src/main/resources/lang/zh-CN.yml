@@ -7,10 +7,13 @@ command:
   reload-success: "&a插件已重新加载。"
   no_player: "&c你必须输入一个假人的名称！"
   no_skin_name: "&c你必须输入一个皮肤名称！"
+  no_command: "&c你必须输入一个指令！"
+  not_allowed_command: "&c你不能使用假人去执行此指令！"
   info: |-
     &a正在运行 FakePlayerMaker-Recoded v%1$s 作者 %2$s. 
     &b输入 /fpm help 获取帮助.
   help:
+    cmd: "让假人执行指令"
     respawn: "让假人重生"
     help: "显示帮助信息"
     chat: "让玩家在服务器里聊天(聊天内容没有签名)"
