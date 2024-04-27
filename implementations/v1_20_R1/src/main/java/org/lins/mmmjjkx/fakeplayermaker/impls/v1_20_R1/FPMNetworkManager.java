@@ -1,0 +1,21 @@
+package org.lins.mmmjjkx.fakeplayermaker.impls.v1_20_R1;
+
+import net.minecraft.network.Connection;
+import net.minecraft.network.ConnectionProtocol;
+import net.minecraft.network.PacketEncoder;
+import net.minecraft.network.protocol.PacketFlow;
+import org.lins.mmmjjkx.fakeplayermaker.commons.FPMChannel;
+
+public class FPMNetworkManager extends Connection {
+    public FPMNetworkManager(PacketFlow side, FPMChannel channel) {
+        super(side);
+
+        setProtocol(ConnectionProtocol.PLAY);
+        configureSerialization(channel.pipeline(), PacketFlow.SERVERBOUND);
+
+        channel.pipeline().addLast("packet_handler", this);
+        channel.pipeline().replace(PacketEncoder.class,"encoder", new EmptyPacketEncoder(PacketFlow.SERVERBOUND));
+
+        this.channel = channel;
+    }
+}

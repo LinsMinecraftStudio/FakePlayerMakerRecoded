@@ -2,6 +2,6 @@ package org.lins.mmmjjkx.fakeplayermaker.commons;
 
 import java.util.UUID;
 
-public interface Ownable {
+public interface IFPMPlayer {
     UUID getOwnerUUID();
 }

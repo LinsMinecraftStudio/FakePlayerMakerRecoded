@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 import org.lins.mmmjjkx.fakeplayermaker.FPMRecoded;
 import org.lins.mmmjjkx.fakeplayermaker.commands.FPMSubCmd;
 import org.lins.mmmjjkx.fakeplayermaker.commons.FPMImplements;
+import org.lins.mmmjjkx.fakeplayermaker.commons.IFPMPlayer;
 
 import java.util.List;
 import java.util.Map;
@@ -35,7 +36,7 @@ public class TeleportHereCommand extends FPMSubCmd {
                 return;
             }
 
-            Object player = getFakePlayer(commandSender, playerName);
+            IFPMPlayer player = getFakePlayer(commandSender, playerName);
             if (player == null) {
                 return;
             }

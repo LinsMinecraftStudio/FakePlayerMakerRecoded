@@ -1,14 +1,13 @@
 package org.lins.mmmjjkx.fakeplayermaker.util;
 
 import com.mojang.authlib.GameProfile;
-import io.github.linsminecraftstudio.polymer.utils.ObjectConverter;
-import net.kyori.adventure.text.Component;
 import org.apache.commons.lang3.tuple.Pair;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.lins.mmmjjkx.fakeplayermaker.FPMRecoded;
 import org.lins.mmmjjkx.fakeplayermaker.commons.FPMImplements;
+import org.lins.mmmjjkx.fakeplayermaker.commons.IFPMPlayer;
 import org.lins.mmmjjkx.fakeplayermaker.commons.PlayerActionImplements;
 import org.lins.mmmjjkx.fakeplayermaker.commons.SetupValueCollection;
 
@@ -18,7 +17,7 @@ import java.util.UUID;
 
 public class FakePlayerManager {
     private final FPMImplements IMPL = FPMImplements.getCurrent();
-    private Map<String, Object> fakePlayers;
+    private Map<String, IFPMPlayer> fakePlayers;
 
     public FakePlayerManager() {
         fakePlayers = FPMRecoded.fakePlayerSaver.getFakePlayers();
@@ -41,10 +40,11 @@ public class FakePlayerManager {
     }
 
     public void join(String playerName) {
-        Object player = fakePlayers.get(playerName);
+        IFPMPlayer player = fakePlayers.get(playerName);
         if (player == null) {
             return;
         }
+
         IMPL.setupConnection(player);
         IMPL.addPlayer(player);
 
@@ -59,6 +59,8 @@ public class FakePlayerManager {
         if (location != null) {
             Player bk = IMPL.toBukkit(player);
             bk.teleport(location);
+
+            FPMRecoded.fakePlayerSaver.getReadyToTeleport().remove(profile);
         }
 
         setupDisplayName(player);
@@ -80,10 +82,10 @@ public class FakePlayerManager {
         FPMRecoded.fakePlayerSaver.removeFakePlayer(playerName);
     }
 
-    public Object create(String playerName, UUID owner, String levelName) {
+    public IFPMPlayer create(String playerName, UUID owner, String levelName) {
         UUID uuid = UUID.nameUUIDFromBytes(playerName.getBytes());
         GameProfile profile = new GameProfile(uuid, playerName);
-        Object player = IMPL.createPlayer(profile, levelName, owner);
+        IFPMPlayer player = IMPL.createPlayer(profile, levelName, owner);
         fakePlayers.put(playerName, player);
         FPMRecoded.fakePlayerSaver.saveFakePlayer(player);
 
@@ -101,8 +103,8 @@ public class FakePlayerManager {
      *         The boolean indicates whether the fake player is online or not.<br>
      *         The object is the fake player object.
      */
-    public Pair<Boolean, Object> getFakePlayer(String playerName) {
-        Object player = fakePlayers.get(playerName);
+    public Pair<Boolean, IFPMPlayer> getFakePlayer(String playerName) {
+        IFPMPlayer player = fakePlayers.get(playerName);
 
         if (player == null) {
             return Pair.of(false, null);
@@ -116,13 +118,10 @@ public class FakePlayerManager {
         return Pair.of(true, player);
     }
 
-    private void setupDisplayName(Object player) {
+    private void setupDisplayName(IFPMPlayer player) {
         Player player1 = IMPL.toBukkit(player);
-        String displayNamePrefix = FPMRecoded.INSTANCE.getConfig().getString("displayNamePrefix", "");
+        String displayNamePrefix = FPMRecoded.INSTANCE.getConfig().getString("displayNamePrefix");
 
-        Component component = ObjectConverter.toComponent(displayNamePrefix);
-        component = component.append(Component.text(player1.getName()));
-
-        player1.displayName(component);
+        player1.setDisplayName(displayNamePrefix + player1.getName());
     }
 }

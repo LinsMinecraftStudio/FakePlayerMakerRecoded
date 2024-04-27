@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 import org.lins.mmmjjkx.fakeplayermaker.FPMRecoded;
 import org.lins.mmmjjkx.fakeplayermaker.commands.FPMSubCmd;
 import org.lins.mmmjjkx.fakeplayermaker.commons.FPMImplements;
+import org.lins.mmmjjkx.fakeplayermaker.commons.IFPMPlayer;
 import org.lins.mmmjjkx.fakeplayermaker.commons.SkinUtils;
 
 import java.util.List;
@@ -45,7 +46,7 @@ public class SkinCommand extends FPMSubCmd {
                 return;
             }
 
-            Object fakePlayer = getFakePlayer(commandSender, playerName);
+            IFPMPlayer fakePlayer = getFakePlayer(commandSender, playerName);
             if (fakePlayer == null) {
                 return;
             }

@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 import org.lins.mmmjjkx.fakeplayermaker.FPMRecoded;
 import org.lins.mmmjjkx.fakeplayermaker.commands.FPMSubCmd;
 import org.lins.mmmjjkx.fakeplayermaker.commons.FPMImplements;
+import org.lins.mmmjjkx.fakeplayermaker.commons.IFPMPlayer;
 
 import java.util.List;
 import java.util.Map;
@@ -37,7 +38,7 @@ public class JoinCommand extends FPMSubCmd {
                 return;
             }
 
-            Object fakePlayer = getFakePlayer(commandSender, playerName);
+            IFPMPlayer fakePlayer = getFakePlayer(commandSender, playerName);
             if (fakePlayer == null) {
                 return;
             }

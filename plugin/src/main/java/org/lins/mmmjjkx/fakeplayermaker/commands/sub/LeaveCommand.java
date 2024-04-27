@@ -1,10 +1,10 @@
 package org.lins.mmmjjkx.fakeplayermaker.commands.sub;
 
 import io.github.linsminecraftstudio.polymer.command.PolymerCommand;
-import org.apache.commons.lang3.tuple.Pair;
 import org.bukkit.command.CommandSender;
 import org.lins.mmmjjkx.fakeplayermaker.FPMRecoded;
 import org.lins.mmmjjkx.fakeplayermaker.commands.FPMSubCmd;
+import org.lins.mmmjjkx.fakeplayermaker.commons.IFPMPlayer;
 
 import java.util.List;
 import java.util.Map;
@@ -36,13 +36,11 @@ public class LeaveCommand extends FPMSubCmd {
                 return;
             }
 
-            Pair<Boolean, Object> player = FPMRecoded.fakePlayerManager.getFakePlayer(playerName);
-            if (player.getRight() == null) {
-                FPMRecoded.INSTANCE.getMessageHandler().sendMessage(commandSender, "player_not_found");
-                return;
-            }
+            IFPMPlayer player = getFakePlayer(commandSender, playerName);
 
-            FPMRecoded.fakePlayerManager.leave(playerName);
+            if (player != null) {
+                FPMRecoded.fakePlayerManager.leave(playerName);
+            }
         }
     }
 }

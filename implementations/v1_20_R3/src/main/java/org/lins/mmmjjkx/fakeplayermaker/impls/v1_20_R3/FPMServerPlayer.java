@@ -5,11 +5,11 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ClientInformation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import org.lins.mmmjjkx.fakeplayermaker.commons.Ownable;
+import org.lins.mmmjjkx.fakeplayermaker.commons.IFPMPlayer;
 
 import java.util.UUID;
 
-public class FPMServerPlayer extends ServerPlayer implements Ownable {
+public class FPMServerPlayer extends ServerPlayer implements IFPMPlayer {
     private final UUID ownerUUID;
 
     public FPMServerPlayer(MinecraftServer server, ServerLevel world, GameProfile profile, UUID owner) {

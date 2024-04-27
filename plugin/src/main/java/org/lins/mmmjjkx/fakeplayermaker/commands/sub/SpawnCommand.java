@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 import org.lins.mmmjjkx.fakeplayermaker.FPMRecoded;
 import org.lins.mmmjjkx.fakeplayermaker.commands.FPMSubCmd;
 import org.lins.mmmjjkx.fakeplayermaker.commons.FPMImplements;
+import org.lins.mmmjjkx.fakeplayermaker.commons.IFPMPlayer;
 import org.lins.mmmjjkx.fakeplayermaker.util.CommonUtils;
 import org.lins.mmmjjkx.fakeplayermaker.util.FakePlayerSaver;
 
@@ -70,7 +71,7 @@ public class SpawnCommand extends FPMSubCmd {
                 owner = p.getUniqueId();
             }
 
-            Object player = FPMRecoded.fakePlayerManager.create(name, owner, world.getName());
+            IFPMPlayer player = FPMRecoded.fakePlayerManager.create(name, owner, world.getName());
             FPMRecoded.fakePlayerManager.join(name);
 
             FPMRecoded.fakePlayerSaver.saveFakePlayer(player);

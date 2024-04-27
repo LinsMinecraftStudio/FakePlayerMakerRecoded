@@ -5,7 +5,6 @@ import io.github.linsminecraftstudio.polymer.objects.plugin.PolymerPlugin;
 import io.github.linsminecraftstudio.polymer.utils.ObjectConverter;
 import io.github.linsminecraftstudio.polymer.utils.OtherUtils;
 import org.lins.mmmjjkx.fakeplayermaker.commands.FPMMainCommand;
-import org.lins.mmmjjkx.fakeplayermaker.commons.FPMPlugin;
 import org.lins.mmmjjkx.fakeplayermaker.commons.Instances;
 import org.lins.mmmjjkx.fakeplayermaker.listeners.AutoRespawn;
 import org.lins.mmmjjkx.fakeplayermaker.util.FakePlayerManager;
@@ -13,16 +12,15 @@ import org.lins.mmmjjkx.fakeplayermaker.util.FakePlayerSaver;
 
 import java.util.List;
 
-public final class FPMRecoded extends PolymerPlugin implements FPMPlugin {
+public final class FPMRecoded extends PolymerPlugin{
     public static FPMRecoded INSTANCE;
 
     public static FakePlayerSaver fakePlayerSaver;
     public static FakePlayerManager fakePlayerManager;
 
-
     @Override
     public void onLoad() {
-        Instances.setFPMPlugin(this);
+        Instances.setFPM(this);
     }
 
     @Override

@@ -11,7 +11,7 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.lins.mmmjjkx.fakeplayermaker.FPMRecoded;
-import org.lins.mmmjjkx.fakeplayermaker.commons.Ownable;
+import org.lins.mmmjjkx.fakeplayermaker.commons.IFPMPlayer;
 
 import java.util.List;
 
@@ -61,8 +61,8 @@ public class CommandListeners implements Listener {
                 String[] split = c.split(" ");
                 String command = split[0];
                 String head = split.length > 1 ? split[1] : "";
-                Ownable ownable = (Ownable) nmsPlayer;
-                OfflinePlayer owner = Bukkit.getOfflinePlayer(ownable.getOwnerUUID());
+                IFPMPlayer IFPMPlayer = (IFPMPlayer) nmsPlayer;
+                OfflinePlayer owner = Bukkit.getOfflinePlayer(IFPMPlayer.getOwnerUUID());
                 command = command.replaceAll("%fakePlayer%", player.getName());
                 if (owner.getName() != null) {
                     command = command.replaceAll("%owner%", owner.getName());
@@ -85,8 +85,8 @@ public class CommandListeners implements Listener {
                 String[] split = c.split(" ");
                 String command = split[0];
                 String head = split.length > 1 ? split[1] : "";
-                Ownable ownable = (Ownable) nmsPlayer;
-                OfflinePlayer owner = Bukkit.getOfflinePlayer(ownable.getOwnerUUID());
+                IFPMPlayer IFPMPlayer = (IFPMPlayer) nmsPlayer;
+                OfflinePlayer owner = Bukkit.getOfflinePlayer(IFPMPlayer.getOwnerUUID());
                 command = command.replaceAll("%fakePlayer%", player.getName());
                 if (owner.getName() != null) {
                     command = command.replaceAll("%owner%", owner.getName());

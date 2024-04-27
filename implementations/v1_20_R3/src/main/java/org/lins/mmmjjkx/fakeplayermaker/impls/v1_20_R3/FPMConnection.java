@@ -2,7 +2,9 @@ package org.lins.mmmjjkx.fakeplayermaker.impls.v1_20_R3;
 
 import net.minecraft.network.Connection;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.level.*;
+import net.minecraft.server.level.ServerChunkCache;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.CommonListenerCookie;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.world.entity.RelativeMovement;
@@ -26,6 +28,7 @@ public class FPMConnection extends ServerGamePacketListenerImpl {
             source.move(player);
 
             player.teleportTo(d0, d1, d2);
+            resetPosition();
         }
     }
 }

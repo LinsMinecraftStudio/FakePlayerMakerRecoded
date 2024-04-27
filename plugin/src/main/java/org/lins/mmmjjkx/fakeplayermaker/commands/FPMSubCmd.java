@@ -6,7 +6,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.lins.mmmjjkx.fakeplayermaker.FPMRecoded;
-import org.lins.mmmjjkx.fakeplayermaker.commons.Ownable;
+import org.lins.mmmjjkx.fakeplayermaker.commons.IFPMPlayer;
 
 import java.util.UUID;
 
@@ -19,10 +19,10 @@ public abstract class FPMSubCmd extends SubCommand {
         super(name, aliases);
     }
 
-    protected Object getFakePlayer(CommandSender sender, String playerName) {
-        Pair<Boolean, Object> fakePlayerPair = FPMRecoded.fakePlayerManager.getFakePlayer(playerName);
+    protected IFPMPlayer getFakePlayer(CommandSender sender, String playerName) {
+        Pair<Boolean, IFPMPlayer> fakePlayerPair = FPMRecoded.fakePlayerManager.getFakePlayer(playerName);
 
-        Object fakePlayer;
+        IFPMPlayer fakePlayer;
 
         if (fakePlayerPair.getLeft()) {
             fakePlayer = fakePlayerPair.getRight();
@@ -35,7 +35,7 @@ public abstract class FPMSubCmd extends SubCommand {
         }
 
         if (fakePlayer != null) {
-            return isHisOwn(sender, ((Ownable) fakePlayer).getOwnerUUID()) ? fakePlayer : null;
+            return isHisOwn(sender, fakePlayer.getOwnerUUID()) ? fakePlayer : null;
         }
 
         return null;

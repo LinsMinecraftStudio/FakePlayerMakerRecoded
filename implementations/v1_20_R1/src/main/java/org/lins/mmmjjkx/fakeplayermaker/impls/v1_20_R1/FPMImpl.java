@@ -4,8 +4,6 @@ import com.mojang.authlib.GameProfile;
 import io.netty.channel.DefaultEventLoop;
 import io.netty.channel.EventLoop;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import net.minecraft.network.Connection;
-import net.minecraft.network.ConnectionProtocol;
 import net.minecraft.network.protocol.PacketFlow;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ChunkMap;
@@ -15,11 +13,11 @@ import net.minecraft.server.players.PlayerList;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.craftbukkit.v1_20_R1.CraftWorld;
-import org.bukkit.craftbukkit.v1_20_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.lins.mmmjjkx.fakeplayermaker.commons.FPMChannel;
 import org.lins.mmmjjkx.fakeplayermaker.commons.FPMImplements;
+import org.lins.mmmjjkx.fakeplayermaker.commons.IFPMPlayer;
 
 import java.util.UUID;
 
@@ -27,7 +25,7 @@ public final class FPMImpl extends FPMImplements {
     private final EventLoop LOOP = new DefaultEventLoop();
 
     @Override
-    public @NotNull Object createPlayer(@NotNull GameProfile profile, @NotNull String levelName, @NotNull UUID owner) {
+    public @NotNull IFPMPlayer createPlayer(@NotNull GameProfile profile, @NotNull String levelName, @NotNull UUID owner) {
         World bk = Bukkit.getWorld(levelName);
         ServerLevel world;
         if (bk == null) {
@@ -40,17 +38,13 @@ public final class FPMImpl extends FPMImplements {
 
     @Override
     public void setupConnection(@NotNull Object player) {
-        FPMChannel channel = new FPMChannel();
         ServerPlayer serverPlayer = (ServerPlayer) player;
+
+        FPMChannel channel = new FPMChannel();
 
         LOOP.register(channel);
 
-        Connection connection = new Connection(PacketFlow.SERVERBOUND);
-        connection.channel = channel;
-
-        Connection.configureSerialization(channel.pipeline(), PacketFlow.SERVERBOUND);
-
-        connection.setProtocol(ConnectionProtocol.PLAY);
+        FPMNetworkManager connection = new FPMNetworkManager(PacketFlow.SERVERBOUND, channel);
 
         serverPlayer.connection = new FPMConnection(MinecraftServer.getServer(), connection, serverPlayer);
     }
@@ -85,12 +79,7 @@ public final class FPMImpl extends FPMImplements {
     }
 
     @Override
-    public Object toNms(@NotNull Player player) {
-        return ((CraftPlayer) player).getHandle();
-    }
-
-    @Override
-    public Player toBukkit(@NotNull Object nmsPlayer) {
+    public Player toBukkit(@NotNull IFPMPlayer nmsPlayer) {
         return ((ServerPlayer) nmsPlayer).getBukkitEntity();
     }
 }

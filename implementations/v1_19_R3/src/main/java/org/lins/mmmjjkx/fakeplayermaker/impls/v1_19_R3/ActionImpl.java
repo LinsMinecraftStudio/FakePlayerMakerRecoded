@@ -17,6 +17,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
+import org.lins.mmmjjkx.fakeplayermaker.commons.Instances;
 import org.lins.mmmjjkx.fakeplayermaker.commons.InteractHand;
 import org.lins.mmmjjkx.fakeplayermaker.commons.PlayerActionImplements;
 import org.lins.mmmjjkx.fakeplayermaker.commons.SetupValueCollection;
@@ -53,10 +54,12 @@ public final class ActionImpl extends PlayerActionImplements {
     public void chat(Object player, String message) {
         ServerPlayer serverPlayer = (ServerPlayer) player;
         PlayerChatMessage playerChatMessage = PlayerChatMessage.unsigned(serverPlayer.getUUID(), message);
+
         ChatProcessor chatProcessor = new ChatProcessor(
                 MinecraftServer.getServer(), serverPlayer, playerChatMessage, true
         );
-        chatProcessor.process();
+
+        Instances.getFPM().getScheduler().scheduleAsync(chatProcessor::process);
     }
 
     @Override

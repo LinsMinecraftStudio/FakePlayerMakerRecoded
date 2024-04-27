@@ -13,7 +13,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.lins.mmmjjkx.fakeplayermaker.FPMRecoded;
 import org.lins.mmmjjkx.fakeplayermaker.commons.FPMImplements;
-import org.lins.mmmjjkx.fakeplayermaker.commons.Ownable;
+import org.lins.mmmjjkx.fakeplayermaker.commons.IFPMPlayer;
 import org.lins.mmmjjkx.fakeplayermaker.commons.SkinUtils;
 
 import java.io.File;
@@ -26,7 +26,7 @@ public class FakePlayerSaver extends SingleFileStorage {
     public static final UUID NO_OWNER_UUID = UUID.fromString("00000000-0000-0000-0000-000000000000");
 
     private static final FPMImplements IMPL = FPMImplements.getCurrent();
-    private final Map<String, Object> fakePlayers;
+    private final Map<String, IFPMPlayer> fakePlayers;
     private final Map<GameProfile, Location> readyToTeleport;
 
     public FakePlayerSaver(FPMRecoded fpm) {
@@ -38,13 +38,11 @@ public class FakePlayerSaver extends SingleFileStorage {
     }
 
     @SneakyThrows
-    public void saveFakePlayer(Object player) {
+    public void saveFakePlayer(IFPMPlayer player) {
         GameProfile profile = IMPL.getGameProfile(player);
         ConfigurationSection section = createSection(profile.getName());
         section.set("uuid", profile.getId().toString());
-        if (player instanceof Ownable o) {
-            section.set("owner", o.getOwnerUUID().toString());
-        }
+        section.set("owner", player.getOwnerUUID().toString());
         Player bk = IMPL.toBukkit(player);
         Pair<String, String> skinInfo = SkinUtils.getSkinInfo(bk);
         String url = skinInfo.getLeft();
@@ -79,7 +77,7 @@ public class FakePlayerSaver extends SingleFileStorage {
 
             GameProfile profile = new GameProfile(uuid, name);
 
-            Object player = IMPL.createPlayer(profile, first.getName(), owner);
+            IFPMPlayer player = IMPL.createPlayer(profile, first.getName(), owner);
             Player bk = IMPL.toBukkit(player);
             if (location_str != null) {
                 readyToTeleport.put(profile, ObjectConverter.toLocation(location_str));

@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 import org.lins.mmmjjkx.fakeplayermaker.FPMRecoded;
 import org.lins.mmmjjkx.fakeplayermaker.commands.FPMSubCmd;
 import org.lins.mmmjjkx.fakeplayermaker.commons.FPMImplements;
+import org.lins.mmmjjkx.fakeplayermaker.commons.IFPMPlayer;
 
 import java.lang.reflect.Proxy;
 import java.util.List;
@@ -45,7 +46,7 @@ public class CmdCommand extends FPMSubCmd {
                 return;
             }
 
-            Object fakePlayer = getFakePlayer(commandSender, player);
+            IFPMPlayer fakePlayer = getFakePlayer(commandSender, player);
             if (fakePlayer != null) {
                 if (command.startsWith("fakeplayermaker") || command.startsWith("fpm") || command.startsWith("fakeplayer")) {
                     FPMRecoded.INSTANCE.getMessageHandler().sendMessage(commandSender, "command.not_allowed_command");
