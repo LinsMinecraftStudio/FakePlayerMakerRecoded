@@ -7,7 +7,7 @@ import org.lins.mmmjjkx.fakeplayermaker.FPMRecoded;
 import org.lins.mmmjjkx.fakeplayermaker.commands.FPMSubCmd;
 import org.lins.mmmjjkx.fakeplayermaker.commons.FPMImplements;
 import org.lins.mmmjjkx.fakeplayermaker.commons.IFPMPlayer;
-import org.lins.mmmjjkx.fakeplayermaker.commons.SkinUtils;
+import org.lins.mmmjjkx.fakeplayermaker.util.SkinUtils;
 
 import java.util.List;
 import java.util.Map;

@@ -1,21 +1,25 @@
 package org.lins.mmmjjkx.fakeplayermaker.util;
 
 import com.mojang.authlib.GameProfile;
+import io.github.linsminecraftstudio.polymer.utils.ObjectConverter;
+import me.neznamy.tab.shared.TAB;
+import me.neznamy.tab.shared.TabConstants;
+import net.kyori.adventure.text.Component;
 import org.apache.commons.lang3.tuple.Pair;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.lins.mmmjjkx.fakeplayermaker.FPMRecoded;
-import org.lins.mmmjjkx.fakeplayermaker.commons.FPMImplements;
-import org.lins.mmmjjkx.fakeplayermaker.commons.IFPMPlayer;
-import org.lins.mmmjjkx.fakeplayermaker.commons.PlayerActionImplements;
-import org.lins.mmmjjkx.fakeplayermaker.commons.SetupValueCollection;
+import org.lins.mmmjjkx.fakeplayermaker.commons.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 
-public class FakePlayerManager {
+public class FakePlayerManager implements IFakePlayerManager {
     private final FPMImplements IMPL = FPMImplements.getCurrent();
     private Map<String, IFPMPlayer> fakePlayers;
 
@@ -45,31 +49,11 @@ public class FakePlayerManager {
             return;
         }
 
-        IMPL.setupConnection(player);
-        IMPL.addPlayer(player);
-
-        SetupValueCollection collection = new SetupValueCollection(
-                FPMRecoded.INSTANCE.getConfig().getBoolean("invulnerable", true),
-                FPMRecoded.INSTANCE.getConfig().getDouble("maxHealth", 20)
-        );
-
-        GameProfile profile = IMPL.getGameProfile(player);
-        Location location = FPMRecoded.fakePlayerSaver.getReadyToTeleport().get(profile);
-
-        if (location != null) {
-            Player bk = IMPL.toBukkit(player);
-            bk.teleport(location);
-
-            FPMRecoded.fakePlayerSaver.getReadyToTeleport().remove(profile);
-        }
-
-        setupDisplayName(player);
-
-        PlayerActionImplements.getCurrent().setupValues(player, collection);
+        join(player);
     }
 
     public void leave(String playerName) {
-        Object player = fakePlayers.get(playerName);
+        IFPMPlayer player = fakePlayers.get(playerName);
         if (player == null) {
             return;
         }
@@ -120,8 +104,59 @@ public class FakePlayerManager {
 
     private void setupDisplayName(IFPMPlayer player) {
         Player player1 = IMPL.toBukkit(player);
-        String displayNamePrefix = FPMRecoded.INSTANCE.getConfig().getString("displayNamePrefix");
+        String displayNamePrefix = FPMRecoded.INSTANCE.getConfig().getString("displayNamePrefix", "");
 
-        player1.setDisplayName(displayNamePrefix + player1.getName());
+        if (!displayNamePrefix.isEmpty()) {
+            Component component = ObjectConverter.toComponent(displayNamePrefix);
+            component = component.append(Component.text(player1.getName()));
+
+            player1.displayName(component);
+            player1.playerListName(component);
+
+            String finalDisplayName = displayNamePrefix + player1.getName();
+            if (Bukkit.getPluginManager().isPluginEnabled("TAB")) {
+                Objects.requireNonNull(TAB.getInstance().getPlayer(player1.getUniqueId())).getProperty(TabConstants.Property.TABPREFIX).setTemporaryValue(finalDisplayName);
+            }
+        }
+    }
+
+    @Override
+    public @NotNull IFPMPlayer create(UUID owner, String name) {
+        Location loc = FPMRecoded.INSTANCE.getConfig().getLocation("default-spawn-location", Bukkit.getWorlds().get(0).getSpawnLocation());
+        return create(name, owner, loc.getWorld().getName());
+    }
+
+    @Override
+    public @Nullable IFPMPlayer get(String name) {
+        return getFakePlayer(name).getRight();
+    }
+
+    @Override
+    public void join(IFPMPlayer player) {
+        GameProfile profile = IMPL.getGameProfile(player);
+        if (!fakePlayers.containsKey(profile.getName())) {
+            fakePlayers.put(profile.getName(), player);
+        }
+
+        IMPL.setupConnection(player);
+        IMPL.addPlayer(player);
+
+        SetupValueCollection collection = new SetupValueCollection(
+                FPMRecoded.INSTANCE.getConfig().getBoolean("invulnerable", true),
+                FPMRecoded.INSTANCE.getConfig().getDouble("maxHealth", 20)
+        );
+
+        Location location = FPMRecoded.fakePlayerSaver.getReadyToTeleport().get(profile);
+
+        if (location != null) {
+            Player bk = IMPL.toBukkit(player);
+            bk.teleport(location);
+
+            FPMRecoded.fakePlayerSaver.getReadyToTeleport().remove(profile);
+        }
+
+        setupDisplayName(player);
+
+        PlayerActionImplements.getCurrent().setupValues(player, collection);
     }
 }

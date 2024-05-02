@@ -8,8 +8,16 @@ public class Instances {
     @Getter
     private static PolymerPlugin FPM;
 
+    @Getter
+    private static IFakePlayerManager fakePlayerManager;
+
     public static void setFPM(PolymerPlugin FPM) {
         Preconditions.checkNotNull(FPM);
         Instances.FPM = FPM;
+    }
+
+    public static void setFakePlayerManager(IFakePlayerManager fakePlayerManager) {
+        Preconditions.checkNotNull(fakePlayerManager);
+        Instances.fakePlayerManager = fakePlayerManager;
     }
 }

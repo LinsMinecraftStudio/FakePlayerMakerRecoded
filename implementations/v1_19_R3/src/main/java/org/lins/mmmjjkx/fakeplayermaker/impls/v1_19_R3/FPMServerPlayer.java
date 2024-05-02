@@ -21,6 +21,4 @@ public class FPMServerPlayer extends ServerPlayer implements IFPMPlayer {
     public UUID getOwnerUUID() {
         return ownerUUID;
     }
-
-
 }

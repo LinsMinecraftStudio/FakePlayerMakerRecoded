@@ -32,17 +32,17 @@ public abstract class PlayerActionImplements {
         }
     }
 
-    public abstract void mountNearest(Object player, int radius);
+    public abstract void mountNearest(IFPMPlayer player, int radius);
 
-    public abstract void dismount(Object player);
+    public abstract void dismount(IFPMPlayer player);
 
-    public abstract void lookAt(Object player, double x, double y, double z);
+    public abstract void lookAt(IFPMPlayer player, double x, double y, double z);
 
-    public abstract void chat(Object player, String message);
+    public abstract void chat(IFPMPlayer player, String message);
 
-    public abstract void sneak(Object player, boolean sneak);
+    public abstract void sneak(IFPMPlayer player, boolean sneak);
 
-    public abstract void setupValues(Object player, SetupValueCollection values);
+    public abstract void setupValues(IFPMPlayer player, SetupValueCollection values);
 
-    public abstract void interact(Object player, InteractHand hand);
+    public abstract void interact(IFPMPlayer player, InteractHand hand);
 }

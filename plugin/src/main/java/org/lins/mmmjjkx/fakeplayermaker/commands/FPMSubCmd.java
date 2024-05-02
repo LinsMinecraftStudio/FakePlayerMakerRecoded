@@ -22,6 +22,11 @@ public abstract class FPMSubCmd extends SubCommand {
     protected IFPMPlayer getFakePlayer(CommandSender sender, String playerName) {
         Pair<Boolean, IFPMPlayer> fakePlayerPair = FPMRecoded.fakePlayerManager.getFakePlayer(playerName);
 
+        if (fakePlayerPair.getRight() == null) {
+            FPMRecoded.INSTANCE.getMessageHandler().sendMessage(sender, "player_not_found");
+            return null;
+        }
+
         IFPMPlayer fakePlayer;
 
         if (fakePlayerPair.getLeft()) {

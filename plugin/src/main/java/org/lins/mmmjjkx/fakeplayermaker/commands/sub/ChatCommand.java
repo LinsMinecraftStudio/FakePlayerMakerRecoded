@@ -4,6 +4,7 @@ import io.github.linsminecraftstudio.polymer.command.PolymerCommand;
 import org.bukkit.command.CommandSender;
 import org.lins.mmmjjkx.fakeplayermaker.FPMRecoded;
 import org.lins.mmmjjkx.fakeplayermaker.commands.FPMSubCmd;
+import org.lins.mmmjjkx.fakeplayermaker.commons.IFPMPlayer;
 import org.lins.mmmjjkx.fakeplayermaker.commons.PlayerActionImplements;
 
 import java.util.List;
@@ -13,6 +14,7 @@ public class ChatCommand extends FPMSubCmd {
     public ChatCommand() {
         super("chat");
 
+        addArgument("player", PolymerCommand.ArgumentType.REQUIRED);
         addArgument("message", PolymerCommand.ArgumentType.REQUIRED);
     }
 
@@ -41,7 +43,7 @@ public class ChatCommand extends FPMSubCmd {
                 return;
             }
 
-            Object fakePlayer = getFakePlayer(commandSender, player);
+            IFPMPlayer fakePlayer = getFakePlayer(commandSender, player);
             if (fakePlayer != null) {
                 PlayerActionImplements.getCurrent().chat(fakePlayer, message.replaceAll("%sp%", " "));
             }

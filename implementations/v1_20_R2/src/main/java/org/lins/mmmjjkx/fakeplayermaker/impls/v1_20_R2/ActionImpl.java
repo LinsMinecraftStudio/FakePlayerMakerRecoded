@@ -3,6 +3,7 @@ package org.lins.mmmjjkx.fakeplayermaker.impls.v1_20_R2;
 import io.github.linsminecraftstudio.polymer.utils.IterableUtil;
 import io.papermc.paper.adventure.ChatProcessor;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
+import net.minecraft.network.chat.ChatDecorator;
 import net.minecraft.network.chat.PlayerChatMessage;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
@@ -17,16 +18,13 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
-import org.lins.mmmjjkx.fakeplayermaker.commons.Instances;
-import org.lins.mmmjjkx.fakeplayermaker.commons.InteractHand;
-import org.lins.mmmjjkx.fakeplayermaker.commons.PlayerActionImplements;
-import org.lins.mmmjjkx.fakeplayermaker.commons.SetupValueCollection;
+import org.lins.mmmjjkx.fakeplayermaker.commons.*;
 
 import java.util.List;
 
 public final class ActionImpl extends PlayerActionImplements {
     @Override
-    public void mountNearest(Object player, int radius) {
+    public void mountNearest(IFPMPlayer player, int radius) {
         ServerPlayer serverPlayer = (ServerPlayer) player;
         ServerLevel level = serverPlayer.serverLevel();
         AABB boundingBox = serverPlayer.getBoundingBox();
@@ -39,21 +37,23 @@ public final class ActionImpl extends PlayerActionImplements {
     }
 
     @Override
-    public void dismount(Object player) {
+    public void dismount(IFPMPlayer player) {
         ServerPlayer serverPlayer = (ServerPlayer) player;
         serverPlayer.stopRiding();
     }
 
     @Override
-    public void lookAt(Object player, double x, double y, double z) {
+    public void lookAt(IFPMPlayer player, double x, double y, double z) {
         ServerPlayer serverPlayer = (ServerPlayer) player;
         serverPlayer.lookAt(EntityAnchorArgument.Anchor.EYES, new Vec3(x, y, z));
     }
 
     @Override
-    public void chat(Object player, String message) {
+    public void chat(IFPMPlayer player, String message) {
         ServerPlayer serverPlayer = (ServerPlayer) player;
         PlayerChatMessage playerChatMessage = PlayerChatMessage.unsigned(serverPlayer.getUUID(), message);
+
+        playerChatMessage.withResult(new ChatDecorator.ModernResult(net.kyori.adventure.text.Component.text(message), false, true));
 
         ChatProcessor chatProcessor = new ChatProcessor(
                 MinecraftServer.getServer(), serverPlayer, playerChatMessage, true
@@ -63,14 +63,14 @@ public final class ActionImpl extends PlayerActionImplements {
     }
 
     @Override
-    public void sneak(Object player, boolean sneak) {
+    public void sneak(IFPMPlayer player, boolean sneak) {
         ServerPlayer serverPlayer = (ServerPlayer) player;
         serverPlayer.setShiftKeyDown(sneak);
         serverPlayer.setPose(sneak ? Pose.CROUCHING : Pose.STANDING);
     }
 
     @Override
-    public void setupValues(Object player, SetupValueCollection values) {
+    public void setupValues(IFPMPlayer player, SetupValueCollection values) {
         ServerPlayer serverPlayer = (ServerPlayer) player;
 
         Player bk = serverPlayer.getBukkitEntity();
@@ -80,7 +80,7 @@ public final class ActionImpl extends PlayerActionImplements {
     }
 
     @Override
-    public void interact(Object player, InteractHand hand) {
+    public void interact(IFPMPlayer player, InteractHand hand) {
         ServerPlayer serverPlayer = (ServerPlayer) player;
 
         serverPlayer.interact(serverPlayer, hand == InteractHand.MAIN_HAND ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND);

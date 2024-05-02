@@ -4,6 +4,7 @@ import io.github.linsminecraftstudio.polymer.command.PolymerCommand;
 import org.bukkit.command.CommandSender;
 import org.lins.mmmjjkx.fakeplayermaker.FPMRecoded;
 import org.lins.mmmjjkx.fakeplayermaker.commands.FPMSubCmd;
+import org.lins.mmmjjkx.fakeplayermaker.commons.IFPMPlayer;
 import org.lins.mmmjjkx.fakeplayermaker.commons.PlayerActionImplements;
 
 import java.util.List;
@@ -34,7 +35,7 @@ public class MountCommand extends FPMSubCmd {
                 return;
             }
 
-            Object player = getFakePlayer(commandSender, playerName);
+            IFPMPlayer player = getFakePlayer(commandSender, playerName);
             if (player == null) {
                 return;
             }

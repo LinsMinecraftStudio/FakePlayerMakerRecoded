@@ -38,7 +38,7 @@ public final class FPMImpl extends FPMImplements {
     }
 
     @Override
-    public void setupConnection(@NotNull Object player) {
+    public void setupConnection(@NotNull IFPMPlayer player) {
         ServerPlayer serverPlayer = (ServerPlayer) player;
 
         FPMChannel channel = new FPMChannel();
@@ -51,7 +51,7 @@ public final class FPMImpl extends FPMImplements {
     }
 
     @Override
-    public void addPlayer(@NotNull Object player) {
+    public void addPlayer(@NotNull IFPMPlayer player) {
         PlayerList playerList = MinecraftServer.getServer().getPlayerList();
         ServerPlayer serverPlayer = (ServerPlayer) player;
 
@@ -59,7 +59,7 @@ public final class FPMImpl extends FPMImplements {
     }
 
     @Override
-    public void removePlayer(@NotNull Object player) {
+    public void removePlayer(@NotNull IFPMPlayer player) {
         PlayerList playerList = MinecraftServer.getServer().getPlayerList();
         ServerPlayer serverPlayer = (ServerPlayer) player;
 
@@ -75,7 +75,7 @@ public final class FPMImpl extends FPMImplements {
     }
 
     @Override
-    public @NotNull GameProfile getGameProfile(@NotNull Object player) {
+    public @NotNull GameProfile getGameProfile(@NotNull IFPMPlayer player) {
         return ((ServerPlayer) player).gameProfile;
     }
 
@@ -83,4 +83,5 @@ public final class FPMImpl extends FPMImplements {
     public Player toBukkit(@NotNull IFPMPlayer nmsPlayer) {
         return ((ServerPlayer) nmsPlayer).getBukkitEntity();
     }
+
 }

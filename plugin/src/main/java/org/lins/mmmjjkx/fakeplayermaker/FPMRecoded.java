@@ -19,11 +19,6 @@ public final class FPMRecoded extends PolymerPlugin{
     public static FakePlayerManager fakePlayerManager;
 
     @Override
-    public void onLoad() {
-        Instances.setFPM(this);
-    }
-
-    @Override
     public void onPlEnable() {
         INSTANCE = this;
 
@@ -40,6 +35,9 @@ public final class FPMRecoded extends PolymerPlugin{
 
         fakePlayerSaver = new FakePlayerSaver(this);
         fakePlayerManager = new FakePlayerManager();
+
+        Instances.setFPM(this);
+        Instances.setFakePlayerManager(fakePlayerManager);
 
         if (getConfig().getBoolean("checkUpdate")) {
             new OtherUtils.Updater(111767, (ver, success) -> {

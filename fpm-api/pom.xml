@@ -5,12 +5,13 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>me.mmmjjkx</groupId>
+        <groupId>io.github.linsminecraftstudio</groupId>
         <artifactId>FPMRecodedContainer</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>common</artifactId>
+    <artifactId>fpm-api</artifactId>
+    <version>${revision}</version>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>

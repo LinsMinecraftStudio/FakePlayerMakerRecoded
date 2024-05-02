@@ -14,7 +14,7 @@ import java.util.Map;
 
 public class CmdCommand extends FPMSubCmd {
     public CmdCommand() {
-        super("cmd");
+        super("command");
 
         addArgument("player", PolymerCommand.ArgumentType.REQUIRED);
         addArgument("command", PolymerCommand.ArgumentType.REQUIRED);

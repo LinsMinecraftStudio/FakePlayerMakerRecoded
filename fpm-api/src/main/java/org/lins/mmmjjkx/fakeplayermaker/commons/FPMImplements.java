@@ -40,13 +40,13 @@ public abstract class FPMImplements {
 
     public abstract @NotNull IFPMPlayer createPlayer(@NotNull GameProfile profile, @NotNull String levelName, @NotNull UUID owner);
 
-    public abstract void setupConnection(@NotNull Object player);
+    public abstract void setupConnection(@NotNull IFPMPlayer player);
 
-    public abstract void addPlayer(@NotNull Object player);
+    public abstract void addPlayer(@NotNull IFPMPlayer player);
 
-    public abstract void removePlayer(@NotNull Object player);
+    public abstract void removePlayer(@NotNull IFPMPlayer player);
 
-    public abstract @NotNull GameProfile getGameProfile(@NotNull Object player);
+    public abstract @NotNull GameProfile getGameProfile(@NotNull IFPMPlayer player);
 
     public abstract Player toBukkit(@NotNull IFPMPlayer nmsPlayer);
 }

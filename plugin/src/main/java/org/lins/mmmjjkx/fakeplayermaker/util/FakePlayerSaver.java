@@ -14,7 +14,6 @@ import org.bukkit.entity.Player;
 import org.lins.mmmjjkx.fakeplayermaker.FPMRecoded;
 import org.lins.mmmjjkx.fakeplayermaker.commons.FPMImplements;
 import org.lins.mmmjjkx.fakeplayermaker.commons.IFPMPlayer;
-import org.lins.mmmjjkx.fakeplayermaker.commons.SkinUtils;
 
 import java.io.File;
 import java.util.HashMap;

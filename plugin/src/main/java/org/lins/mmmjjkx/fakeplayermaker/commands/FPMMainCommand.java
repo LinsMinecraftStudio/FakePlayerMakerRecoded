@@ -14,7 +14,7 @@ public class FPMMainCommand extends PolymerCommand {
     public static final FPMMainCommand INSTANCE = new FPMMainCommand();
 
     protected FPMMainCommand() {
-        super("fakeplayermaker", FPMRecoded.INSTANCE,List.of("fpm", "fakeplayer"));
+        super("fakeplayermaker", FPMRecoded.INSTANCE, List.of("fpm", "fakeplayer"));
 
         registerSubCommand(new FPMHelpSubCommand(this));
         registerSubCommand(new RemoveCommand());
@@ -33,6 +33,7 @@ public class FPMMainCommand extends PolymerCommand {
         registerSubCommand(new RespawnCommand());
         registerSubCommand(new CmdCommand());
         registerSubCommand(new InteractCommand());
+        registerSubCommand(new LookAtCommand());
     }
 
     @Override

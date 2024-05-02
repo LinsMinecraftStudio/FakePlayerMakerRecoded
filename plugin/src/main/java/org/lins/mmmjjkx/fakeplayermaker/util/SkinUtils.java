@@ -1,4 +1,4 @@
-package org.lins.mmmjjkx.fakeplayermaker.commons;
+package org.lins.mmmjjkx.fakeplayermaker.util;
 
 import com.destroystokyo.paper.profile.PlayerProfile;
 import com.destroystokyo.paper.profile.ProfileProperty;

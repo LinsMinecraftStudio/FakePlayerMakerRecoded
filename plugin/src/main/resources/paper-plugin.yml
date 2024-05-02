@@ -5,9 +5,14 @@ api-version: "1.19"
 authors: ["mmmjjkx"]
 description: "create fake players in minecraft"
 website: "https://github.com/LinsMinecraftStudio/FakePlayerMaker-Recoded"
+has-open-classloader: true
 dependencies:
   server:
     Polymer:
       required: true
+      load: BEFORE
+      join-classpath: true
+    TAB:
+      required: false
       load: BEFORE
       join-classpath: true
