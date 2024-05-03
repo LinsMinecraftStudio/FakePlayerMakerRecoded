@@ -7,6 +7,7 @@ import io.github.linsminecraftstudio.polymer.utils.OtherUtils;
 import org.lins.mmmjjkx.fakeplayermaker.commands.FPMMainCommand;
 import org.lins.mmmjjkx.fakeplayermaker.commons.Instances;
 import org.lins.mmmjjkx.fakeplayermaker.listeners.AutoRespawn;
+import org.lins.mmmjjkx.fakeplayermaker.listeners.CommandListeners;
 import org.lins.mmmjjkx.fakeplayermaker.util.FakePlayerManager;
 import org.lins.mmmjjkx.fakeplayermaker.util.FakePlayerSaver;
 
@@ -39,6 +40,9 @@ public final class FPMRecoded extends PolymerPlugin{
         Instances.setFPM(this);
         Instances.setFakePlayerManager(fakePlayerManager);
 
+        new AutoRespawn();
+        new CommandListeners();
+
         if (getConfig().getBoolean("checkUpdate")) {
             new OtherUtils.Updater(111767, (ver, success) -> {
                 if (success) {
@@ -52,8 +56,6 @@ public final class FPMRecoded extends PolymerPlugin{
                 }
             });
         }
-
-        new AutoRespawn();
     }
 
     @Override

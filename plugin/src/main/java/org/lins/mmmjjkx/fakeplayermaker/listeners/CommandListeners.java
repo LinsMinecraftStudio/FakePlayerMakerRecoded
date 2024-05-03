@@ -68,7 +68,7 @@ public class CommandListeners implements Listener {
                     command = command.replaceAll("%owner%", owner.getName());
                 }
                 switch (head) {
-                    default -> player.performCommand(command);
+                    default -> player.performCommand(c);
                     case "console" -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
                     case "chat" -> player.chat(command);
                 }
@@ -92,7 +92,7 @@ public class CommandListeners implements Listener {
                     command = command.replaceAll("%owner%", owner.getName());
                 }
                 switch (head) {
-                    default -> player.performCommand(command);
+                    default -> player.performCommand(c);
                     case "console" -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
                     case "chat" -> player.chat(command);
                 }

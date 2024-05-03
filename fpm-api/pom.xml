@@ -24,8 +24,24 @@
             <id>nms</id>
             <url>https://repo.codemc.io/repository/nms/</url>
         </repository>
-
     </repositories>
+
+    <profiles>
+        <profile>
+            <id>ossrh</id>
+        </profile>
+    </profiles>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>ossrh</id>
+            <url>https://s01.oss.sonatype.org/content/repositories/releases/</url>
+        </repository>
+    </distributionManagement>
 
     <dependencies>
         <dependency>
