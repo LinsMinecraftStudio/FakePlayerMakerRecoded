@@ -29,3 +29,5 @@ command:
     reload: "Reload the plugin"
     teleport: "Teleport to a fake player"
     teleporthere: "Teleport a fake player to you"
+    interact: "Let a fake player interact"
+    lookat: "Let a fake player look at somewhere"

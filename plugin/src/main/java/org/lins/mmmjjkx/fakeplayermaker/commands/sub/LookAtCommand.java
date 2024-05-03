@@ -26,6 +26,11 @@ public class LookAtCommand extends FPMSubCmd {
     }
 
     @Override
+    public String getHelpDescription() {
+        return FPMRecoded.INSTANCE.getMessageHandler().get(null, "command.help.lookat");
+    }
+
+    @Override
     public void execute(CommandSender commandSender, String s) {
         if (hasPermission()) {
             String playerName = getArg(0);

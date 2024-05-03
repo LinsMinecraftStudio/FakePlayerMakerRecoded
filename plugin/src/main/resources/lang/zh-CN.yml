@@ -29,3 +29,5 @@ command:
     reload: "重载插件"
     teleport: "传送至一个假人"
     teleporthere: "让假人传送到你的位置"
+    interact: "让假人交互"
+    lookat: "让假人看向一个地方"
