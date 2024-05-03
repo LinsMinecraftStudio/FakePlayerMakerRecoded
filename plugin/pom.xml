@@ -26,8 +26,8 @@
 
     <dependencies>
         <dependency>
-            <groupId>io.papermc.paper</groupId>
-            <artifactId>paper-api</artifactId>
+            <groupId>dev.folia</groupId>
+            <artifactId>folia-api</artifactId>
         </dependency>
         <dependency>
             <groupId>io.github.linsminecraftstudio</groupId>
@@ -51,13 +51,6 @@
             <version>4.1.4</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/TAB.v4.1.4.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>com.github.NEZNAMY</groupId>
-            <artifactId>TAB-Bridge</artifactId>
-            <version>5.0.6</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/TAB-Bridge.v5.0.6.jar</systemPath>
         </dependency>
 
         <!-- implementation dependencies -->

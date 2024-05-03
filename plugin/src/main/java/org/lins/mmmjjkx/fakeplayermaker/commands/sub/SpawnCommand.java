@@ -77,7 +77,12 @@ public class SpawnCommand extends FPMSubCmd {
             FPMRecoded.fakePlayerSaver.saveFakePlayer(player);
 
             Player bk = FPMImplements.getCurrent().toBukkit(player);
-            bk.teleport(loc);
+
+            if (FPMImplements.isFolia()) {
+                bk.teleportAsync(loc);
+            } else {
+                bk.teleport(loc);
+            }
         }
     }
 }

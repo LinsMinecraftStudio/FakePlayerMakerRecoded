@@ -150,10 +150,14 @@ public class FakePlayerManager implements IFakePlayerManager {
 
         if (location != null) {
             Player bk = IMPL.toBukkit(player);
-            bk.teleport(location);
 
-            FPMRecoded.fakePlayerSaver.getReadyToTeleport().remove(profile);
+            if (FPMImplements.isFolia()) {
+                bk.teleportAsync(location).join();
+            } else {
+                bk.teleport(location);
+            }
         }
+        FPMRecoded.fakePlayerSaver.getReadyToTeleport().remove(profile);
 
         setupDisplayName(player);
 

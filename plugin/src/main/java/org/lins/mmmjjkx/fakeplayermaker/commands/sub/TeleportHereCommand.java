@@ -47,7 +47,11 @@ public class TeleportHereCommand extends FPMSubCmd {
             }
 
             Player p2 = FPMImplements.getCurrent().toBukkit(player);
-            p2.teleport(p);
+            if (FPMImplements.isFolia()) {
+                p2.teleportAsync(p.getLocation());
+            } else {
+                p2.teleport(p);
+            }
         }
     }
 }

@@ -1,6 +1,7 @@
 package org.lins.mmmjjkx.fakeplayermaker.listeners;
 
 import io.github.linsminecraftstudio.polymer.utils.ObjectConverter;
+import org.apache.commons.lang3.tuple.Pair;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -55,13 +56,13 @@ public class CommandListeners implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
         Player player = e.getPlayer();
-        Object nmsPlayer = FPMRecoded.fakePlayerManager.getFakePlayer(player.getName());
-        if (nmsPlayer != null) {
+        Pair<Boolean, IFPMPlayer> nmsPlayer = FPMRecoded.fakePlayerManager.getFakePlayer(player.getName());
+        if (nmsPlayer.getRight() != null) {
             FPMRecoded.INSTANCE.getConfig().getStringList("runCommands.onJoin").forEach(c -> {
                 String[] split = c.split(" ");
                 String command = split[0];
                 String head = split.length > 1 ? split[1] : "";
-                IFPMPlayer IFPMPlayer = (IFPMPlayer) nmsPlayer;
+                IFPMPlayer IFPMPlayer = nmsPlayer.getRight();
                 OfflinePlayer owner = Bukkit.getOfflinePlayer(IFPMPlayer.getOwnerUUID());
                 command = command.replaceAll("%fakePlayer%", player.getName());
                 if (owner.getName() != null) {
@@ -79,13 +80,13 @@ public class CommandListeners implements Listener {
     @EventHandler
     public void onQuit(PlayerQuitEvent e) {
         Player player = e.getPlayer();
-        Object nmsPlayer = FPMRecoded.fakePlayerManager.getFakePlayer(player.getName());
-        if (nmsPlayer != null) {
+        Pair<Boolean, IFPMPlayer> nmsPlayer = FPMRecoded.fakePlayerManager.getFakePlayer(player.getName());
+        if (nmsPlayer.getRight() != null) {
             FPMRecoded.INSTANCE.getConfig().getStringList("runCommands.onQuit").forEach(c -> {
                 String[] split = c.split(" ");
                 String command = split[0];
                 String head = split.length > 1 ? split[1] : "";
-                IFPMPlayer IFPMPlayer = (IFPMPlayer) nmsPlayer;
+                IFPMPlayer IFPMPlayer = nmsPlayer.getRight();
                 OfflinePlayer owner = Bukkit.getOfflinePlayer(IFPMPlayer.getOwnerUUID());
                 command = command.replaceAll("%fakePlayer%", player.getName());
                 if (owner.getName() != null) {

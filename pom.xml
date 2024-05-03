@@ -88,6 +88,12 @@
                 <scope>provided</scope>
             </dependency>
             <dependency>
+                <groupId>dev.folia</groupId>
+                <artifactId>folia-api</artifactId>
+                <version>1.19.4-R0.1-SNAPSHOT</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
                 <groupId>io.github.linsminecraftstudio</groupId>
                 <artifactId>Polymer-Core</artifactId>
                 <version>1.4.5-SNAPSHOT</version>

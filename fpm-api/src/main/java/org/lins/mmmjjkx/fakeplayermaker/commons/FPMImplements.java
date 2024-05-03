@@ -13,8 +13,19 @@ public abstract class FPMImplements {
 
     @Getter
     private static final FPMImplements current;
+    @Getter
+    private static final boolean folia;
 
     static {
+        boolean folia1;
+        try {
+            Class.forName("io.papermc.paper.threadedregions.RegionizedServer");
+            folia1 = true;
+        } catch (ClassNotFoundException ignored) {
+            folia1 = false;
+        }
+        folia = folia1;
+
         current = findCurrent();
     }
 
@@ -26,10 +37,11 @@ public abstract class FPMImplements {
         String nmsVer = serverClassName
                 .replaceAll("org.bukkit.craftbukkit.", "")
                 .replaceAll(".CraftServer", "");
-        String packageName = "org.lins.mmmjjkx.fakeplayermaker.impls." + nmsVer + ".FPMImpl";
-        try {
-            Class<?> impl = Class.forName(packageName);
 
+        String className = "org.lins.mmmjjkx.fakeplayermaker.impls." + nmsVer + (folia ? ".FoliaFPMImpl" :".FPMImpl");
+
+        try {
+            Class<?> impl = Class.forName(className);
             return (FPMImplements) impl.newInstance();
         } catch (ClassNotFoundException e) {
             throw new RuntimeException("Unsupported server version: " + nmsVer);

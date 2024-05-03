@@ -6,6 +6,7 @@ authors: ["mmmjjkx"]
 description: "create fake players in minecraft"
 website: "https://github.com/LinsMinecraftStudio/FakePlayerMaker-Recoded"
 has-open-classloader: true
+folia-supported: true
 dependencies:
   server:
     Polymer:

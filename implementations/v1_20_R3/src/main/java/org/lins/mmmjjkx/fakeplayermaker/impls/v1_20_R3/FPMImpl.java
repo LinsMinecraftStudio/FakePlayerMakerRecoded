@@ -4,6 +4,8 @@ import com.mojang.authlib.GameProfile;
 import io.netty.channel.DefaultEventLoop;
 import io.netty.channel.EventLoop;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import lombok.SneakyThrows;
+import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.PacketFlow;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ChunkMap;
@@ -22,7 +24,7 @@ import org.lins.mmmjjkx.fakeplayermaker.commons.IFPMPlayer;
 
 import java.util.UUID;
 
-public final class FPMImpl extends FPMImplements {
+public class FPMImpl extends FPMImplements {
     private final EventLoop LOOP = new DefaultEventLoop();
 
     @Override
@@ -50,14 +52,21 @@ public final class FPMImpl extends FPMImplements {
         serverPlayer.connection = new FPMConnection(MinecraftServer.getServer(), connection, serverPlayer);
     }
 
+    @lombok.SneakyThrows
     @Override
     public void addPlayer(@NotNull IFPMPlayer player) {
         PlayerList playerList = MinecraftServer.getServer().getPlayerList();
         ServerPlayer serverPlayer = (ServerPlayer) player;
 
-        playerList.placeNewPlayer(serverPlayer.connection.connection, serverPlayer, CommonListenerCookie.createInitial(serverPlayer.gameProfile));
+        PlayerList.class.getMethod("a", Connection.class, ServerPlayer.class, CommonListenerCookie.class)
+                        .invoke(playerList,
+                                serverPlayer.connection.connection,
+                                serverPlayer,
+                                CommonListenerCookie.createInitial(serverPlayer.gameProfile)
+                        );
     }
 
+    @SneakyThrows
     @Override
     public void removePlayer(@NotNull IFPMPlayer player) {
         PlayerList playerList = MinecraftServer.getServer().getPlayerList();
@@ -70,7 +79,8 @@ public final class FPMImpl extends FPMImplements {
         ServerLevel world = serverPlayer.serverLevel();
         ChunkMap chunkMap = world.chunkSource.chunkMap;
 
-        Int2ObjectMap<ChunkMap.TrackedEntity> entityMap = chunkMap.entityMap;
+        Int2ObjectMap<ChunkMap.TrackedEntity> entityMap = (Int2ObjectMap<ChunkMap.TrackedEntity>)
+                ChunkMap.class.getDeclaredField("K").get(chunkMap);
         entityMap.remove(serverPlayer.getId());
     }
 
