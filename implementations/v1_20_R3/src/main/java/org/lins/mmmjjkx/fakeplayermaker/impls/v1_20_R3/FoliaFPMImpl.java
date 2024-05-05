@@ -22,8 +22,11 @@ public class FoliaFPMImpl extends FPMImpl {
             tag = new CompoundTag();
         }
 
-        ServerLevel level = serverPlayer.serverLevel();
-        level.getCurrentWorldData();
+        playerList.pushPendingJoin(
+                serverPlayer.getName().getString(),
+                serverPlayer.getUUID(),
+                serverPlayer.connection.connection
+        );
 
         playerList.placeNewPlayer(
                 serverPlayer.connection.connection,

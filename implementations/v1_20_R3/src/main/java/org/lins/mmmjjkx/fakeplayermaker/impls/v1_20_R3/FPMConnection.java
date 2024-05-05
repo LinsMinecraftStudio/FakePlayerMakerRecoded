@@ -1,5 +1,6 @@
 package org.lins.mmmjjkx.fakeplayermaker.impls.v1_20_R3;
 
+import lombok.SneakyThrows;
 import net.minecraft.Util;
 import net.minecraft.network.Connection;
 import net.minecraft.server.MinecraftServer;
@@ -34,8 +35,11 @@ public class FPMConnection extends ServerGamePacketListenerImpl {
         KEEP_ALIVE_PENDING.setAccessible(true);
     }
 
+    @SneakyThrows
     public FPMConnection(MinecraftServer server, Connection connection, ServerPlayer player) {
         super(server, connection, player, CommonListenerCookie.createInitial(player.gameProfile));
+
+        KEEP_ALIVE_PENDING.set(this, false);
     }
 
     @Override

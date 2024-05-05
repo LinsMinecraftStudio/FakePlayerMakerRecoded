@@ -1,0 +1,22 @@
+fakers:
+  tablist:
+    enabled: false
+    #You can also use /fpmb tablist add/remove to add/remove fake players' names from the tablist.
+    #if you don't want to use the default player list, you can leave it empty.
+    defaultPlayerList: []
+  #We suggested you to turn off every motd plugin's "player count edit" future before using this.
+  motd:
+    enabled: false
+    #This will count the amount of fake players in the tablist and motd.
+    #If you want to count the amount of real players, set "countRealPlayerAmount" to true.
+    #If you just want to add count, please set "countSimpleFakePlayerAmount" to true,
+    #and set "simpleFakePlayerAmount" to the amount of you want to add.
+    #If you want to count the amount of fake players, set "countFakePlayerAmount" to true.
+    countFakePlayerAmount: false
+    countSimpleFakePlayerAmount: false
+    simpleFakePlayerAmount: 0
+    countRealPlayerAmount: false
+#Use for contract backend servers
+backend:
+  #Turn on so that fake players can join to the bungeecord server.(Not only that backend server!)
+  enabled: true

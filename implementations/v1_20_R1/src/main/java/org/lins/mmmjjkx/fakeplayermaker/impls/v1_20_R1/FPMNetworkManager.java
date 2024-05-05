@@ -10,12 +10,13 @@ public class FPMNetworkManager extends Connection {
     public FPMNetworkManager(PacketFlow side, FPMChannel channel) {
         super(side);
 
-        setProtocol(ConnectionProtocol.PLAY);
         configureSerialization(channel.pipeline(), PacketFlow.SERVERBOUND);
 
         channel.pipeline().addLast("packet_handler", this);
         channel.pipeline().replace(PacketEncoder.class,"encoder", new EmptyPacketEncoder(PacketFlow.SERVERBOUND));
 
         this.channel = channel;
+
+        setProtocol(ConnectionProtocol.PLAY);
     }
 }

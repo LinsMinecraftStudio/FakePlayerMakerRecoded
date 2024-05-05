@@ -1,4 +1,4 @@
-package me.mmmjjkx.fpmbungee;
+package me.mmmjjkx.fpmbungee.netty;
 
 import io.netty.channel.*;
 
