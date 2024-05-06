@@ -38,13 +38,21 @@ public abstract class FPMImplements {
                 .replaceAll("org.bukkit.craftbukkit.", "")
                 .replaceAll(".CraftServer", "");
 
+        if (Instances.isVersionAtLeast1206()) {
+            nmsVer = "v" + Instances.versionToCode(Bukkit.getMinecraftVersion());
+        }
+
         String className = "org.lins.mmmjjkx.fakeplayermaker.impls." + nmsVer + (folia ? ".FoliaFPMImpl" :".FPMImpl");
 
         try {
             Class<?> impl = Class.forName(className);
             return (FPMImplements) impl.newInstance();
         } catch (ClassNotFoundException e) {
-            throw new RuntimeException("Unsupported server version: " + nmsVer);
+            if (className.contains("FoliaFPMImpl")) {
+                throw new UnsupportedOperationException("This version of the server does not support fpm using Folia implementation.");
+            } else {
+                throw new UnsupportedOperationException("Unsupported server version: " + nmsVer);
+            }
         } catch (InstantiationException | IllegalAccessException e) {
             throw new RuntimeException(e);
         }

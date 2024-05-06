@@ -17,6 +17,7 @@
         <module>implementations/v1_20_R1</module>
         <module>implementations/v1_20_R2</module>
         <module>implementations/v1_20_R3</module>
+        <module>implementations/v1.20.6</module>
 
         <module>bungee</module>
     </modules>

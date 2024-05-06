@@ -20,4 +20,23 @@ public class Instances {
         Preconditions.checkNotNull(fakePlayerManager);
         Instances.fakePlayerManager = fakePlayerManager;
     }
+
+    public static boolean isVersionAtLeast1206() {
+        int version = versionToCode(FPM.getServer().getMinecraftVersion());
+        return version >= 1206;
+    }
+
+    public static int versionToCode(String s) {
+        String[] ver = s.split("\\.");
+        String ver2 = "";
+        for (String v : ver) {
+            ver2 = ver2.concat(v);
+        }
+
+        if (ver.length == 2) {
+            ver2 = ver2.concat("0");
+        }
+
+        return Integer.parseInt(ver2);
+    }
 }

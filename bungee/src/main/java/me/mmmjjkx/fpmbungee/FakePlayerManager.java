@@ -17,6 +17,7 @@ import net.md_5.bungee.netty.ChannelWrapper;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -74,5 +75,9 @@ public class FakePlayerManager {
 
     public int getFakePlayerCount() {
         return fakePlayerMap.size();
+    }
+
+    public Collection<UserConnection> getFakePlayers() {
+        return fakePlayerMap.values();
     }
 }
