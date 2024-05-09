@@ -14,14 +14,17 @@ namePrefix: "fak_"
 randomNameLength: 10
 
 #Fake player settings
-invulnerable: true
-max-health: 20
-mount-distance: 3
-auto-respawn: true
-#also usable in fake tablist!
-displayNamePrefix: "&a[Fake Player] &f"
-bannedCommandsPrefix:
-  - "fly"
+fakePlayer:
+  invulnerable: true
+  max-health: 20
+  mount-distance: 3
+  auto-respawn: true
+  #also usable in fake tablist!
+  displayNamePrefix: "&a[Fake Player] &f"
+  bannedCommandsPrefix:
+    - "fly"
+  #It uses to fix the tablist order when TAB is installed.
+  defaultTabGroup: "default"
 
 #console: run commands by console
 #self: run commands by the fake player itself
@@ -55,13 +58,16 @@ fakeStuff:
       - "Fake_Player1"
   motd:
     enabled: false
-    #You can also use /fpm motd add/remove to add/remove fake players' motds.
     invisiblePlayerAmount: false
     #The final player amount will be:
-    #realPlayerAmount + fakePlayerAmount(if plusRealPlayerAmount is true)
-    #or only fakePlayerAmount(if plusRealPlayerAmount is false)
-    fakePlayerAmount: 10
+    #+ realPlayerAmount(if plusRealPlayerAmount is true)
+    #+ simpleFakePlayerAmount(if plusSimpleFakePlayerAmount is true)
+    #+ fakePlayerAmount(if plusFakePlayerAmount is true)
+    simpleFakePlayerAmount: 10
+    plusSimpleFakePlayerAmount: true
     plusRealPlayerAmount: true
+    #Note: this not simpleFakePlayerAmount, that's about the amount of fpm fake players.
+    plusFakePlayerAmount: false
 
 #For make fake players more realistic, you can use this feature.
 #Not Implemented yet.

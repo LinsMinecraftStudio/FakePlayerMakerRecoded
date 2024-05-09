@@ -13,15 +13,21 @@ import org.lins.mmmjjkx.fakeplayermaker.util.FakePlayerSaver;
 
 import java.util.List;
 
-public final class FPMRecoded extends PolymerPlugin{
+public final class FPMRecoded extends PolymerPlugin {
     public static FPMRecoded INSTANCE;
 
     public static FakePlayerSaver fakePlayerSaver;
     public static FakePlayerManager fakePlayerManager;
 
+    public void onLoad() {
+        Instances.setFPM(this);
+    }
+
     @Override
     public void onPlEnable() {
         INSTANCE = this;
+
+        new Metrics(this, 21829);
 
         getLogger().info("""
                 
@@ -37,10 +43,12 @@ public final class FPMRecoded extends PolymerPlugin{
         fakePlayerSaver = new FakePlayerSaver(this);
         fakePlayerManager = new FakePlayerManager();
 
-        Instances.setFPM(this);
         Instances.setFakePlayerManager(fakePlayerManager);
 
-        new AutoRespawn();
+        if (FPMRecoded.INSTANCE.getConfig().getBoolean("auto-respawn")) {
+            new AutoRespawn();
+        }
+
         new CommandListeners();
 
         if (getConfig().getBoolean("checkUpdate")) {

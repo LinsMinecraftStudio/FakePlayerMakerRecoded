@@ -20,6 +20,12 @@ public abstract class PlayerActionImplements {
         String nmsVer = serverClassName
                 .replaceAll("org.bukkit.craftbukkit.", "")
                 .replaceAll(".CraftServer", "");
+
+        if (Instances.isVersionAtLeast1206()) {
+           VersionedImplementation implementation = VersionedImplementation.get();
+            nmsVer = implementation.getPackageName();
+        }
+
         String packageName = "org.lins.mmmjjkx.fakeplayermaker.impls." + nmsVer + ".ActionImpl";
         try {
             Class<?> impl = Class.forName(packageName);

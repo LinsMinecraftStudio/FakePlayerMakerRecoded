@@ -1,3 +1,6 @@
+language: en-US
+checkUpdates: true
+
 fakers:
   tablist:
     enabled: false
@@ -24,5 +27,5 @@ fakePlayerPrefix: "&a[Fake Player] &f"
 
 #Use for contract backend servers
 backend:
-  #Turn on so that fake players can join to the bungeecord server.(Not only that backend server!)
+  #Turn on so that fake players can join to the destination backend server.
   enabled: true

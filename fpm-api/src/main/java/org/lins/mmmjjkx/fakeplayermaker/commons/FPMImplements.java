@@ -39,7 +39,8 @@ public abstract class FPMImplements {
                 .replaceAll(".CraftServer", "");
 
         if (Instances.isVersionAtLeast1206()) {
-            nmsVer = "v" + Instances.versionToCode(Bukkit.getMinecraftVersion());
+            VersionedImplementation implementation = VersionedImplementation.get();
+            nmsVer = implementation.getPackageName();
         }
 
         String className = "org.lins.mmmjjkx.fakeplayermaker.impls." + nmsVer + (folia ? ".FoliaFPMImpl" :".FPMImpl");

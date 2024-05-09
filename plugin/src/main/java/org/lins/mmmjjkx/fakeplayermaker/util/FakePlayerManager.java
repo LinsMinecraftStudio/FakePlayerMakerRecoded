@@ -104,7 +104,7 @@ public class FakePlayerManager implements IFakePlayerManager {
 
     private void setupDisplayName(IFPMPlayer player) {
         Player player1 = IMPL.toBukkit(player);
-        String displayNamePrefix = FPMRecoded.INSTANCE.getConfig().getString("displayNamePrefix", "");
+        String displayNamePrefix = FPMRecoded.INSTANCE.getConfig().getString("fakePlayer.displayNamePrefix", "");
 
         if (!displayNamePrefix.isEmpty()) {
             Component component = ObjectConverter.toComponent(displayNamePrefix);
@@ -142,8 +142,8 @@ public class FakePlayerManager implements IFakePlayerManager {
         IMPL.addPlayer(player);
 
         SetupValueCollection collection = new SetupValueCollection(
-                FPMRecoded.INSTANCE.getConfig().getBoolean("invulnerable", true),
-                FPMRecoded.INSTANCE.getConfig().getDouble("maxHealth", 20)
+                FPMRecoded.INSTANCE.getConfig().getBoolean("fakePlayer.invulnerable", true),
+                FPMRecoded.INSTANCE.getConfig().getDouble("fakePlayer.maxHealth", 20)
         );
 
         Location location = FPMRecoded.fakePlayerSaver.getReadyToTeleport().get(profile);

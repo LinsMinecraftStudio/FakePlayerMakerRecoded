@@ -8,11 +8,11 @@ import net.minecraft.network.PacketEncoder;
 import net.minecraft.network.ProtocolInfo;
 import net.minecraft.network.protocol.PacketFlow;
 import net.minecraft.network.protocol.ProtocolInfoBuilder;
-import net.minecraft.server.network.ServerCommonPacketListenerImpl;
+import net.minecraft.network.protocol.common.ServerCommonPacketListener;
 
-public class EmptyPacketEncoder extends PacketEncoder<ServerCommonPacketListenerImpl> {
-    public static final ProtocolInfo<ServerCommonPacketListenerImpl> PROTOCOL_INFO =
-            new ProtocolInfoBuilder<ServerCommonPacketListenerImpl, ByteBuf>(ConnectionProtocol.PLAY, PacketFlow.SERVERBOUND)
+public class EmptyPacketEncoder extends PacketEncoder<ServerCommonPacketListener> {
+    public static final ProtocolInfo<ServerCommonPacketListener> PROTOCOL_INFO =
+            new ProtocolInfoBuilder<ServerCommonPacketListener, ByteBuf>(ConnectionProtocol.PLAY, PacketFlow.SERVERBOUND)
                     .build(bf -> bf);
 
     public EmptyPacketEncoder() {

@@ -10,11 +10,11 @@
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
-    <artifactId>v1_20_6</artifactId>
+    <artifactId>impl-v1_20_6</artifactId>
 
     <properties>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
@@ -31,14 +31,6 @@
                 <groupId>ca.bkaw</groupId>
                 <artifactId>paper-nms-maven-plugin</artifactId>
                 <version>1.4.3</version>
-                <executions>
-                    <execution>
-                        <phase>process-classes</phase>
-                        <goals>
-                            <goal>remap</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>

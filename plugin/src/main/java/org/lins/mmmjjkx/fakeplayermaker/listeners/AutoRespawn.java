@@ -14,12 +14,10 @@ public class AutoRespawn implements Listener {
 
     @EventHandler
     public void onPlayerDie(PlayerDeathEvent e) {
-        if (FPMRecoded.INSTANCE.getConfig().getBoolean("auto-respawn")) {
-            Player p = e.getEntity();
-            Object player = FPMRecoded.fakePlayerManager.getFakePlayer(p.getName()).getRight();
-            if (player != null) {
-                p.spigot().respawn();
-            }
+        Player p = e.getEntity();
+        Object player = FPMRecoded.fakePlayerManager.getFakePlayer(p.getName()).getRight();
+        if (player != null) {
+            p.spigot().respawn();
         }
     }
 }

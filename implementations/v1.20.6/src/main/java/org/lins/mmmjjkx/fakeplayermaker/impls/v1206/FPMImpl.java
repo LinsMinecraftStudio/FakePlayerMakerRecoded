@@ -5,7 +5,9 @@ import io.netty.channel.DefaultEventLoop;
 import io.netty.channel.EventLoop;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import lombok.SneakyThrows;
-import net.minecraft.network.Connection;
+import net.minecraft.network.*;
+import net.minecraft.network.protocol.BundlerInfo;
+import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.PacketFlow;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ChunkMap;
@@ -18,11 +20,14 @@ import org.bukkit.World;
 import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.lins.mmmjjkx.fakeplayermaker.commons.FPMChannel;
 import org.lins.mmmjjkx.fakeplayermaker.commons.FPMImplements;
 import org.lins.mmmjjkx.fakeplayermaker.commons.IFPMPlayer;
 
+import java.lang.reflect.Field;
 import java.util.UUID;
+import java.util.function.Consumer;
 
 public class FPMImpl extends FPMImplements {
     private final EventLoop LOOP = new DefaultEventLoop();
@@ -51,8 +56,7 @@ public class FPMImpl extends FPMImplements {
 
         FPMConnection connection1 = new FPMConnection(MinecraftServer.getServer(), connection, serverPlayer);
 
-        connection.setupInboundProtocol(EmptyPacketEncoder.PROTOCOL_INFO, connection1);
-        connection.setupOutboundProtocol(EmptyPacketEncoder.PROTOCOL_INFO);
+        setupNetworkManager(connection);
 
         serverPlayer.connection = connection1;
     }
@@ -85,7 +89,7 @@ public class FPMImpl extends FPMImplements {
         ChunkMap chunkMap = world.chunkSource.chunkMap;
 
         Int2ObjectMap<ChunkMap.TrackedEntity> entityMap = (Int2ObjectMap<ChunkMap.TrackedEntity>)
-                ChunkMap.class.getDeclaredField("K").get(chunkMap);
+                ChunkMap.class.getDeclaredField("entityMap").get(chunkMap);
         entityMap.remove(serverPlayer.getId());
     }
 
@@ -99,4 +103,41 @@ public class FPMImpl extends FPMImplements {
         return ((ServerPlayer) nmsPlayer).getBukkitEntity();
     }
 
+    @SneakyThrows
+    private void setupNetworkManager(FPMNetworkManager networkManager) {
+        ProtocolInfo<?> protocolInfo = EmptyPacketEncoder.PROTOCOL_INFO;
+        UnconfiguredPipelineHandler.OutboundConfigurationTask unconfiguredpipelinehandler_d = UnconfiguredPipelineHandler.setupOutboundProtocol(protocolInfo);
+
+        BundlerInfo EMPTY = new BundlerInfo() {
+            @Override
+            public void unbundlePacket(@NotNull Packet<?> packet, Consumer<Packet<?>> consumer) {
+                consumer.accept(packet);
+            }
+
+            @Nullable
+            @Override
+            public Bundler startPacketBundling(@NotNull Packet<?> splitter) {
+                return null;
+            }
+        };
+
+        PacketBundleUnpacker packetbundleunpacker = new PacketBundleUnpacker(EMPTY);
+
+        Field loginDisconnect = Connection.class.getDeclaredField("sendLoginDisconnect");
+        loginDisconnect.setAccessible(true);
+        loginDisconnect.set(networkManager, false);
+
+        UnconfiguredPipelineHandler.InboundConfigurationTask unconfiguredpipelinehandler_b = UnconfiguredPipelineHandler.setupInboundProtocol(protocolInfo);
+        PacketBundlePacker packetbundlepacker = new PacketBundlePacker(EMPTY);
+        unconfiguredpipelinehandler_b = unconfiguredpipelinehandler_b.andThen((channelhandlercontext) ->  {
+                    channelhandlercontext.pipeline().addAfter("decoder", "bundler", packetbundlepacker);
+        });
+
+        unconfiguredpipelinehandler_d = unconfiguredpipelinehandler_d.andThen((channelhandlercontext) -> {
+                    channelhandlercontext.pipeline().addAfter("encoder", "unbundler", packetbundleunpacker);
+        });
+
+        networkManager.channel.writeAndFlush(unconfiguredpipelinehandler_d);
+        networkManager.channel.writeAndFlush(unconfiguredpipelinehandler_b);
+    }
 }

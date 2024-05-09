@@ -6,6 +6,7 @@ import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.protocol.packet.PlayerListItem;
+import net.md_5.bungee.protocol.packet.PlayerListItemRemove;
 import net.md_5.bungee.tab.TabList;
 
 import java.util.UUID;
@@ -31,7 +32,6 @@ public class TablistFaker {
             item1.setUsername(name);
             item1.setUuid(uuid);
 
-
             if (config.getBoolean("fakers.tablist.useFakePlayerPrefix", false)) {
                 String prefix = config.getString("fakePlayerPrefix", "");
                 String displayName = prefix + name;
@@ -46,7 +46,14 @@ public class TablistFaker {
     }
 
     public void removeTabListName(String name) {
+        PlayerListItemRemove remove = new PlayerListItemRemove();
+        remove.setUuids(new UUID[]{UUID.nameUUIDFromBytes(name.getBytes())});
 
+        for (ProxiedPlayer player : BungeeCord.getInstance().getPlayers()) {
+            UserConnection user = (UserConnection) player;
+            TabList tabList = user.getTabListHandler();
+            tabList.onUpdate(remove);
+        }
     }
 
     private byte[] generateRandomBytes() {
