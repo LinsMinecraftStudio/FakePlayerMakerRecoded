@@ -26,10 +26,21 @@ import org.lins.mmmjjkx.fakeplayermaker.commons.FPMImplements;
 import org.lins.mmmjjkx.fakeplayermaker.commons.IFPMPlayer;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.UUID;
 import java.util.function.Consumer;
 
 public class FPMImpl extends FPMImplements {
+    private final Method PLACE_NEW_PLAYER_ORIGINAL;
+
+    public FPMImpl() {
+        try {
+            PLACE_NEW_PLAYER_ORIGINAL = PlayerList.class.getMethod("placeNewPlayer", Connection.class, ServerPlayer.class, CommonListenerCookie.class);
+        } catch (NoSuchMethodException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     private final EventLoop LOOP = new DefaultEventLoop();
 
     @Override
@@ -67,12 +78,11 @@ public class FPMImpl extends FPMImplements {
         PlayerList playerList = MinecraftServer.getServer().getPlayerList();
         ServerPlayer serverPlayer = (ServerPlayer) player;
 
-        PlayerList.class.getMethod("a", Connection.class, ServerPlayer.class, CommonListenerCookie.class)
-                        .invoke(playerList,
+        PLACE_NEW_PLAYER_ORIGINAL.invoke(playerList,
                                 serverPlayer.connection.connection,
                                 serverPlayer,
                                 CommonListenerCookie.createInitial(serverPlayer.gameProfile, true)
-                        );
+        );
     }
 
     @SneakyThrows

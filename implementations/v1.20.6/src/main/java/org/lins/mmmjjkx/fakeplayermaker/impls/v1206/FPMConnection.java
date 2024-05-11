@@ -23,9 +23,9 @@ public class FPMConnection extends ServerGamePacketListenerImpl {
 
     static {
         try {
-            KEEP_ALIVE_PENDING = ServerCommonPacketListenerImpl.class.getDeclaredField("g");
-            KEEP_ALIVE_CHALLENGE = ServerCommonPacketListenerImpl.class.getDeclaredField("h");
-            KEEP_ALIVE_TIME = ServerCommonPacketListenerImpl.class.getDeclaredField("f");
+            KEEP_ALIVE_PENDING = ServerCommonPacketListenerImpl.class.getDeclaredField("keepAlivePending");
+            KEEP_ALIVE_CHALLENGE = ServerCommonPacketListenerImpl.class.getDeclaredField("keepAliveChallenge");
+            KEEP_ALIVE_TIME = ServerCommonPacketListenerImpl.class.getDeclaredField("keepAliveTime");
         } catch (NoSuchFieldException e) {
             throw new RuntimeException(e);
         }

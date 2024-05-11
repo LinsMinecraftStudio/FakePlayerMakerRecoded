@@ -85,4 +85,24 @@ public class FPMChannel extends AbstractChannel {
     public ChannelPipeline pipeline() {
         return super.pipeline();
     }
+
+    @Override
+    public ChannelFuture write(Object msg) {
+        return newSucceededFuture();
+    }
+
+    @Override
+    public ChannelFuture write(Object msg, ChannelPromise promise) {
+        return newSucceededFuture();
+    }
+
+    @Override
+    public ChannelFuture writeAndFlush(Object msg) {
+        return newSucceededFuture();
+    }
+
+    @Override
+    public ChannelFuture writeAndFlush(Object msg, ChannelPromise promise) {
+        return newSucceededFuture();
+    }
 }

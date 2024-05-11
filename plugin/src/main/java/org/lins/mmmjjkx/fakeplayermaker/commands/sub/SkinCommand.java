@@ -52,7 +52,7 @@ public class SkinCommand extends FPMSubCmd {
             }
 
             Player bk = FPMImplements.getCurrent().toBukkit(fakePlayer);
-            boolean success = SkinUtils.changeSkin(bk, skinName);
+            boolean success = SkinUtils.changeSkin(commandSender, bk, skinName);
             if (success) {
                 FPMRecoded.fakePlayerSaver.saveFakePlayer(fakePlayer);
                 FPMRecoded.INSTANCE.getMessageHandler().sendMessage(commandSender, "command.skin_changed");

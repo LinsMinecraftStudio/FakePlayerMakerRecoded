@@ -6,8 +6,10 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import io.github.linsminecraftstudio.polymer.utils.IterableUtil;
 import org.apache.commons.lang3.tuple.Pair;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.lins.mmmjjkx.fakeplayermaker.FPMRecoded;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -16,7 +18,7 @@ import java.util.Optional;
 import java.util.Set;
 
 public class SkinUtils {
-    public static boolean changeSkin(Player player, String targetName) {
+    public static boolean changeSkin(CommandSender requester, Player player, String targetName) {
         PlayerProfile playerProfile = player.getPlayerProfile();
         try {
             URL url_0 = new URL("https://api.mojang.com/users/profiles/minecraft/" + targetName);
@@ -38,7 +40,10 @@ public class SkinUtils {
             player.setPlayerProfile(playerProfile);
 
             return true;
-        } catch (IllegalStateException | IOException | NullPointerException exception) {
+        } catch (IllegalStateException | NullPointerException exception) {
+            return false;
+        } catch (IOException exception) {
+            FPMRecoded.INSTANCE.getMessageHandler().sendMessage(requester, "command.skin_not_found");
             return false;
         }
     }

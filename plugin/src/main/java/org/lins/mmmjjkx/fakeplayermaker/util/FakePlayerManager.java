@@ -4,6 +4,7 @@ import com.mojang.authlib.GameProfile;
 import io.github.linsminecraftstudio.polymer.utils.ObjectConverter;
 import me.neznamy.tab.shared.TAB;
 import me.neznamy.tab.shared.TabConstants;
+import me.neznamy.tab.shared.platform.TabPlayer;
 import net.kyori.adventure.text.Component;
 import org.apache.commons.lang3.tuple.Pair;
 import org.bukkit.Bukkit;
@@ -16,7 +17,6 @@ import org.lins.mmmjjkx.fakeplayermaker.commons.*;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.UUID;
 
 public class FakePlayerManager implements IFakePlayerManager {
@@ -102,7 +102,7 @@ public class FakePlayerManager implements IFakePlayerManager {
         return Pair.of(true, player);
     }
 
-    private void setupDisplayName(IFPMPlayer player) {
+    private void setupNames(IFPMPlayer player) {
         Player player1 = IMPL.toBukkit(player);
         String displayNamePrefix = FPMRecoded.INSTANCE.getConfig().getString("fakePlayer.displayNamePrefix", "");
 
@@ -115,7 +115,19 @@ public class FakePlayerManager implements IFakePlayerManager {
 
             String finalDisplayName = displayNamePrefix + player1.getName();
             if (Bukkit.getPluginManager().isPluginEnabled("TAB")) {
-                Objects.requireNonNull(TAB.getInstance().getPlayer(player1.getUniqueId())).getProperty(TabConstants.Property.TABPREFIX).setTemporaryValue(finalDisplayName);
+                TabPlayer tabPlayer = TAB.getInstance().getPlayer(player1.getUniqueId());
+                if (tabPlayer != null) {
+                    tabPlayer.getProperty(TabConstants.Property.TABPREFIX).setTemporaryValue(finalDisplayName);
+
+                    String groupName = FPMRecoded.INSTANCE.getConfig().getString("fakePlayer.defaultTabGroup", "");
+                    if (!groupName.isBlank()) {
+                        if (!tabPlayer.getGroup().equals(groupName)) {
+                            return;
+                        }
+
+                        tabPlayer.setGroup(groupName);
+                    }
+                }
             }
         }
     }
@@ -141,6 +153,8 @@ public class FakePlayerManager implements IFakePlayerManager {
         IMPL.setupConnection(player);
         IMPL.addPlayer(player);
 
+        FPMImplements.handlePluginCompatability(player);
+
         SetupValueCollection collection = new SetupValueCollection(
                 FPMRecoded.INSTANCE.getConfig().getBoolean("fakePlayer.invulnerable", true),
                 FPMRecoded.INSTANCE.getConfig().getDouble("fakePlayer.maxHealth", 20)
@@ -159,7 +173,7 @@ public class FakePlayerManager implements IFakePlayerManager {
         }
         FPMRecoded.fakePlayerSaver.getReadyToTeleport().remove(profile);
 
-        setupDisplayName(player);
+        setupNames(player);
 
         PlayerActionImplements.getCurrent().setupValues(player, collection);
     }
