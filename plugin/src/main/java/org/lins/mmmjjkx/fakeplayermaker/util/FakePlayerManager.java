@@ -161,7 +161,6 @@ public class FakePlayerManager implements IFakePlayerManager {
         );
 
         Location location = FPMRecoded.fakePlayerSaver.getReadyToTeleport().get(profile);
-
         if (location != null) {
             Player bk = IMPL.toBukkit(player);
 

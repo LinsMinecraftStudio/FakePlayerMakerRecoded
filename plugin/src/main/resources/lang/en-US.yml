@@ -9,6 +9,7 @@ command:
   no_skin_name: "&cYou must enter a skin name."
   no_command: "&cYou must enter a command to execute."
   not_allowed_command: "&cYou are not allowed to execute this command using fake players."
+  skin_not_found: "&cThe skin you entered does not exist."
   info: |- 
     &aRunning FakePlayerMaker-Recoded v%1$s by %2$s. 
     &bRun /fpm help to get help.

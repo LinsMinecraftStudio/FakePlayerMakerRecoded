@@ -9,6 +9,7 @@ command:
   no_skin_name: "&c你必须输入一个皮肤名称！"
   no_command: "&c你必须输入一个指令！"
   not_allowed_command: "&c你不能使用假人去执行此指令！"
+  skin_not_found: "&c找不到该皮肤。"
   info: |-
     &a正在运行 FakePlayerMaker-Recoded v%1$s 作者 %2$s. 
     &b输入 /fpm help 获取帮助.
