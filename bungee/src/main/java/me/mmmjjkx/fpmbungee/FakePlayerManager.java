@@ -80,4 +80,8 @@ public class FakePlayerManager {
     public Collection<UserConnection> getFakePlayers() {
         return fakePlayerMap.values();
     }
+
+    public boolean isFakePlayer(String name) {
+        return fakePlayerMap.containsKey(name);
+    }
 }

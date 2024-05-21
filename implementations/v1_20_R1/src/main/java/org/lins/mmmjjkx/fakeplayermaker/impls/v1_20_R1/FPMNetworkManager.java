@@ -16,6 +16,7 @@ public class FPMNetworkManager extends Connection {
         channel.pipeline().replace(PacketEncoder.class,"encoder", new EmptyPacketEncoder(PacketFlow.SERVERBOUND));
 
         this.channel = channel;
+        this.address = channel.remoteAddress();
 
         setProtocol(ConnectionProtocol.PLAY);
     }

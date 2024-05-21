@@ -8,6 +8,7 @@ import org.lins.mmmjjkx.fakeplayermaker.commands.FPMMainCommand;
 import org.lins.mmmjjkx.fakeplayermaker.commons.Instances;
 import org.lins.mmmjjkx.fakeplayermaker.listeners.AutoRespawn;
 import org.lins.mmmjjkx.fakeplayermaker.listeners.CommandListeners;
+import org.lins.mmmjjkx.fakeplayermaker.listeners.Scheduling;
 import org.lins.mmmjjkx.fakeplayermaker.util.FakePlayerManager;
 import org.lins.mmmjjkx.fakeplayermaker.util.FakePlayerSaver;
 
@@ -45,11 +46,11 @@ public final class FPMRecoded extends PolymerPlugin {
 
         Instances.setFakePlayerManager(fakePlayerManager);
 
-        if (FPMRecoded.INSTANCE.getConfig().getBoolean("auto-respawn")) {
-            new AutoRespawn();
-        }
-
+        // Register listeners
+        new AutoRespawn();
         new CommandListeners();
+        new Scheduling();
+        //end of register listeners
 
         if (getConfig().getBoolean("checkUpdate")) {
             new OtherUtils.Updater(111767, (ver, success) -> {

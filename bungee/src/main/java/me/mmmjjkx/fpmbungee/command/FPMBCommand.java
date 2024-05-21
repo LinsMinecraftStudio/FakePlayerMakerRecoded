@@ -14,6 +14,8 @@ public class FPMBCommand extends Command {
     public void execute(CommandSender commandSender, String[] strings) {
         if (strings.length == 0) {
             commandSender.sendMessage();
+        } else if (strings.length == 1) {
+
         }
     }
 

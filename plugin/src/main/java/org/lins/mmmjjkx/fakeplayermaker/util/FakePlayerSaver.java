@@ -94,8 +94,6 @@ public class FakePlayerSaver extends SingleFileStorage {
     }
 
     public void reload() {
-        super.reload();
-
         fakePlayers.clear();
         setup();
     }

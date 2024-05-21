@@ -75,7 +75,14 @@ public abstract class FPMImplements {
                         //LuckPerms using different class loader
                         ClassLoader loader = lpBukkitPlugin.getClass().getClassLoader();
 
-                        Object lpBootStrap = lpBukkitPlugin.getClass().getMethod("getBootstrap").invoke(lpBukkitPlugin);
+                        Object lpBootStrap;
+                        try {
+                            lpBootStrap = lpBukkitPlugin.getClass().getMethod("getBootstrap").invoke(lpBukkitPlugin);
+                        } catch (NoSuchMethodException e) {
+                            Field lpBootStrapField = lpBukkitPlugin.getClass().getDeclaredField("plugin");
+                            lpBootStrapField.setAccessible(true);
+                            lpBootStrap = lpBootStrapField.get(lpBukkitPlugin);
+                        }
                         Object storage = lpBukkitPlugin.getClass().getMethod("getStorage").invoke(lpBukkitPlugin);
                         Class<?> userClass = loader.loadClass("me.lucko.luckperms.common.model.User");
                         Method method = storage.getClass().getDeclaredMethod("saveUser", userClass);

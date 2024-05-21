@@ -50,27 +50,15 @@ checkTpaRequests:
 #The feature is only make some fake players' name/amount show on the tablist/motd.
 #That means you don't need to spawn fake players and won't save any data about them.
 #Not Implemented yet.
-fakeStuff:
+fakers:
   tablist:
     enabled: false
-    #You can also use /fpm tablist add/remove to add/remove fake players' names from the tablist.
+    #Default tablist entry(entries) to add to the tablist.
+    #You can also use /fpm tablist add/remove to add/remove entries' name from the tablist.
     playerList:
       - "Fake_Player1"
-  motd:
-    enabled: false
-    invisiblePlayerAmount: false
-    #The final player amount will be:
-    #+ realPlayerAmount(if plusRealPlayerAmount is true)
-    #+ simpleFakePlayerAmount(if plusSimpleFakePlayerAmount is true)
-    #+ fakePlayerAmount(if plusFakePlayerAmount is true)
-    simpleFakePlayerAmount: 10
-    plusSimpleFakePlayerAmount: true
-    plusRealPlayerAmount: true
-    #Note: this not simpleFakePlayerAmount, that's about the amount of fpm fake players.
-    plusFakePlayerAmount: false
 
 #For make fake players more realistic, you can use this feature.
-#Not Implemented yet.
 schedule:
   randomQuit:
     enabled: false

@@ -2,8 +2,10 @@ package org.lins.mmmjjkx.fakeplayermaker.util;
 
 import com.mojang.authlib.GameProfile;
 import io.github.linsminecraftstudio.polymer.utils.ObjectConverter;
+import me.neznamy.tab.api.tablist.SortingManager;
 import me.neznamy.tab.shared.TAB;
 import me.neznamy.tab.shared.TabConstants;
+import me.neznamy.tab.shared.features.sorting.Sorting;
 import me.neznamy.tab.shared.platform.TabPlayer;
 import net.kyori.adventure.text.Component;
 import org.apache.commons.lang3.tuple.Pair;
@@ -57,7 +59,7 @@ public class FakePlayerManager implements IFakePlayerManager {
         if (player == null) {
             return;
         }
-        IMPL.removePlayer(player);
+        IMPL.toBukkit(player).kick(Component.text("FPM: leaved from server"));
     }
 
     public void remove(String playerName) {
@@ -126,6 +128,12 @@ public class FakePlayerManager implements IFakePlayerManager {
                         }
 
                         tabPlayer.setGroup(groupName);
+
+                        SortingManager sortingManager = TAB.getInstance().getSortingManager();
+                        if (sortingManager != null) {
+                            Sorting sorting = (Sorting) sortingManager;
+                            sorting.refresh(tabPlayer,true);
+                        }
                     }
                 }
             }

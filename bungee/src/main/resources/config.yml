@@ -8,20 +8,6 @@ fakers:
     #if you don't want to use the default player list, you can leave it empty.
     defaultPlayerList: []
     useFakePlayerPrefix: false
-  #We suggested you to turn off every motd plugin's "player count edit" future before using this.
-  motd:
-    enabled: false
-    #This will count the amount of fake players in the tablist and motd.
-    #If you want to count the amount of real players, set "countRealPlayerAmount" to true.
-    #If you just want to add count, please set "countSimpleFakePlayerAmount" to true,
-    #and set "simpleFakePlayerAmount" to the amount of you want to add.
-    #If you want to count the amount of fake players, set "countFakePlayerAmount" to true.
-    countFakePlayerAmount: false
-    countSimpleFakePlayerAmount: false
-    simpleFakePlayerAmount: 0
-    countRealPlayerAmount: false
-    #If you want to list the fake players' names in the motd, set "listFakePlayers" to true.
-    listFakePlayers: false
 
 fakePlayerPrefix: "&a[Fake Player] &f"
 

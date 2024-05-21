@@ -16,5 +16,6 @@ public class FPMNetworkManager extends Connection {
         channel.pipeline().addLast("packet_handler", this);
 
         this.channel = channel;
+        this.address = channel.remoteAddress();
     }
 }

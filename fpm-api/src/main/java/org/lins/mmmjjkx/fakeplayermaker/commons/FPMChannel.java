@@ -8,6 +8,7 @@ import java.net.SocketAddress;
 public class FPMChannel extends AbstractChannel {
     private final ChannelConfig config;
     private final ChannelMetadata metadata;
+    private State state = State.OPEN;
 
     public FPMChannel() {
         super(null);
@@ -50,6 +51,7 @@ public class FPMChannel extends AbstractChannel {
 
     @Override
     protected void doClose() {
+        state = State.CLOSED;
     }
 
     @Override
@@ -68,12 +70,12 @@ public class FPMChannel extends AbstractChannel {
 
     @Override
     public boolean isOpen() {
-        return true;
+        return state == State.OPEN;
     }
 
     @Override
     public boolean isActive() {
-        return true;
+        return state == State.OPEN;
     }
 
     @Override
@@ -104,5 +106,10 @@ public class FPMChannel extends AbstractChannel {
     @Override
     public ChannelFuture writeAndFlush(Object msg, ChannelPromise promise) {
         return newSucceededFuture();
+    }
+
+    private enum State {
+        OPEN,
+        CLOSED
     }
 }
