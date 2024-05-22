@@ -73,19 +73,19 @@ public class Updater {
         consumer.accept(ver, ver != null);
     }
 
-    static <T> CompletableFuture<T> within(CompletableFuture<T> future, long timeout, TimeUnit unit) {
+    private <T> CompletableFuture<T> within(CompletableFuture<T> future, long timeout, TimeUnit unit) {
         final CompletableFuture<T> timeoutFuture = timeoutAfter(timeout, unit);
 
         return future.applyToEither(timeoutFuture, t -> null);
     }
 
-    static <T> CompletableFuture<T> timeoutAfter(long timeout, TimeUnit unit) {
+    private <T> CompletableFuture<T> timeoutAfter(long timeout, TimeUnit unit) {
         CompletableFuture<T> result = new CompletableFuture<>();
         Delayer.delayer.schedule(() -> result.completeExceptionally(new TimeoutException()), timeout, unit);
         return result;
     }
 
-    static final class Delayer {
+    private static final class Delayer {
         static final class DaemonThreadFactory implements ThreadFactory {
             @Override
             public Thread newThread(@Nonnull Runnable r) {

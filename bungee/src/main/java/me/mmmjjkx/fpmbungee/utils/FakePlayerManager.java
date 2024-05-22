@@ -1,6 +1,7 @@
-package me.mmmjjkx.fpmbungee;
+package me.mmmjjkx.fpmbungee.utils;
 
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
+import me.mmmjjkx.fpmbungee.FakePlayerMakerBungee;
 import me.mmmjjkx.fpmbungee.netty.FPMChannel;
 import me.mmmjjkx.fpmbungee.netty.FakeChannelHandlerContext;
 import net.md_5.bungee.BungeeCord;

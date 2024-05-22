@@ -1,6 +1,7 @@
 package me.mmmjjkx.fpmbungee;
 
 import me.mmmjjkx.fpmbungee.fakers.TablistFaker;
+import me.mmmjjkx.fpmbungee.utils.FakePlayerManager;
 import me.mmmjjkx.fpmbungee.utils.Updater;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.config.Configuration;
