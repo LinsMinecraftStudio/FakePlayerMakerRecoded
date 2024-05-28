@@ -25,6 +25,13 @@ fakePlayer:
     - "fly"
   #It uses to fix the tablist order when TAB is installed.
   defaultTabGroup: "default"
+  pickupItems: true
+  randomizePing:
+    enabled: true
+    #for example: 20 is 20ms
+    min: 20
+    #for example, 200 is 200ms
+    max: 200
 
 #console: run commands by console
 #self: run commands by the fake player itself

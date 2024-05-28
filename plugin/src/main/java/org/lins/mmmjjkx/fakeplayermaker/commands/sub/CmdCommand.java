@@ -63,7 +63,7 @@ public class CmdCommand extends FPMSubCmd {
                     return method.invoke(bk, args);
                 });
 
-                bkProxied.performCommand(command);
+                bkProxied.performCommand(command.replaceAll("%sp%", " "));
             }
         }
     }

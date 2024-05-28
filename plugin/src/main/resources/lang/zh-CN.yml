@@ -1,6 +1,7 @@
 player_not_joined: "&c假人尚未加入服务器。请使用/fpm join＜player＞让他加入服务器。"
 player_not_found: "&c无法找到该假人"
 player_already_joined: "&c该假人已经加入了服务器。"
+no_fake_players_u_have: "&c你没有拥有任何一个假人。"
 command:
   skin_changed: "&a假人的皮肤已更换。"
   skin_error: "&c更换假人皮肤时出现错误。请稍后再试。"

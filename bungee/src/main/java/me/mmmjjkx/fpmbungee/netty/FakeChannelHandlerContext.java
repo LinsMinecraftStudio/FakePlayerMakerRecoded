@@ -245,8 +245,9 @@ public class FakeChannelHandlerContext implements ChannelHandlerContext {
         }
 
         protected EventExecutor executor() {
-            EventExecutor e = super.executor();
-            return e == null ? this.channel().eventLoop() : e;
+            try (EventExecutor e = super.executor()) {
+                return e == null ? this.channel().eventLoop() : e;
+            }
         }
 
         @Override

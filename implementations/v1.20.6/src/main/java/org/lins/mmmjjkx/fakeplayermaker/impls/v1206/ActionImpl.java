@@ -16,6 +16,7 @@ import net.minecraft.world.entity.vehicle.Minecart;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.bukkit.attribute.Attribute;
+import org.bukkit.craftbukkit.entity.CraftEntity;
 import org.bukkit.entity.Player;
 import org.lins.mmmjjkx.fakeplayermaker.commons.*;
 
@@ -81,5 +82,15 @@ public final class ActionImpl extends PlayerActionImplements {
         ServerPlayer serverPlayer = (ServerPlayer) player;
 
         serverPlayer.interact(serverPlayer, hand == InteractHand.MAIN_HAND ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND);
+    }
+
+    @Override
+    public void attack(IFPMPlayer player, org.bukkit.entity.Entity bukkitEntity) {
+        ServerPlayer serverPlayer = (ServerPlayer) player;
+
+        CraftEntity craftEntity = (CraftEntity) bukkitEntity;
+        Entity entity = craftEntity.getHandle();
+
+        serverPlayer.attack(entity);
     }
 }

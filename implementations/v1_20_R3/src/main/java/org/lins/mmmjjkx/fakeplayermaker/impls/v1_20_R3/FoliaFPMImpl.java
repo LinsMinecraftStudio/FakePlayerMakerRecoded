@@ -12,6 +12,7 @@ import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 import org.lins.mmmjjkx.fakeplayermaker.commons.IFPMPlayer;
 import org.lins.mmmjjkx.fakeplayermaker.commons.Instances;
+import org.lins.mmmjjkx.fakeplayermaker.commons.PlayerSettingsValueCollection;
 
 import java.util.logging.Level;
 
@@ -66,7 +67,7 @@ public class FoliaFPMImpl extends FPMImpl {
         PlayerList playerList = MinecraftServer.getServer().getPlayerList();
         ServerPlayer serverPlayer = (ServerPlayer) player;
 
-        setupConnection(player);
+        setupConnection(player, PlayerSettingsValueCollection.EMPTY);
 
         ServerLevel world = serverPlayer.serverLevel();
         world.playerChunkLoader.removePlayer(serverPlayer);

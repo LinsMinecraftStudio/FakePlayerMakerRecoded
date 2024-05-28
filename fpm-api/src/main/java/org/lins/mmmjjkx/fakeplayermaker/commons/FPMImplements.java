@@ -87,24 +87,19 @@ public abstract class FPMImplements {
 
                         Class<?> LuckPermsPermissible = loader.loadClass("me.lucko.luckperms.bukkit.inject.permissible.LuckPermsPermissible");
 
-                        Object storage;
-                        try {
-                            storage = lpBukkitPluginLoader.getClass().getMethod("getStorage").invoke(lpBukkitPluginLoader);
-                        } catch (NoSuchMethodException e) {
-                            Field lpBukkitPluginField = lpBootStrap.getClass().getField("plugin");
-                            lpBukkitPluginField.setAccessible(true);
-                            Object lpBukkitPlugin = lpBukkitPluginField.get(lpBootStrap);
-                            storage = lpBukkitPlugin.getClass().getMethod("getStorage").invoke(lpBukkitPlugin);
-                        }
+                        Field lpBukkitPluginField = lpBootStrap.getClass().getDeclaredField("plugin");
+                        lpBukkitPluginField.setAccessible(true);
+                        Object lpBukkitPlugin = lpBukkitPluginField.get(lpBootStrap);
+                        Object storage = lpBukkitPlugin.getClass().getMethod("getStorage").invoke(lpBukkitPlugin);
 
                         Class<?> userClass = loader.loadClass("me.lucko.luckperms.common.model.User");
                         Method method = storage.getClass().getDeclaredMethod("saveUser", userClass);
 
                         //saveUser
-                        Object user = userClass.getDeclaredConstructors()[0].newInstance(p.getUniqueId(), lpBukkitPluginLoader);
+                        Object user = userClass.getDeclaredConstructors()[0].newInstance(p.getUniqueId(), lpBukkitPlugin);
                         method.invoke(storage, user);
 
-                        Object permissible = LuckPermsPermissible.getDeclaredConstructors()[0].newInstance(p, user, lpBukkitPluginLoader);
+                        Object permissible = LuckPermsPermissible.getDeclaredConstructors()[0].newInstance(p, user, lpBukkitPlugin);
                         Object pluginLogger = lpBootStrap.getClass().getMethod("getPluginLogger").invoke(lpBootStrap);
 
                         Class<?> PermissibleInjector = loader.loadClass("me.lucko.luckperms.bukkit.inject.permissible.PermissibleInjector");
@@ -121,7 +116,7 @@ public abstract class FPMImplements {
 
     public abstract @NotNull IFPMPlayer createPlayer(@NotNull GameProfile profile, @NotNull String levelName, @NotNull UUID owner);
 
-    public abstract void setupConnection(@NotNull IFPMPlayer player);
+    public abstract void setupConnection(@NotNull IFPMPlayer player, @NotNull PlayerSettingsValueCollection settings);
 
     public abstract void addPlayer(@NotNull IFPMPlayer player);
 

@@ -3,6 +3,7 @@ package org.lins.mmmjjkx.fakeplayermaker.commons;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
+import org.bukkit.entity.Entity;
 
 public abstract class PlayerActionImplements {
     @Getter
@@ -51,4 +52,6 @@ public abstract class PlayerActionImplements {
     public abstract void setupValues(IFPMPlayer player, SetupValueCollection values);
 
     public abstract void interact(IFPMPlayer player, InteractHand hand);
+
+    public abstract void attack(IFPMPlayer player, Entity bukkitEntity);
 }

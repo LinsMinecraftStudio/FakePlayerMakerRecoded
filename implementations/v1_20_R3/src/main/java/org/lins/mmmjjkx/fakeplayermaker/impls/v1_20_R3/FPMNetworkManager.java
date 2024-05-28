@@ -6,10 +6,10 @@ import net.minecraft.network.ConnectionProtocol;
 import net.minecraft.network.PacketEncoder;
 import net.minecraft.network.protocol.PacketFlow;
 import net.minecraft.util.SampleLogger;
-import org.lins.mmmjjkx.fakeplayermaker.commons.FPMChannel;
+import org.lins.mmmjjkx.fakeplayermaker.commons.FakeChannel;
 
 public class FPMNetworkManager extends Connection {
-    public FPMNetworkManager(PacketFlow side, FPMChannel channel) {
+    public FPMNetworkManager(PacketFlow side, FakeChannel channel) {
         super(side);
 
         channel.attr(Connection.ATTRIBUTE_SERVERBOUND_PROTOCOL).set(ConnectionProtocol.PLAY.codec(PacketFlow.SERVERBOUND));

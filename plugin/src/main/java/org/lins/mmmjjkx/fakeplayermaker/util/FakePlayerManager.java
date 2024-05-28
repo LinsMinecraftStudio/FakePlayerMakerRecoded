@@ -104,6 +104,10 @@ public class FakePlayerManager implements IFakePlayerManager {
         return Pair.of(true, player);
     }
 
+    public List<IFPMPlayer> getFakePlayers(UUID owner) {
+        return fakePlayers.values().stream().filter(p -> p.getOwnerUUID().equals(owner)).toList();
+    }
+
     private void setupNames(IFPMPlayer player) {
         Player player1 = IMPL.toBukkit(player);
         String displayNamePrefix = FPMRecoded.INSTANCE.getConfig().getString("fakePlayer.displayNamePrefix", "");
@@ -158,7 +162,13 @@ public class FakePlayerManager implements IFakePlayerManager {
             fakePlayers.put(profile.getName(), player);
         }
 
-        IMPL.setupConnection(player);
+        PlayerSettingsValueCollection settings = FPMRecoded.INSTANCE.getConfig().getBoolean("fakePlayer.randomizePing.enabled", true)
+                ? new PlayerSettingsValueCollection(
+                        FPMRecoded.INSTANCE.getConfig().getInt("fakePlayer.randomizePing.min", 20),
+                        FPMRecoded.INSTANCE.getConfig().getInt("fakePlayer.randomizePing.max", 200)
+                ) : PlayerSettingsValueCollection.EMPTY;
+
+        IMPL.setupConnection(player, settings);
         IMPL.addPlayer(player);
 
         FPMImplements.handlePluginCompatability(player);

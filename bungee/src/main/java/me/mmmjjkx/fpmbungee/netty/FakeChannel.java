@@ -5,11 +5,11 @@ import io.netty.channel.*;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 
-public class FPMChannel extends AbstractChannel {
+public class FakeChannel extends AbstractChannel {
     private final ChannelConfig config;
     private final ChannelMetadata metadata;
 
-    public FPMChannel() {
+    public FakeChannel() {
         super(null);
         metadata = new ChannelMetadata(false);
         config = new DefaultChannelConfig(this);

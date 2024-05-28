@@ -1,6 +1,8 @@
 package org.lins.mmmjjkx.fakeplayermaker.impls.v1_19_R3;
 
 import net.minecraft.network.Connection;
+import net.minecraft.network.PacketSendListener;
+import net.minecraft.network.protocol.Packet;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerChunkCache;
 import net.minecraft.server.level.ServerLevel;
@@ -8,12 +10,19 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.world.entity.RelativeMovement;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.lins.mmmjjkx.fakeplayermaker.commons.PlayerSettingsValueCollection;
 
+import java.util.Random;
 import java.util.Set;
 
 public class FPMConnection extends ServerGamePacketListenerImpl {
-    public FPMConnection(MinecraftServer server, Connection connection, ServerPlayer player) {
+    private final PlayerSettingsValueCollection collection;
+
+    public FPMConnection(MinecraftServer server, Connection connection, ServerPlayer player, PlayerSettingsValueCollection collection) {
         super(server, connection, player);
+
+        this.collection = collection;
     }
 
     @Override
@@ -29,5 +38,26 @@ public class FPMConnection extends ServerGamePacketListenerImpl {
             player.teleportTo(d0, d1, d2);
             resetPosition();
         }
+    }
+
+    @Override
+    public void send(@NotNull Packet<?> packet) {
+        super.send(packet);
+
+        resetLatency();
+    }
+
+    private void resetLatency() {
+        Random random = new Random();
+        int latencyRaw = random.nextInt(collection.latencyMax() - collection.latencyMin() + 1);
+
+        player.latency = collection.latencyMin() + latencyRaw;
+    }
+
+    @Override
+    public void send(@NotNull Packet<?> packet, @Nullable PacketSendListener callbacks) {
+        super.send(packet, callbacks);
+
+        resetLatency();
     }
 }

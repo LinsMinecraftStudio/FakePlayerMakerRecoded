@@ -1,6 +1,7 @@
 player_not_joined: "&cThe fake player has not joined the server yet. Please use /fpm join <player> to let him join the server."
 player_not_found: "&cThe fake player you entered does not exist."
 player_already_joined: "&cThe fake player has already joined the server."
+no_fake_players_u_have: "&cYou do not have any fake players."
 command:
   skin_changed: "&aThe fake player's skin has been changed."
   skin_error: "&cAn error occurred while changing the fake player's skin. Please try again later."

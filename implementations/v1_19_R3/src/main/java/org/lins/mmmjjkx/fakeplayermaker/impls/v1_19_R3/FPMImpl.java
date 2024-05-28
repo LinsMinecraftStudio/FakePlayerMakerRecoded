@@ -15,9 +15,10 @@ import org.bukkit.World;
 import org.bukkit.craftbukkit.v1_19_R3.CraftWorld;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import org.lins.mmmjjkx.fakeplayermaker.commons.FPMChannel;
 import org.lins.mmmjjkx.fakeplayermaker.commons.FPMImplements;
+import org.lins.mmmjjkx.fakeplayermaker.commons.FakeChannel;
 import org.lins.mmmjjkx.fakeplayermaker.commons.IFPMPlayer;
+import org.lins.mmmjjkx.fakeplayermaker.commons.PlayerSettingsValueCollection;
 
 import java.util.UUID;
 
@@ -37,16 +38,16 @@ public final class FPMImpl extends FPMImplements {
     }
 
     @Override
-    public void setupConnection(@NotNull IFPMPlayer player) {
+    public void setupConnection(@NotNull IFPMPlayer player, @NotNull PlayerSettingsValueCollection settings) {
         ServerPlayer serverPlayer = (ServerPlayer) player;
 
-        FPMChannel channel = new FPMChannel();
+        FakeChannel channel = new FakeChannel();
 
         LOOP.register(channel);
 
         FPMNetworkManager connection = new FPMNetworkManager(PacketFlow.SERVERBOUND, channel);
 
-        serverPlayer.connection = new FPMConnection(MinecraftServer.getServer(), connection, serverPlayer);
+        serverPlayer.connection = new FPMConnection(MinecraftServer.getServer(), connection, serverPlayer, settings);
     }
 
     @Override
@@ -62,7 +63,7 @@ public final class FPMImpl extends FPMImplements {
         PlayerList playerList = MinecraftServer.getServer().getPlayerList();
         ServerPlayer serverPlayer = (ServerPlayer) player;
 
-        setupConnection(player);
+        setupConnection(player, PlayerSettingsValueCollection.EMPTY);
 
         playerList.remove(serverPlayer);
 

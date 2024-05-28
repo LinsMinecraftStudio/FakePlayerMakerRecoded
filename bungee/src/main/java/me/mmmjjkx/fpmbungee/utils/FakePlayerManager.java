@@ -2,7 +2,7 @@ package me.mmmjjkx.fpmbungee.utils;
 
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import me.mmmjjkx.fpmbungee.FakePlayerMakerBungee;
-import me.mmmjjkx.fpmbungee.netty.FPMChannel;
+import me.mmmjjkx.fpmbungee.netty.FakeChannel;
 import me.mmmjjkx.fpmbungee.netty.FakeChannelHandlerContext;
 import net.md_5.bungee.BungeeCord;
 import net.md_5.bungee.UserConnection;
@@ -18,7 +18,6 @@ import net.md_5.bungee.netty.ChannelWrapper;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -45,7 +44,7 @@ public class FakePlayerManager {
     public ProxiedPlayer createFakePlayer(String name) {
         UUID uuid = UUID.nameUUIDFromBytes(name.getBytes());
 
-        FPMChannel channel = new FPMChannel();
+        FakeChannel channel = new FakeChannel();
 
         ListenerInfo info = BungeeCord.getInstance().getConfig().getListeners().toArray(new ListenerInfo[0])[0];
 
@@ -72,14 +71,6 @@ public class FakePlayerManager {
     public void removeFakePlayer(String name) {
         fakePlayers.set(name, null);
         fakePlayerMap.remove(name);
-    }
-
-    public int getFakePlayerCount() {
-        return fakePlayerMap.size();
-    }
-
-    public Collection<UserConnection> getFakePlayers() {
-        return fakePlayerMap.values();
     }
 
     public boolean isFakePlayer(String name) {
