@@ -1,10 +1,7 @@
 package org.lins.mmmjjkx.fakeplayermaker.impls.v1_20_R3;
 
 import io.github.linsminecraftstudio.polymer.utils.IterableUtil;
-import io.papermc.paper.adventure.ChatProcessor;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
-import net.minecraft.network.chat.PlayerChatMessage;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -18,7 +15,10 @@ import net.minecraft.world.phys.Vec3;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.craftbukkit.v1_20_R3.entity.CraftEntity;
 import org.bukkit.entity.Player;
-import org.lins.mmmjjkx.fakeplayermaker.commons.*;
+import org.lins.mmmjjkx.fakeplayermaker.commons.IFPMPlayer;
+import org.lins.mmmjjkx.fakeplayermaker.commons.InteractHand;
+import org.lins.mmmjjkx.fakeplayermaker.commons.PlayerActionImplements;
+import org.lins.mmmjjkx.fakeplayermaker.commons.SetupValueCollection;
 
 import java.util.List;
 
@@ -49,18 +49,6 @@ public final class ActionImpl extends PlayerActionImplements {
     }
 
     @Override
-    public void chat(IFPMPlayer player, String message) {
-        ServerPlayer serverPlayer = (ServerPlayer) player;
-        PlayerChatMessage playerChatMessage = PlayerChatMessage.unsigned(serverPlayer.getUUID(), message);
-
-        ChatProcessor chatProcessor = new ChatProcessor(
-                MinecraftServer.getServer(), serverPlayer, playerChatMessage, true
-        );
-
-        Instances.getFPM().getScheduler().scheduleAsync(chatProcessor::process);
-    }
-
-    @Override
     public void sneak(IFPMPlayer player, boolean sneak) {
         ServerPlayer serverPlayer = (ServerPlayer) player;
         serverPlayer.setShiftKeyDown(sneak);
@@ -75,6 +63,7 @@ public final class ActionImpl extends PlayerActionImplements {
         bk.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(values.maxHealth());
 
         serverPlayer.setInvulnerable(values.invulnerable());
+        serverPlayer.bukkitPickUpLoot = values.pickupItems();
     }
 
     @Override

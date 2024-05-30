@@ -45,8 +45,6 @@ public abstract class PlayerActionImplements {
 
     public abstract void lookAt(IFPMPlayer player, double x, double y, double z);
 
-    public abstract void chat(IFPMPlayer player, String message);
-
     public abstract void sneak(IFPMPlayer player, boolean sneak);
 
     public abstract void setupValues(IFPMPlayer player, SetupValueCollection values);

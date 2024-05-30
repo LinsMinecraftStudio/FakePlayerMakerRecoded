@@ -11,6 +11,7 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.PacketFlow;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ChunkMap;
+import net.minecraft.server.level.ClientInformation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.CommonListenerCookie;
@@ -79,10 +80,11 @@ public class FPMImpl extends FPMImplements {
         PlayerList playerList = MinecraftServer.getServer().getPlayerList();
         ServerPlayer serverPlayer = (ServerPlayer) player;
 
-        PLACE_NEW_PLAYER_ORIGINAL.invoke(playerList,
-                                serverPlayer.connection.connection,
-                                serverPlayer,
-                                CommonListenerCookie.createInitial(serverPlayer.gameProfile, true)
+        PLACE_NEW_PLAYER_ORIGINAL.invoke(
+                playerList,
+                serverPlayer.connection.connection,
+                serverPlayer,
+                new CommonListenerCookie(serverPlayer.gameProfile, 5, ClientInformation.createDefault(), true)
         );
     }
 

@@ -33,3 +33,4 @@ command:
     teleporthere: "让假人传送到你的位置"
     interact: "让假人交互"
     lookat: "让假人看向一个地方"
+    inventory: "打开假人的背包"

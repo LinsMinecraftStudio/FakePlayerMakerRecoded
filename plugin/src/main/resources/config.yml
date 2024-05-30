@@ -9,7 +9,8 @@ default-spawn-location:
   yaw: 0
   pitch: 0
 
-# Total mc name length limit is 16 characters!
+#Total mc name length limit is 16 characters!
+#To disable the name prefix, set it to "" (empty string)
 namePrefix: "fak_"
 randomNameLength: 10
 
@@ -26,6 +27,7 @@ fakePlayer:
   #It uses to fix the tablist order when TAB is installed.
   defaultTabGroup: "default"
   pickupItems: true
+  entityAttackRadius: 3
   randomizePing:
     enabled: true
     #for example: 20 is 20ms

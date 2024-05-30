@@ -26,6 +26,7 @@
         <java.version>17</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <revision>1.0.4</revision>
+        <paper.nms.plugin.version>1.4.4</paper.nms.plugin.version>
     </properties>
 
   <build>

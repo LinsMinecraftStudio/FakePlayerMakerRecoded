@@ -33,3 +33,4 @@ command:
     teleporthere: "Teleport a fake player to you"
     interact: "Let a fake player interact"
     lookat: "Let a fake player look at somewhere"
+    inventory: "Open the inventory of a fake player"

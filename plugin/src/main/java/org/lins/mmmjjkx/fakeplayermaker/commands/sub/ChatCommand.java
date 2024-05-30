@@ -4,9 +4,10 @@ import io.github.linsminecraftstudio.polymer.command.PolymerCommand;
 import org.bukkit.command.CommandSender;
 import org.lins.mmmjjkx.fakeplayermaker.FPMRecoded;
 import org.lins.mmmjjkx.fakeplayermaker.commands.FPMSubCmd;
+import org.lins.mmmjjkx.fakeplayermaker.commons.FPMImplements;
 import org.lins.mmmjjkx.fakeplayermaker.commons.IFPMPlayer;
-import org.lins.mmmjjkx.fakeplayermaker.commons.PlayerActionImplements;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -20,7 +21,10 @@ public class ChatCommand extends FPMSubCmd {
 
     @Override
     public Map<Integer, List<String>> tabCompletion(CommandSender commandSender) {
-        return Map.of(0, FPMRecoded.fakePlayerManager.getFakePlayerNames(), 1, List.of("message(use %sp% instead of spaces)"));
+        return Map.of(0, FPMRecoded.fakePlayerManager.getFakePlayerNames(),
+                1, List.of("message(you can space directly)"),
+                getArgs().size() - 1, List.of("message(you can space directly)")
+        );
     }
 
     @Override
@@ -39,13 +43,16 @@ public class ChatCommand extends FPMSubCmd {
                 return;
             }
 
+            //head content
             if (message == null) {
                 return;
             }
 
             IFPMPlayer fakePlayer = getFakePlayer(commandSender, player);
             if (fakePlayer != null) {
-                PlayerActionImplements.getCurrent().chat(fakePlayer, message.replaceAll("%sp%", " "));
+                String[] msg = Arrays.copyOfRange(getArgs().args(), 1, getArgs().size());
+                String msgStr = String.join(" ", msg);
+                FPMImplements.getCurrent().toBukkit(fakePlayer).chat(msgStr);
             }
         }
     }

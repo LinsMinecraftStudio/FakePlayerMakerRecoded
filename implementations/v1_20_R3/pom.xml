@@ -30,25 +30,7 @@
             <plugin>
                 <groupId>ca.bkaw</groupId>
                 <artifactId>paper-nms-maven-plugin</artifactId>
-                <version>1.4.3</version>
-                <configuration>
-                    <devBundle>
-                        <!-- The artifact id of the resulting dependency -->
-                        <id>folia-nms</id>
-                        <!-- The repository to download the dev-bundle from -->
-                        <repository>
-                            <id>papermc</id>
-                            <url>https://repo.papermc.io/repository/maven-public/</url>
-                        </repository>
-                        <!-- The artifact to download -->
-                        <artifact>
-                            <groupId>dev.folia</groupId>
-                            <artifactId>dev-bundle</artifactId>
-                            <version>1.20.4-R0.1-SNAPSHOT</version>
-                            <!-- ${gameVersion} will be replaced with the game version to use -->
-                        </artifact>
-                    </devBundle>
-                </configuration>
+                <version>${paper.nms.plugin.version}</version>
                 <executions>
                     <execution>
                         <phase>process-classes</phase>
@@ -85,8 +67,8 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>ca.bkaw.nms</groupId>
-            <artifactId>folia-nms</artifactId>
+            <groupId>ca.bkaw</groupId>
+            <artifactId>paper-nms</artifactId>
             <version>1.20.4-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
