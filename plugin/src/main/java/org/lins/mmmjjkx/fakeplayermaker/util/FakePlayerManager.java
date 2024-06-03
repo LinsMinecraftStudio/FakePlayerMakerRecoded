@@ -127,7 +127,7 @@ public class FakePlayerManager implements IFakePlayerManager {
 
                     String groupName = FPMRecoded.INSTANCE.getConfig().getString("fakePlayer.defaultTabGroup", "");
                     if (!groupName.isBlank()) {
-                        if (!tabPlayer.getGroup().equals(groupName)) {
+                        if (!tabPlayer.getGroup().equalsIgnoreCase("none")) {
                             return;
                         }
 
@@ -171,11 +171,15 @@ public class FakePlayerManager implements IFakePlayerManager {
         IMPL.setupConnection(player, settings);
         IMPL.addPlayer(player);
 
+        int ping = FPMImplements.getCurrent().toBukkit(player).getPing();
+        FPMRecoded.INSTANCE.getLogger().info("Fake player ping: " + ping);
+
         FPMImplements.handlePluginCompatability(player);
 
         SetupValueCollection collection = new SetupValueCollection(
                 FPMRecoded.INSTANCE.getConfig().getBoolean("fakePlayer.invulnerable", true),
-                FPMRecoded.INSTANCE.getConfig().getDouble("fakePlayer.maxHealth", 20)
+                FPMRecoded.INSTANCE.getConfig().getDouble("fakePlayer.maxHealth", 20),
+                FPMRecoded.INSTANCE.getConfig().getBoolean("fakePlayer.pickupItems", true)
         );
 
         Location location = FPMRecoded.fakePlayerSaver.getReadyToTeleport().get(profile);

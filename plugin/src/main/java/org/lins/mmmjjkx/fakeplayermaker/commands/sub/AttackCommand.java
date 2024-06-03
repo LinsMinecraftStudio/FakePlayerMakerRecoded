@@ -1,5 +1,6 @@
 package org.lins.mmmjjkx.fakeplayermaker.commands.sub;
 
+import io.github.linsminecraftstudio.polymer.objectutils.CommandArgumentType;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -15,6 +16,8 @@ import java.util.Map;
 public class AttackCommand extends FPMSubCmd {
     public AttackCommand() {
         super("attack");
+
+        addArgument("player", CommandArgumentType.REQUIRED);
     }
 
     @Override

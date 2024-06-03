@@ -1,12 +1,11 @@
 package me.mmmjjkx.fpmbungee;
 
+import io.github.linsminecraftstudio.bungee.Constants;
+import io.github.linsminecraftstudio.bungee.PolymerBungeePlugin;
 import me.mmmjjkx.fpmbungee.fakers.TablistFaker;
 import me.mmmjjkx.fpmbungee.utils.FakePlayerManager;
 import me.mmmjjkx.fpmbungee.utils.Updater;
-import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.config.Configuration;
-import net.md_5.bungee.config.ConfigurationProvider;
-import net.md_5.bungee.config.YamlConfiguration;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -14,7 +13,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.nio.file.Files;
 
-public final class FakePlayerMakerBungee extends Plugin {
+public final class FakePlayerMakerBungee extends PolymerBungeePlugin {
     public static final String CHANNEL_NAME = "fpmbungee";
 
     public static FakePlayerManager manager;
@@ -32,8 +31,7 @@ public final class FakePlayerMakerBungee extends Plugin {
         if (!configFile.exists()) {
             try (InputStream in = getResourceAsStream("config.yml")) {
                 Files.copy(in, configFile.toPath());
-                ConfigurationProvider provider = ConfigurationProvider.getProvider(YamlConfiguration.class);
-                configuration = provider.load(configFile);
+                configuration = Constants.CONFIGURATION_PROVIDER.load(configFile);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -66,11 +64,13 @@ public final class FakePlayerMakerBungee extends Plugin {
                 }
             });
         }
+
+        getProxy().registerChannel(CHANNEL_NAME);
+        getProxy().getPluginManager().registerListener(this, new MessageListener());
     }
 
     @Override
-    public void onDisable() {
-        // Plugin shutdown logic
+    public void onPlDisable() {
     }
 
     @Nullable

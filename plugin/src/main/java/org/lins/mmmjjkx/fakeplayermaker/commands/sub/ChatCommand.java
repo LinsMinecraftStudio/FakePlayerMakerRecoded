@@ -1,6 +1,6 @@
 package org.lins.mmmjjkx.fakeplayermaker.commands.sub;
 
-import io.github.linsminecraftstudio.polymer.command.PolymerCommand;
+import io.github.linsminecraftstudio.polymer.objectutils.CommandArgumentType;
 import org.bukkit.command.CommandSender;
 import org.lins.mmmjjkx.fakeplayermaker.FPMRecoded;
 import org.lins.mmmjjkx.fakeplayermaker.commands.FPMSubCmd;
@@ -15,8 +15,8 @@ public class ChatCommand extends FPMSubCmd {
     public ChatCommand() {
         super("chat");
 
-        addArgument("player", PolymerCommand.ArgumentType.REQUIRED);
-        addArgument("message", PolymerCommand.ArgumentType.REQUIRED);
+        addArgument("player", CommandArgumentType.REQUIRED);
+        addArgument("message", CommandArgumentType.REQUIRED);
     }
 
     @Override

@@ -1,6 +1,6 @@
 package org.lins.mmmjjkx.fakeplayermaker.commands.sub;
 
-import io.github.linsminecraftstudio.polymer.command.PolymerCommand;
+import io.github.linsminecraftstudio.polymer.objectutils.CommandArgumentType;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -16,7 +16,7 @@ public class JoinCommand extends FPMSubCmd {
     public JoinCommand() {
         super("join");
 
-        addArgument("player", PolymerCommand.ArgumentType.REQUIRED);
+        addArgument("player", CommandArgumentType.REQUIRED);
     }
 
     @Override

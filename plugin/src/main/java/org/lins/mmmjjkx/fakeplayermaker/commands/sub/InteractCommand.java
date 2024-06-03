@@ -1,6 +1,6 @@
 package org.lins.mmmjjkx.fakeplayermaker.commands.sub;
 
-import io.github.linsminecraftstudio.polymer.command.PolymerCommand;
+import io.github.linsminecraftstudio.polymer.objectutils.CommandArgumentType;
 import org.bukkit.command.CommandSender;
 import org.lins.mmmjjkx.fakeplayermaker.FPMRecoded;
 import org.lins.mmmjjkx.fakeplayermaker.commands.FPMSubCmd;
@@ -16,8 +16,8 @@ public class InteractCommand extends FPMSubCmd {
     public InteractCommand() {
         super("interact");
 
-        addArgument("player", PolymerCommand.ArgumentType.REQUIRED);
-        addArgument("hand", PolymerCommand.ArgumentType.OPTIONAL);
+        addArgument("player", CommandArgumentType.REQUIRED);
+        addArgument("hand", CommandArgumentType.OPTIONAL);
     }
 
     @Override

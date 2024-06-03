@@ -91,5 +91,4 @@ public class FPMImpl extends FPMImplements {
     public Player toBukkit(@NotNull IFPMPlayer nmsPlayer) {
         return ((ServerPlayer) nmsPlayer).getBukkitEntity();
     }
-
 }

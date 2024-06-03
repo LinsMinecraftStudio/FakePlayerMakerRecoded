@@ -2,6 +2,7 @@ package org.lins.mmmjjkx.fakeplayermaker.commands.sub;
 
 import com.google.common.collect.Lists;
 import io.github.linsminecraftstudio.polymer.TempPolymer;
+import io.github.linsminecraftstudio.polymer.objectutils.CommandArgumentType;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import org.bukkit.Bukkit;
@@ -20,6 +21,8 @@ import java.util.UUID;
 public class ListCommand extends FPMSubCmd {
     public ListCommand() {
         super("list");
+
+        addArgument("ownerOrPage", CommandArgumentType.OPTIONAL);
     }
 
     @Override

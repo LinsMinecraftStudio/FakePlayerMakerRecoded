@@ -91,9 +91,12 @@ public class FakePlayerSaver extends SingleFileStorage {
     public void removeFakePlayer(String name) {
         set(name, null);
         fakePlayers.remove(name);
+        super.reload();
     }
 
     public void reload() {
+        super.reload();
+
         fakePlayers.clear();
         setup();
     }

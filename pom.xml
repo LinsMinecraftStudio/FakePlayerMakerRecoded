@@ -98,7 +98,7 @@
             <dependency>
                 <groupId>io.github.linsminecraftstudio</groupId>
                 <artifactId>Polymer-Core</artifactId>
-                <version>1.4.5-SNAPSHOT</version>
+                <version>1.4.7-SNAPSHOT</version>
                 <scope>provided</scope>
             </dependency>
             <dependency>

@@ -1,5 +1,6 @@
 package org.lins.mmmjjkx.fakeplayermaker.commands.sub;
 
+import io.github.linsminecraftstudio.polymer.objectutils.CommandArgumentType;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.lins.mmmjjkx.fakeplayermaker.FPMRecoded;
@@ -13,6 +14,8 @@ import java.util.Map;
 public class InventoryCommand extends FPMSubCmd {
     public InventoryCommand() {
         super("inventory", "inv");
+
+        addArgument("player", CommandArgumentType.REQUIRED);
     }
 
     @Override

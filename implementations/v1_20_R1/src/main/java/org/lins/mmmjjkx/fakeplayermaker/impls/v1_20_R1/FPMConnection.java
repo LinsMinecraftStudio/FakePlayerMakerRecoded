@@ -18,6 +18,7 @@ import java.util.Set;
 
 public class FPMConnection extends ServerGamePacketListenerImpl {
     private final PlayerSettingsValueCollection settings;
+    private final Random RNG = new Random();
 
     public FPMConnection(MinecraftServer server, Connection connection, ServerPlayer player, PlayerSettingsValueCollection settings) {
         super(server, connection, player);
@@ -55,8 +56,6 @@ public class FPMConnection extends ServerGamePacketListenerImpl {
     }
 
     private void resetLatency() {
-        Random random = new Random();
-
-        player.latency = random.nextInt(settings.latencyMax() - settings.latencyMin() + 1) + settings.latencyMin();
+        player.latency = RNG.nextInt(settings.latencyMax() - settings.latencyMin() + 1) + settings.latencyMin();
     }
 }

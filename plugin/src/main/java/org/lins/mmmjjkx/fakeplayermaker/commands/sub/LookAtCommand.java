@@ -1,6 +1,6 @@
 package org.lins.mmmjjkx.fakeplayermaker.commands.sub;
 
-import io.github.linsminecraftstudio.polymer.command.PolymerCommand;
+import io.github.linsminecraftstudio.polymer.objectutils.CommandArgumentType;
 import org.bukkit.command.CommandSender;
 import org.lins.mmmjjkx.fakeplayermaker.FPMRecoded;
 import org.lins.mmmjjkx.fakeplayermaker.commands.FPMSubCmd;
@@ -14,10 +14,10 @@ public class LookAtCommand extends FPMSubCmd {
     public LookAtCommand() {
         super("lookat");
 
-        addArgument("player", PolymerCommand.ArgumentType.REQUIRED);
-        addArgument("x", PolymerCommand.ArgumentType.REQUIRED);
-        addArgument("y", PolymerCommand.ArgumentType.REQUIRED);
-        addArgument("z", PolymerCommand.ArgumentType.REQUIRED);
+        addArgument("player", CommandArgumentType.REQUIRED);
+        addArgument("x", CommandArgumentType.REQUIRED);
+        addArgument("y", CommandArgumentType.REQUIRED);
+        addArgument("z", CommandArgumentType.REQUIRED);
     }
 
     @Override

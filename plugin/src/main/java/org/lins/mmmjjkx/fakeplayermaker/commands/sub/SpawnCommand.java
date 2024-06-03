@@ -1,6 +1,6 @@
 package org.lins.mmmjjkx.fakeplayermaker.commands.sub;
 
-import io.github.linsminecraftstudio.polymer.command.PolymerCommand;
+import io.github.linsminecraftstudio.polymer.objectutils.CommandArgumentType;
 import io.github.linsminecraftstudio.polymer.utils.ObjectConverter;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -22,8 +22,8 @@ public class SpawnCommand extends FPMSubCmd {
     public SpawnCommand() {
         super("spawn");
 
-        addArgument("name", PolymerCommand.ArgumentType.OPTIONAL);
-        addArgument("location", PolymerCommand.ArgumentType.OPTIONAL);
+        addArgument("name", CommandArgumentType.OPTIONAL);
+        addArgument("location", CommandArgumentType.OPTIONAL);
     }
 
     @Override

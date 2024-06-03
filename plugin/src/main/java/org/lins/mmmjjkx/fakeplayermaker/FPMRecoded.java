@@ -1,7 +1,9 @@
 package org.lins.mmmjjkx.fakeplayermaker;
 
 import io.github.linsminecraftstudio.polymer.command.PolymerCommand;
+import io.github.linsminecraftstudio.polymer.objects.PolymerConstants;
 import io.github.linsminecraftstudio.polymer.objects.plugin.PolymerPlugin;
+import io.github.linsminecraftstudio.polymer.utils.FileUtil;
 import io.github.linsminecraftstudio.polymer.utils.ObjectConverter;
 import io.github.linsminecraftstudio.polymer.utils.OtherUtils;
 import org.lins.mmmjjkx.fakeplayermaker.commands.FPMMainCommand;
@@ -28,7 +30,7 @@ public final class FPMRecoded extends PolymerPlugin {
     public void onPlEnable() {
         INSTANCE = this;
 
-        new Metrics(this, 21829);
+        startMetrics(21829);
 
         getLogger().info("""
                 
@@ -45,6 +47,8 @@ public final class FPMRecoded extends PolymerPlugin {
         fakePlayerManager = new FakePlayerManager();
 
         Instances.setFakePlayerManager(fakePlayerManager);
+
+        FileUtil.completeFile("config.yml");
 
         // Register listeners
         new AutoRespawn();
@@ -86,11 +90,11 @@ public final class FPMRecoded extends PolymerPlugin {
 
     @Override
     public String requireVersion() {
-        return "1.4.5";
+        return "1.4.7";
     }
 
     @Override
     public int requireApiVersion() {
-        return 2;
+        return PolymerConstants.API_VERSION;
     }
 }
