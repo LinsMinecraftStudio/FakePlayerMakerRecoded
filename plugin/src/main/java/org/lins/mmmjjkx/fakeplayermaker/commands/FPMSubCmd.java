@@ -46,12 +46,16 @@ public abstract class FPMSubCmd extends SubCommand {
         return null;
     }
 
-    private boolean isHisOwn(CommandSender sender, UUID ownerUUID) {
+    public boolean isHisOwn(CommandSender sender, UUID ownerUUID) {
         if (sender instanceof Player p) {
             if (p.hasPermission("fakeplayermaker.bypassowner")) {
                 return true;
             } else {
-                return p.getUniqueId().equals(ownerUUID);
+                if (p.getUniqueId().equals(ownerUUID)) {
+                    return true;
+                }
+                FPMRecoded.INSTANCE.getMessageHandler().sendMessage(sender, "player_not_yours");
+                return false;
             }
         }
         return true;

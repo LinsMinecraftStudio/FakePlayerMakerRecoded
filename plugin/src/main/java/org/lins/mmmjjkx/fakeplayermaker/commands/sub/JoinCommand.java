@@ -46,13 +46,18 @@ public class JoinCommand extends FPMSubCmd {
                 return;
             }
 
+            if (!isHisOwn(commandSender, fakePlayer.getOwnerUUID())) {
+                return;
+            }
+
             Player player = FPMImplements.getCurrent().toBukkit(fakePlayer);
             if (Bukkit.getPlayer(player.getUniqueId()) != null) {
                 FPMRecoded.INSTANCE.getMessageHandler().sendMessage(commandSender, "player_already_joined");
                 return;
             }
 
-            FPMRecoded.fakePlayerManager.join(playerName);
+            IFPMPlayer newPlayer = FPMRecoded.fakePlayerSaver.recreate(fakePlayer, player.getLocation());
+            FPMRecoded.fakePlayerManager.join(newPlayer);
         }
     }
 }

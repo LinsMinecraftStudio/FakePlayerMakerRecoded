@@ -8,6 +8,8 @@ import net.md_5.bungee.api.chat.ComponentBuilder;
 public class FPMBCommand extends PolymerBungeeCommand {
     public FPMBCommand() {
         super("fakeplayermakerbungee", "fakeplayermakerbungee.admin", "fpmb", "fakeplayerbungee");
+
+        new SpawnCommand(this);
     }
 
     @Override

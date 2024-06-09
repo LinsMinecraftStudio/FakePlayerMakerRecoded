@@ -2,7 +2,9 @@ player_not_joined: "&c假人尚未加入服务器。请使用/fpm join <player> 
 player_not_found: "&c无法找到该假人"
 player_already_joined: "&c该假人已经加入了服务器。"
 no_fake_players_u_have: "&c你没有拥有任何一个假人。"
+player_not_yours: "&c那不是你的假人！"
 command:
+  name_taken: "&c该名称已被使用。请选择另一个名称。"
   reload-expired: "&e&l你的完整重载请求已过期。"
   skin_changed: "&a假人的皮肤已更换。"
   skin_error: "&c更换假人皮肤时出现错误。请稍后再试。"

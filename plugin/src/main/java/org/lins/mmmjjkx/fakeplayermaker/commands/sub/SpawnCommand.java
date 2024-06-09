@@ -47,6 +47,11 @@ public class SpawnCommand extends FPMSubCmd {
                 name += CommonUtils.generateRandomString(FPMRecoded.INSTANCE.getConfig().getInt("randomNameLength", 8));
             }
 
+            if (FPMRecoded.fakePlayerManager.getFakePlayer(name).getRight() != null) {
+                FPMRecoded.INSTANCE.getMessageHandler().sendMessage(commandSender, "command.name_taken");
+                return;
+            }
+
             Location loc;
             if (location == null) {
                 if (commandSender instanceof Player p) {
@@ -77,12 +82,7 @@ public class SpawnCommand extends FPMSubCmd {
             FPMRecoded.fakePlayerSaver.saveFakePlayer(player);
 
             Player bk = FPMImplements.getCurrent().toBukkit(player);
-
-            if (FPMImplements.isFolia()) {
-                bk.teleportAsync(loc);
-            } else {
-                bk.teleport(loc);
-            }
+            bk.teleport(loc);
         }
     }
 }

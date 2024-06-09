@@ -1,13 +1,12 @@
 language: en-US
 checkUpdates: true
 
-fakers:
-  tablist:
-    enabled: false
-    #You can also use /fpmb tablist add/remove to add/remove fake players' names from the tablist.
-    #if you don't want to use the default player list, you can leave it empty.
-    defaultPlayerList: []
-    useFakePlayerPrefix: false
+tablist-faker:
+  enabled: false
+  #You can also use /fpmb tablist add/remove to add/remove fake players' names from the tablist.
+  #if you don't want to use the default player list, you can leave it empty.
+  defaultPlayerList: []
+  useFakePlayerPrefix: false
 
 fakePlayerPrefix: "&a[Fake Player] &f"
 

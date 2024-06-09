@@ -18,15 +18,14 @@ public class MessageListener extends MessageChannel {
 
     @EventHandler
     public void onMessageReceived(PluginMessageEvent e, ByteArrayDataInput in) {
-        ByteArrayDataInput is = ByteStreams.newDataInput(e.getData());
-        String action = is.readUTF();
+        String action = in.readUTF();
         switch (action) {
             case "spawn": {
-                String name = is.readUTF();
+                String name = in.readUTF();
                 //We need console force to write the server name.
                 String server = getServerName(e.getSender());
                 if (server.isEmpty()) {
-                    server = is.readUTF();
+                    server = in.readUTF();
                 }
 
                 ServerInfo serverInfo = ProxyServer.getInstance().getServerInfo(server);
@@ -49,14 +48,26 @@ public class MessageListener extends MessageChannel {
                 break;
             }
             case "remove": {
-                String name = is.readUTF();
+                String name = in.readUTF();
                 ProxyServer.getInstance().getPlayer(name).disconnect();
                 FakePlayerMakerBungee.manager.removeFakePlayer(name);
                 break;
             }
             case "leave": {
-                String name = is.readUTF();
+                String name = in.readUTF();
                 ProxyServer.getInstance().getPlayer(name).disconnect();
+                break;
+            }
+            case "query": {
+                String name = in.readUTF();
+                if (e.getSender() instanceof ProxiedPlayer) {
+                    ProxiedPlayer sender = (ProxiedPlayer) e.getSender();
+
+                    ByteArrayDataOutput os = ByteStreams.newDataOutput();
+                    os.writeBoolean(FakePlayerMakerBungee.manager.isFakePlayer(name));
+
+                    sender.sendData(FakePlayerMakerBungee.CHANNEL_NAME, os.toByteArray());
+                }
                 break;
             }
         }
