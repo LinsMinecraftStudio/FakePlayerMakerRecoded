@@ -3,6 +3,7 @@ package org.lins.mmmjjkx.fakeplayermaker.impls.v1_20_R3;
 import com.mojang.authlib.GameProfile;
 import io.netty.channel.DefaultEventLoop;
 import io.netty.channel.EventLoop;
+import io.papermc.paper.threadedregions.EntityScheduler;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import lombok.SneakyThrows;
 import net.minecraft.network.protocol.PacketFlow;
@@ -22,6 +23,7 @@ import org.lins.mmmjjkx.fakeplayermaker.commons.FakeChannel;
 import org.lins.mmmjjkx.fakeplayermaker.commons.IFPMPlayer;
 import org.lins.mmmjjkx.fakeplayermaker.commons.PlayerSettingsValueCollection;
 
+import java.lang.reflect.Field;
 import java.util.UUID;
 
 public class FPMImpl extends FPMImplements {
@@ -63,6 +65,16 @@ public class FPMImpl extends FPMImplements {
                 serverPlayer,
                 CommonListenerCookie.createInitial(serverPlayer.gameProfile)
         );
+
+        serverPlayer.getBukkitEntity().taskScheduler.schedule(e -> {}, e -> {
+            try {
+                Field field = EntityScheduler.class.getDeclaredField("tickCount");
+                field.setAccessible(true);
+                field.set(serverPlayer.getBukkitEntity().taskScheduler, 10L);
+            } catch (NoSuchFieldException | IllegalAccessException ex) {
+                throw new RuntimeException(ex);
+            }
+        }, 1000L);
     }
 
     @SneakyThrows

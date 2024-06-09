@@ -22,8 +22,7 @@ public class ChatCommand extends FPMSubCmd {
     @Override
     public Map<Integer, List<String>> tabCompletion(CommandSender commandSender) {
         return Map.of(0, FPMRecoded.fakePlayerManager.getFakePlayerNames(),
-                1, List.of("message(you can space directly)"),
-                getArgs().size() - 1, List.of("message(you can space directly)")
+                1, List.of("message(you can space directly)")
         );
     }
 

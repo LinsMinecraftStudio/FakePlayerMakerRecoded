@@ -1,15 +1,15 @@
 package org.lins.mmmjjkx.fakeplayermaker;
 
 import io.github.linsminecraftstudio.polymer.command.PolymerCommand;
-import io.github.linsminecraftstudio.polymer.objects.PolymerConstants;
 import io.github.linsminecraftstudio.polymer.objects.plugin.PolymerPlugin;
 import io.github.linsminecraftstudio.polymer.utils.FileUtil;
 import io.github.linsminecraftstudio.polymer.utils.ObjectConverter;
 import io.github.linsminecraftstudio.polymer.utils.OtherUtils;
 import org.lins.mmmjjkx.fakeplayermaker.commands.FPMMainCommand;
 import org.lins.mmmjjkx.fakeplayermaker.commons.Instances;
-import org.lins.mmmjjkx.fakeplayermaker.listeners.AutoRespawn;
 import org.lins.mmmjjkx.fakeplayermaker.listeners.CommandListeners;
+import org.lins.mmmjjkx.fakeplayermaker.listeners.FakePlayerListener;
+import org.lins.mmmjjkx.fakeplayermaker.listeners.LPLookupUUIDListener;
 import org.lins.mmmjjkx.fakeplayermaker.listeners.Scheduling;
 import org.lins.mmmjjkx.fakeplayermaker.util.FakePlayerManager;
 import org.lins.mmmjjkx.fakeplayermaker.util.FakePlayerSaver;
@@ -51,9 +51,13 @@ public final class FPMRecoded extends PolymerPlugin {
         FileUtil.completeFile("config.yml");
 
         // Register listeners
-        new AutoRespawn();
+        new FakePlayerListener();
         new CommandListeners();
         new Scheduling();
+
+        if (getServer().getPluginManager().isPluginEnabled("LuckPerms")) {
+            new LPLookupUUIDListener();
+        }
         //end of register listeners
 
         if (getConfig().getBoolean("checkUpdate")) {
@@ -85,7 +89,6 @@ public final class FPMRecoded extends PolymerPlugin {
         super.reload();
 
         fakePlayerSaver.reload();
-        fakePlayerManager.reload();
     }
 
     @Override
@@ -95,6 +98,6 @@ public final class FPMRecoded extends PolymerPlugin {
 
     @Override
     public int requireApiVersion() {
-        return PolymerConstants.API_VERSION;
+        return 3;
     }
 }

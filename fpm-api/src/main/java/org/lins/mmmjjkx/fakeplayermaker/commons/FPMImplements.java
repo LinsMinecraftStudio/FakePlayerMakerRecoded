@@ -2,15 +2,11 @@ package org.lins.mmmjjkx.fakeplayermaker.commons;
 
 import com.mojang.authlib.GameProfile;
 import lombok.Getter;
-import net.luckperms.api.LuckPermsProvider;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.UUID;
 
 public abstract class FPMImplements {
@@ -64,6 +60,7 @@ public abstract class FPMImplements {
     }
 
     public static void handlePluginCompatability(IFPMPlayer player) {
+        /* STAY IT HERE
         Player p = getCurrent().toBukkit(player);
         //luckperms compatibility
         {
@@ -112,6 +109,8 @@ public abstract class FPMImplements {
                 }
             }
         }
+
+         */
     }
 
     public abstract @NotNull IFPMPlayer createPlayer(@NotNull GameProfile profile, @NotNull String levelName, @NotNull UUID owner);

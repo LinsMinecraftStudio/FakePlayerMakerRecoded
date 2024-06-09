@@ -3,6 +3,7 @@ package org.lins.mmmjjkx.fakeplayermaker.impls.v1206;
 import com.mojang.authlib.GameProfile;
 import io.netty.channel.DefaultEventLoop;
 import io.netty.channel.EventLoop;
+import io.papermc.paper.threadedregions.EntityScheduler;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import lombok.SneakyThrows;
 import net.minecraft.network.*;
@@ -28,21 +29,10 @@ import org.lins.mmmjjkx.fakeplayermaker.commons.IFPMPlayer;
 import org.lins.mmmjjkx.fakeplayermaker.commons.PlayerSettingsValueCollection;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.UUID;
 import java.util.function.Consumer;
 
 public class FPMImpl extends FPMImplements {
-    private final Method PLACE_NEW_PLAYER_ORIGINAL;
-
-    public FPMImpl() {
-        try {
-            PLACE_NEW_PLAYER_ORIGINAL = PlayerList.class.getMethod("placeNewPlayer", Connection.class, ServerPlayer.class, CommonListenerCookie.class);
-        } catch (NoSuchMethodException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     private final EventLoop LOOP = new DefaultEventLoop();
 
     @Override
@@ -80,12 +70,21 @@ public class FPMImpl extends FPMImplements {
         PlayerList playerList = MinecraftServer.getServer().getPlayerList();
         ServerPlayer serverPlayer = (ServerPlayer) player;
 
-        PLACE_NEW_PLAYER_ORIGINAL.invoke(
-                playerList,
+        playerList.placeNewPlayer(
                 serverPlayer.connection.connection,
                 serverPlayer,
                 new CommonListenerCookie(serverPlayer.gameProfile, 5, ClientInformation.createDefault(), true)
         );
+
+        serverPlayer.getBukkitEntity().taskScheduler.schedule(e -> {}, e -> {
+            try {
+                Field field = EntityScheduler.class.getDeclaredField("tickCount");
+                field.setAccessible(true);
+                field.set(serverPlayer.getBukkitEntity().taskScheduler, 10L);
+            } catch (NoSuchFieldException | IllegalAccessException ex) {
+                throw new RuntimeException(ex);
+            }
+        }, 1000L);
     }
 
     @SneakyThrows
@@ -101,8 +100,7 @@ public class FPMImpl extends FPMImplements {
         ServerLevel world = serverPlayer.serverLevel();
         ChunkMap chunkMap = world.chunkSource.chunkMap;
 
-        Int2ObjectMap<ChunkMap.TrackedEntity> entityMap = (Int2ObjectMap<ChunkMap.TrackedEntity>)
-                ChunkMap.class.getDeclaredField("entityMap").get(chunkMap);
+        Int2ObjectMap<ChunkMap.TrackedEntity> entityMap = chunkMap.entityMap;
         entityMap.remove(serverPlayer.getId());
     }
 

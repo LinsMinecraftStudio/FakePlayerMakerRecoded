@@ -59,8 +59,9 @@ public class FakePlayerSaver extends SingleFileStorage {
             if (section == null) {
                 continue;
             }
+
             String uuid_str = section.getString("uuid");
-            UUID uuid = uuid_str == null ? UUID.randomUUID() : UUID.fromString(uuid_str);
+            UUID uuid = uuid_str == null ? UUID.nameUUIDFromBytes(name.getBytes()) : UUID.fromString(uuid_str);
 
             section.set("uuid", uuid.toString());
 
@@ -91,7 +92,6 @@ public class FakePlayerSaver extends SingleFileStorage {
     public void removeFakePlayer(String name) {
         set(name, null);
         fakePlayers.remove(name);
-        super.reload();
     }
 
     public void reload() {
@@ -99,5 +99,10 @@ public class FakePlayerSaver extends SingleFileStorage {
 
         fakePlayers.clear();
         setup();
+    }
+
+    public IFPMPlayer recreate(IFPMPlayer original, Location location) {
+        GameProfile profile = IMPL.getGameProfile(original);
+        return IMPL.createPlayer(profile, location.getWorld().getName(), original.getOwnerUUID());
     }
 }

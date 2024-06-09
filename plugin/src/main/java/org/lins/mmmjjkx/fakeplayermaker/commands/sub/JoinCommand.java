@@ -1,6 +1,7 @@
 package org.lins.mmmjjkx.fakeplayermaker.commands.sub;
 
 import io.github.linsminecraftstudio.polymer.objectutils.CommandArgumentType;
+import org.apache.commons.lang3.tuple.Pair;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -38,8 +39,10 @@ public class JoinCommand extends FPMSubCmd {
                 return;
             }
 
-            IFPMPlayer fakePlayer = getFakePlayer(commandSender, playerName);
+            Pair<Boolean, IFPMPlayer> fakePlayerPair = FPMRecoded.fakePlayerManager.getFakePlayer(playerName);
+            IFPMPlayer fakePlayer = fakePlayerPair.getRight();
             if (fakePlayer == null) {
+                FPMRecoded.INSTANCE.getMessageHandler().sendMessage(commandSender, "player_not_found");
                 return;
             }
 

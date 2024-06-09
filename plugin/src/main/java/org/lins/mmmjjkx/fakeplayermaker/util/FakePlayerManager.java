@@ -20,6 +20,7 @@ import org.lins.mmmjjkx.fakeplayermaker.commons.*;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 public class FakePlayerManager implements IFakePlayerManager {
     private final FPMImplements IMPL = FPMImplements.getCurrent();
@@ -34,11 +35,12 @@ public class FakePlayerManager implements IFakePlayerManager {
     }
 
     public void reload() {
-        fakePlayers = FPMRecoded.fakePlayerSaver.getFakePlayers();
+        fakePlayers.values().forEach(IMPL::removePlayer);
 
-        for (String playerName : fakePlayers.keySet()) {
-            IMPL.removePlayer(fakePlayers.get(playerName));
-        }
+        fakePlayers.clear();
+        FPMRecoded.fakePlayerSaver.reload();
+
+        fakePlayers = FPMRecoded.fakePlayerSaver.getFakePlayers();
 
         for (String playerName : fakePlayers.keySet()) {
             join(playerName);
@@ -59,7 +61,7 @@ public class FakePlayerManager implements IFakePlayerManager {
         if (player == null) {
             return;
         }
-        IMPL.toBukkit(player).kick(Component.text("FPM: leaved from server"));
+        IMPL.removePlayer(player);
     }
 
     public void remove(String playerName) {
@@ -119,19 +121,23 @@ public class FakePlayerManager implements IFakePlayerManager {
             player1.displayName(component);
             player1.playerListName(component);
 
-            String finalDisplayName = displayNamePrefix + player1.getName();
             if (Bukkit.getPluginManager().isPluginEnabled("TAB")) {
                 TabPlayer tabPlayer = TAB.getInstance().getPlayer(player1.getUniqueId());
                 if (tabPlayer != null) {
-                    tabPlayer.getProperty(TabConstants.Property.TABPREFIX).setTemporaryValue(finalDisplayName);
+                    tabPlayer.getProperty(TabConstants.Property.TABPREFIX).setTemporaryValue(displayNamePrefix);
 
                     String groupName = FPMRecoded.INSTANCE.getConfig().getString("fakePlayer.defaultTabGroup", "");
                     if (!groupName.isBlank()) {
                         if (!tabPlayer.getGroup().equalsIgnoreCase("none")) {
+                            SortingManager sortingManager = TAB.getInstance().getSortingManager();
+                            if (sortingManager != null) {
+                                Sorting sorting = (Sorting) sortingManager;
+                                sorting.refresh(tabPlayer,true);
+                            }
                             return;
                         }
 
-                        tabPlayer.setGroup(groupName);
+                        tabPlayer.setTemporaryGroup(groupName);
 
                         SortingManager sortingManager = TAB.getInstance().getSortingManager();
                         if (sortingManager != null) {
@@ -171,10 +177,7 @@ public class FakePlayerManager implements IFakePlayerManager {
         IMPL.setupConnection(player, settings);
         IMPL.addPlayer(player);
 
-        int ping = FPMImplements.getCurrent().toBukkit(player).getPing();
-        FPMRecoded.INSTANCE.getLogger().info("Fake player ping: " + ping);
-
-        FPMImplements.handlePluginCompatability(player);
+        CompletableFuture.runAsync(() -> FPMImplements.handlePluginCompatability(player));
 
         SetupValueCollection collection = new SetupValueCollection(
                 FPMRecoded.INSTANCE.getConfig().getBoolean("fakePlayer.invulnerable", true),

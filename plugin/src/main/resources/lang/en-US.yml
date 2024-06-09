@@ -3,6 +3,10 @@ player_not_found: "&cThe fake player you entered does not exist."
 player_already_joined: "&cThe fake player has already joined the server."
 no_fake_players_u_have: "&cYou do not have any fake players."
 command:
+  reload-expired: "&e&lYour full reload request has expired."
+  reload-config-now: |-
+    &aThe plugin is only reloading the configuration file now(1.0.5+). 
+    &cFor big changes, please restart the server or /fpm full-reload(NOT RECOMMENDED).
   skin_changed: "&aThe fake player's skin has been changed."
   skin_error: "&cAn error occurred while changing the fake player's skin. Please try again later."
   reload-success: "&aPlugin reloaded successfully."
@@ -11,10 +15,18 @@ command:
   no_command: "&cYou must enter a command to execute."
   not_allowed_command: "&cYou are not allowed to execute this command using fake players."
   skin_not_found: "&cThe skin you entered does not exist."
+
+  reload-confirm: |-
+    &c&lARE YOU SURE TO MAKE A FULL RELOAD?
+    &cThis will reload almost every things of the plugin, including the configuration file.
+    &cIt may cause some issues or even crashes. So, I suggest you had better restart the server instead.
+    &c&lType the same command again to confirm the full reload.
+    &c&lExpiring in &b&l10 &c&lseconds...
   info: |- 
     &aRunning FakePlayerMaker-Recoded v%1$s by %2$s. 
     &bRun /fpm help to get help.
   help:
+    full-reload: "Reload the plugin almost every things"
     cmd: "Let a fake player perform a command"
     respawn: "Respawn a fake player"
     help: "Get the help message of the plugin"
@@ -28,7 +40,7 @@ command:
     dismount: "Let a fake player dismount"
     mount: "Let a fake player mount"
     removeall: "Remove all fake players from the server and delete their data(only FPM)"
-    reload: "Reload the plugin"
+    reload: "Reload the configuration file"
     teleport: "Teleport to a fake player"
     teleporthere: "Teleport a fake player to you"
     interact: "Let a fake player interact"

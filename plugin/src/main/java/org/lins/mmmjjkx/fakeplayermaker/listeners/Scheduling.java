@@ -4,6 +4,7 @@ import net.kyori.adventure.text.Component;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.lins.mmmjjkx.fakeplayermaker.FPMRecoded;
 
 import java.util.Random;
@@ -12,7 +13,7 @@ public class Scheduling implements Listener {
     @EventHandler
     public void onFakePlayerJoin(PlayerJoinEvent e) {
         if (FPMRecoded.fakePlayerManager.getFakePlayer(e.getPlayer().getName()) != null) {
-            if (FPMRecoded.INSTANCE.getConfig().getBoolean("schedule.randomQuit.enabled")) {
+            if (FPMRecoded.INSTANCE.getConfig().getBoolean("schedule.randomQuit.enabled", false)) {
                 Random rand = new Random();
                 int min = FPMRecoded.INSTANCE.getConfig().getInt("schedule.randomQuit.timeInterval.min");
                 int max = FPMRecoded.INSTANCE.getConfig().getInt("schedule.randomQuit.timeInterval.max");
@@ -25,9 +26,9 @@ public class Scheduling implements Listener {
     }
 
     @EventHandler
-    public void onFakePlayerQuit(PlayerJoinEvent e) {
+    public void onFakePlayerQuit(PlayerQuitEvent e) {
         if (FPMRecoded.fakePlayerManager.getFakePlayer(e.getPlayer().getName()) != null) {
-            if (FPMRecoded.INSTANCE.getConfig().getBoolean("schedule.randomJoin.enabled")) {
+            if (FPMRecoded.INSTANCE.getConfig().getBoolean("schedule.randomJoin.enabled", false)) {
                 Random rand = new Random();
                 int min = FPMRecoded.INSTANCE.getConfig().getInt("schedule.randomJoin.timeInterval.min");
                 int max = FPMRecoded.INSTANCE.getConfig().getInt("schedule.randomJoin.timeInterval.max");

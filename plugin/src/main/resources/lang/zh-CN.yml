@@ -1,8 +1,9 @@
-player_not_joined: "&c假人尚未加入服务器。请使用/fpm join＜player＞让他加入服务器。"
+player_not_joined: "&c假人尚未加入服务器。请使用/fpm join <player> 让他加入服务器。"
 player_not_found: "&c无法找到该假人"
 player_already_joined: "&c该假人已经加入了服务器。"
 no_fake_players_u_have: "&c你没有拥有任何一个假人。"
 command:
+  reload-expired: "&e&l你的完整重载请求已过期。"
   skin_changed: "&a假人的皮肤已更换。"
   skin_error: "&c更换假人皮肤时出现错误。请稍后再试。"
   reload-success: "&a插件已重新加载。"
@@ -11,10 +12,20 @@ command:
   no_command: "&c你必须输入一个指令！"
   not_allowed_command: "&c你不能使用假人去执行此指令！"
   skin_not_found: "&c找不到该皮肤。"
+  reload-config-now: |-
+    &c&l该插件现在只重载配置文件（1.0.5 及以上）。
+    &b&l如需重大更改，请重启服务器或 /fpm full-reload（非常不建议）。
+  reload-confirm: |-
+    &c&l您确定要进行完全重载吗？
+    &c&l这将重新加载插件的几乎所有内容，包括配置文件。
+    &c&l这可能会导致一些问题甚至崩溃。因此，我建议你最好重启服务器。
+    &c&l再次键入相同命令，来确认完全重载。
+    &c&l将在 &b&l10 &c&l秒后到期...
   info: |-
     &a正在运行 FakePlayerMaker-Recoded v%1$s 作者 %2$s. 
     &b输入 /fpm help 获取帮助.
   help:
+    full-reload: "重载插件的几乎一切"
     cmd: "让假人执行指令"
     respawn: "让假人重生"
     help: "显示帮助信息"
@@ -28,7 +39,7 @@ command:
     dismount: "让假人脱离坐骑"
     mount: "让假人坐在坐骑上"
     removeall: "从服务器上删除所有假人并删除他们的数据（仅FPM）"
-    reload: "重载插件"
+    reload: "重载配置文件"
     teleport: "传送至一个假人"
     teleporthere: "让假人传送到你的位置"
     interact: "让假人交互"

@@ -36,6 +36,7 @@ public class FPMMainCommand extends PolymerCommand {
         registerSubCommand(new LookAtCommand());
         registerSubCommand(new InventoryCommand());
         registerSubCommand(new AttackCommand());
+        registerSubCommand(new FullReloadCommand());
     }
 
     @Override
@@ -58,7 +59,7 @@ public class FPMMainCommand extends PolymerCommand {
         }
     }
 
-    private static class FPMReloadSubCommand extends SubReloadCommand {
+    public static class FPMReloadSubCommand extends SubReloadCommand {
         public FPMReloadSubCommand() {
             super(FPMRecoded.INSTANCE);
         }
@@ -66,7 +67,8 @@ public class FPMMainCommand extends PolymerCommand {
         @Override
         public void execute(CommandSender sender, String alias) {
             if (this.hasPermission()) {
-                FPMRecoded.INSTANCE.reload();
+                FPMRecoded.INSTANCE.getMessageHandler().sendMessage(sender, "command.reload-config-now");
+                FPMRecoded.INSTANCE.reloadConfig();
                 FPMRecoded.INSTANCE.getMessageHandler().sendMessage(sender, "command.reload-success");
             }
         }
