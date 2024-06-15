@@ -5,8 +5,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.lins.mmmjjkx.fakeplayermaker.FPMRecoded;
 import org.lins.mmmjjkx.fakeplayermaker.commands.FPMSubCmd;
-import org.lins.mmmjjkx.fakeplayermaker.commons.FPMImplements;
-import org.lins.mmmjjkx.fakeplayermaker.commons.IFPMPlayer;
+import org.lins.mmmjjkx.fakeplayermaker.commons.objects.IFPMPlayer;
 import org.lins.mmmjjkx.fakeplayermaker.util.SkinUtils;
 
 import java.util.List;
@@ -51,7 +50,7 @@ public class SkinCommand extends FPMSubCmd {
                 return;
             }
 
-            Player bk = FPMImplements.getCurrent().toBukkit(fakePlayer);
+            Player bk = fakePlayer.getFakePlayerProfile().getPlayer();
             boolean success = SkinUtils.changeSkin(commandSender, bk, skinName);
             if (success) {
                 FPMRecoded.fakePlayerSaver.saveFakePlayer(fakePlayer);

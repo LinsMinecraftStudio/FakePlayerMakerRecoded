@@ -7,8 +7,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.lins.mmmjjkx.fakeplayermaker.FPMRecoded;
 import org.lins.mmmjjkx.fakeplayermaker.commands.FPMSubCmd;
-import org.lins.mmmjjkx.fakeplayermaker.commons.FPMImplements;
-import org.lins.mmmjjkx.fakeplayermaker.commons.IFPMPlayer;
+import org.lins.mmmjjkx.fakeplayermaker.commons.objects.IFPMPlayer;
 
 import java.util.List;
 import java.util.Map;
@@ -39,7 +38,7 @@ public class JoinCommand extends FPMSubCmd {
                 return;
             }
 
-            Pair<Boolean, IFPMPlayer> fakePlayerPair = FPMRecoded.fakePlayerManager.getFakePlayer(playerName);
+            Pair<Boolean, IFPMPlayer> fakePlayerPair = FPMRecoded.fakePlayerManager.getExactly(playerName);
             IFPMPlayer fakePlayer = fakePlayerPair.getRight();
             if (fakePlayer == null) {
                 FPMRecoded.INSTANCE.getMessageHandler().sendMessage(commandSender, "player_not_found");
@@ -50,14 +49,13 @@ public class JoinCommand extends FPMSubCmd {
                 return;
             }
 
-            Player player = FPMImplements.getCurrent().toBukkit(fakePlayer);
-            if (Bukkit.getPlayer(player.getUniqueId()) != null) {
+            Player bk = Bukkit.getPlayer(fakePlayer.getFakePlayerProfile().getId());
+            if (bk != null) {
                 FPMRecoded.INSTANCE.getMessageHandler().sendMessage(commandSender, "player_already_joined");
                 return;
             }
 
-            IFPMPlayer newPlayer = FPMRecoded.fakePlayerSaver.recreate(fakePlayer, player.getLocation());
-            FPMRecoded.fakePlayerManager.join(newPlayer);
+            FPMRecoded.fakePlayerManager.join(playerName);
         }
     }
 }

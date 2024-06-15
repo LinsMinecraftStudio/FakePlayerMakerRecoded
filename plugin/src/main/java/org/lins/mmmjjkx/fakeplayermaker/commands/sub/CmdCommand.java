@@ -5,8 +5,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.lins.mmmjjkx.fakeplayermaker.FPMRecoded;
 import org.lins.mmmjjkx.fakeplayermaker.commands.FPMSubCmd;
-import org.lins.mmmjjkx.fakeplayermaker.commons.FPMImplements;
-import org.lins.mmmjjkx.fakeplayermaker.commons.IFPMPlayer;
+import org.lins.mmmjjkx.fakeplayermaker.commons.objects.IFPMPlayer;
 
 import java.lang.reflect.Proxy;
 import java.util.List;
@@ -53,7 +52,7 @@ public class CmdCommand extends FPMSubCmd {
                     return;
                 }
 
-                Player bk = FPMImplements.getCurrent().toBukkit(fakePlayer);
+                Player bk = fakePlayer.getFakePlayerProfile().getPlayer();
                 Player bkProxied = (Player) Proxy.newProxyInstance(getClass().getClassLoader(), new Class[]{Player.class}, (proxy, method, args) -> {
                     if (method.getName().equals("sendMessage")) {
                         method.invoke(commandSender, args);

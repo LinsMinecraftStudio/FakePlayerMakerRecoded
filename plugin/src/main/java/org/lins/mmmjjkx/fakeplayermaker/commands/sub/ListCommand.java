@@ -10,8 +10,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.lins.mmmjjkx.fakeplayermaker.FPMRecoded;
 import org.lins.mmmjjkx.fakeplayermaker.commands.FPMSubCmd;
-import org.lins.mmmjjkx.fakeplayermaker.commons.IFPMPlayer;
-import org.lins.mmmjjkx.fakeplayermaker.util.FakePlayerManager;
+import org.lins.mmmjjkx.fakeplayermaker.commons.objects.IFPMPlayer;
+import org.lins.mmmjjkx.fakeplayermaker.commons.objects.IFakePlayerManager;
 import org.lins.mmmjjkx.fakeplayermaker.util.FakePlayerSaver;
 
 import java.util.List;
@@ -27,7 +27,7 @@ public class ListCommand extends FPMSubCmd {
 
     @Override
     public Map<Integer, List<String>> tabCompletion(CommandSender commandSender) {
-        List<String> players = Bukkit.getOnlinePlayers().stream().map(Player::getName).filter(name -> FPMRecoded.fakePlayerManager.getFakePlayer(name) == null).toList();
+        List<String> players = Bukkit.getOnlinePlayers().stream().map(Player::getName).filter(name -> FPMRecoded.fakePlayerManager.getExactly(name) == null).toList();
         return Map.of(0, players);
     }
 
@@ -74,7 +74,7 @@ public class ListCommand extends FPMSubCmd {
                 ownerUUID = FakePlayerSaver.NO_OWNER_UUID;
             }
 
-            FakePlayerManager manager = FPMRecoded.fakePlayerManager;
+            IFakePlayerManager manager = FPMRecoded.fakePlayerManager;
             List<IFPMPlayer> fakePlayers = manager.getFakePlayers(ownerUUID);
             if (fakePlayers.isEmpty()) {
                 FPMRecoded.INSTANCE.getMessageHandler().sendMessage(commandSender, "no_fake_players_u_have");

@@ -5,16 +5,12 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.lins.mmmjjkx.fakeplayermaker.FPMRecoded;
 import org.lins.mmmjjkx.fakeplayermaker.commands.FPMSubCmd;
-import org.lins.mmmjjkx.fakeplayermaker.commons.FPMImplements;
-import org.lins.mmmjjkx.fakeplayermaker.commons.IFPMPlayer;
-import org.lins.mmmjjkx.fakeplayermaker.commons.PlayerActionImplements;
+import org.lins.mmmjjkx.fakeplayermaker.commons.objects.IFPMPlayer;
 
 import java.util.List;
 import java.util.Map;
 
 public class SneakCommand extends FPMSubCmd {
-    private final PlayerActionImplements IMPL = PlayerActionImplements.getCurrent();
-
     public SneakCommand() {
         super("sneak");
 
@@ -44,8 +40,8 @@ public class SneakCommand extends FPMSubCmd {
                 return;
             }
 
-            Player bk = FPMImplements.getCurrent().toBukkit(player);
-            IMPL.sneak(player, !bk.isSneaking());
+            Player bk = player.getFakePlayerProfile().getPlayer();
+            bk.setSneaking(!bk.isSneaking());
         }
     }
 }

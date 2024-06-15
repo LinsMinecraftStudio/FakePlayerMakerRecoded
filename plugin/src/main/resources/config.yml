@@ -1,6 +1,11 @@
 language: en-US
 checkUpdate: true
 
+#If you don't know why players can't join the server, set this to true.
+#And then, check the console for error messages.
+#You can join our discord server to ask for help if needed.
+print-connection-debug: false
+
 default-spawn-location:
   world: world
   x: 0
@@ -17,17 +22,12 @@ randomNameLength: 10
 #Fake player settings
 fakePlayer:
   invulnerable: true
-  max-health: 20
   mount-distance: 3
   auto-respawn: true
-  #also usable in fake tablist!
-  displayNamePrefix: "&a[Fake Player] &f"
+  displayNamePrefix: ""
   bannedCommandsPrefix:
     - "fly"
-  #It uses to fix the tablist order when TAB is installed.
-  defaultTabGroup: "default"
   pickupItems: true
-  entityAttackRadius: 3
 
 #console: run commands by console
 #self: run commands by the fake player itself
@@ -42,24 +42,16 @@ runCommands:
   onQuit:
     - "console say &cFake player left the server!"
 
-#check tpa/tpahere requests
-#If enabled, fake players can't receive tpa/tpahere requests
-checkTpaRequests:
-  enabled: true
-  sendMsgToRequester: true
-  #Use %fakePlayer% to replace with the fake player's name
-  msgToRequester: "&4Fake players can't accept/deny tpa/tpahere requests."
+#REMEMBER TO CHANGE THE IP AND PORT TO YOUR SERVER!
+entrance:
+  ip: "127.0.0.1"
+  port: 25565
 
-#The feature is only make some fake players' name/amount show on the tablist/motd.
-#That means you don't need to spawn fake players and won't save any data about them.
-#Not Implemented yet.
-fakers:
-  tablist:
-    enabled: false
-    #Default tablist entry(entries) to add to the tablist.
-    #You can also use /fpm tablist add/remove to add/remove entries' name from the tablist.
-    playerList:
-      - "Fake_Player1"
+#For bind fake players to a specific address.
+#Don't set it to empty. Otherwise, the fake players won't be able to join the server.
+usable_ip:
+  - "0.0.0.0"
+  - "192.168.1.255"
 
 #For make fake players more realistic, you can use this feature.
 schedule:

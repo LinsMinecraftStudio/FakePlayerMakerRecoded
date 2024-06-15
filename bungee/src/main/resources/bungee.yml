@@ -1,3 +1,0 @@
-name: FakePlayerMakerBungee
-version: '${project.version}'
-main: me.mmmjjkx.fpmbungee.FakePlayerMakerBungee

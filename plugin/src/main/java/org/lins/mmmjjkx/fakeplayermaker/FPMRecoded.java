@@ -7,12 +7,12 @@ import io.github.linsminecraftstudio.polymer.utils.ObjectConverter;
 import io.github.linsminecraftstudio.polymer.utils.OtherUtils;
 import org.lins.mmmjjkx.fakeplayermaker.commands.FPMMainCommand;
 import org.lins.mmmjjkx.fakeplayermaker.commons.Instances;
+import org.lins.mmmjjkx.fakeplayermaker.commons.objects.IFakePlayerManager;
 import org.lins.mmmjjkx.fakeplayermaker.listeners.CommandListeners;
 import org.lins.mmmjjkx.fakeplayermaker.listeners.FakePlayerListener;
-import org.lins.mmmjjkx.fakeplayermaker.listeners.LPLookupUUIDListener;
 import org.lins.mmmjjkx.fakeplayermaker.listeners.Scheduling;
-import org.lins.mmmjjkx.fakeplayermaker.util.FakePlayerManager;
 import org.lins.mmmjjkx.fakeplayermaker.util.FakePlayerSaver;
+import org.lins.mmmjjkx.fakeplayermaker.util.NewFakePlayerManager;
 
 import java.util.List;
 
@@ -20,7 +20,7 @@ public final class FPMRecoded extends PolymerPlugin {
     public static FPMRecoded INSTANCE;
 
     public static FakePlayerSaver fakePlayerSaver;
-    public static FakePlayerManager fakePlayerManager;
+    public static IFakePlayerManager fakePlayerManager;
 
     public void onLoad() {
         Instances.setFPM(this);
@@ -44,7 +44,7 @@ public final class FPMRecoded extends PolymerPlugin {
                 Made by mmmjjkx(lijinhong11).""");
 
         fakePlayerSaver = new FakePlayerSaver(this);
-        fakePlayerManager = new FakePlayerManager();
+        fakePlayerManager = new NewFakePlayerManager();
 
         Instances.setFakePlayerManager(fakePlayerManager);
 
@@ -54,10 +54,6 @@ public final class FPMRecoded extends PolymerPlugin {
         new FakePlayerListener();
         new CommandListeners();
         new Scheduling();
-
-        if (getServer().getPluginManager().isPluginEnabled("LuckPerms")) {
-            new LPLookupUUIDListener();
-        }
         //end of register listeners
 
         if (getConfig().getBoolean("checkUpdate")) {

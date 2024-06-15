@@ -5,8 +5,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.lins.mmmjjkx.fakeplayermaker.FPMRecoded;
 import org.lins.mmmjjkx.fakeplayermaker.commands.FPMSubCmd;
-import org.lins.mmmjjkx.fakeplayermaker.commons.FPMImplements;
-import org.lins.mmmjjkx.fakeplayermaker.commons.IFPMPlayer;
+import org.lins.mmmjjkx.fakeplayermaker.commons.objects.IFPMPlayer;
 
 import java.util.List;
 import java.util.Map;
@@ -46,12 +45,8 @@ public class TeleportHereCommand extends FPMSubCmd {
                 return;
             }
 
-            Player p2 = FPMImplements.getCurrent().toBukkit(player);
-            if (FPMImplements.isFolia()) {
-                p2.teleportAsync(p.getLocation());
-            } else {
-                p2.teleport(p);
-            }
+            Player p2 = player.getFakePlayerProfile().getPlayer();
+            p2.teleport(p);
         }
     }
 }

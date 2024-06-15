@@ -6,9 +6,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.lins.mmmjjkx.fakeplayermaker.FPMRecoded;
 import org.lins.mmmjjkx.fakeplayermaker.commands.FPMSubCmd;
-import org.lins.mmmjjkx.fakeplayermaker.commons.FPMImplements;
-import org.lins.mmmjjkx.fakeplayermaker.commons.IFPMPlayer;
-import org.lins.mmmjjkx.fakeplayermaker.commons.PlayerActionImplements;
+import org.lins.mmmjjkx.fakeplayermaker.commons.objects.IFPMPlayer;
 
 import java.util.List;
 import java.util.Map;
@@ -38,13 +36,13 @@ public class AttackCommand extends FPMSubCmd {
                 return;
             }
 
-            Player bk = FPMImplements.getCurrent().toBukkit(player);
+            Player bk = player.getFakePlayerProfile().getPlayer();
 
             int entityAttackRadius = FPMRecoded.INSTANCE.getConfig().getInt("fakePlayer.entityAttackRadius", 3);
 
             List<Entity> targets = bk.getNearbyEntities(entityAttackRadius, entityAttackRadius, entityAttackRadius);
 
-            PlayerActionImplements.getCurrent().attack(player, targets.get(0));
+            //.attack(player, targets.get(0));
         }
     }
 

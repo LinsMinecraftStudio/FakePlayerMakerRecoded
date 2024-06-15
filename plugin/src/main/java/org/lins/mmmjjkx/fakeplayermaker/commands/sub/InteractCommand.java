@@ -4,9 +4,8 @@ import io.github.linsminecraftstudio.polymer.objectutils.CommandArgumentType;
 import org.bukkit.command.CommandSender;
 import org.lins.mmmjjkx.fakeplayermaker.FPMRecoded;
 import org.lins.mmmjjkx.fakeplayermaker.commands.FPMSubCmd;
-import org.lins.mmmjjkx.fakeplayermaker.commons.IFPMPlayer;
-import org.lins.mmmjjkx.fakeplayermaker.commons.InteractHand;
-import org.lins.mmmjjkx.fakeplayermaker.commons.PlayerActionImplements;
+import org.lins.mmmjjkx.fakeplayermaker.commons.objects.IFPMPlayer;
+import org.lins.mmmjjkx.fakeplayermaker.commons.objects.InteractHand;
 
 import java.util.Arrays;
 import java.util.List;
@@ -54,7 +53,7 @@ public class InteractCommand extends FPMSubCmd {
                 return;
             }
 
-            PlayerActionImplements.getCurrent().interact(player, hand);
+            //.interact(player, hand);
         }
     }
 }

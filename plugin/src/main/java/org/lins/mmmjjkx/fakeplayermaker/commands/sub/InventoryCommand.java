@@ -5,8 +5,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.lins.mmmjjkx.fakeplayermaker.FPMRecoded;
 import org.lins.mmmjjkx.fakeplayermaker.commands.FPMSubCmd;
-import org.lins.mmmjjkx.fakeplayermaker.commons.FPMImplements;
-import org.lins.mmmjjkx.fakeplayermaker.commons.IFPMPlayer;
+import org.lins.mmmjjkx.fakeplayermaker.commons.objects.IFPMPlayer;
 
 import java.util.List;
 import java.util.Map;
@@ -41,7 +40,7 @@ public class InventoryCommand extends FPMSubCmd {
                 return;
             }
 
-            Player fake = FPMImplements.getCurrent().toBukkit(player);
+            Player fake = player.getFakePlayerProfile().getPlayer();
             p.openInventory(fake.getInventory());
         }
     }

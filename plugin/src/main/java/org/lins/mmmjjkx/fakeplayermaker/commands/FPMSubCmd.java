@@ -6,7 +6,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.lins.mmmjjkx.fakeplayermaker.FPMRecoded;
-import org.lins.mmmjjkx.fakeplayermaker.commons.IFPMPlayer;
+import org.lins.mmmjjkx.fakeplayermaker.commons.objects.IFPMPlayer;
 
 import java.util.UUID;
 
@@ -20,7 +20,7 @@ public abstract class FPMSubCmd extends SubCommand {
     }
 
     protected IFPMPlayer getFakePlayer(CommandSender sender, String playerName) {
-        Pair<Boolean, IFPMPlayer> fakePlayerPair = FPMRecoded.fakePlayerManager.getFakePlayer(playerName);
+        Pair<Boolean, IFPMPlayer> fakePlayerPair = FPMRecoded.fakePlayerManager.getExactly(playerName);
 
         if (fakePlayerPair.getRight() == null) {
             FPMRecoded.INSTANCE.getMessageHandler().sendMessage(sender, "player_not_found");

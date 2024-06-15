@@ -4,13 +4,11 @@ import io.github.linsminecraftstudio.polymer.objectutils.CommandArgumentType;
 import io.github.linsminecraftstudio.polymer.utils.ObjectConverter;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.lins.mmmjjkx.fakeplayermaker.FPMRecoded;
 import org.lins.mmmjjkx.fakeplayermaker.commands.FPMSubCmd;
-import org.lins.mmmjjkx.fakeplayermaker.commons.FPMImplements;
-import org.lins.mmmjjkx.fakeplayermaker.commons.IFPMPlayer;
+import org.lins.mmmjjkx.fakeplayermaker.commons.objects.IFPMPlayer;
 import org.lins.mmmjjkx.fakeplayermaker.util.CommonUtils;
 import org.lins.mmmjjkx.fakeplayermaker.util.FakePlayerSaver;
 
@@ -20,7 +18,7 @@ import java.util.UUID;
 
 public class SpawnCommand extends FPMSubCmd {
     public SpawnCommand() {
-        super("spawn");
+        super("spawn", "create");
 
         addArgument("name", CommandArgumentType.OPTIONAL);
         addArgument("location", CommandArgumentType.OPTIONAL);
@@ -47,7 +45,7 @@ public class SpawnCommand extends FPMSubCmd {
                 name += CommonUtils.generateRandomString(FPMRecoded.INSTANCE.getConfig().getInt("randomNameLength", 8));
             }
 
-            if (FPMRecoded.fakePlayerManager.getFakePlayer(name).getRight() != null) {
+            if (FPMRecoded.fakePlayerManager.get(name) != null) {
                 FPMRecoded.INSTANCE.getMessageHandler().sendMessage(commandSender, "command.name_taken");
                 return;
             }
@@ -69,20 +67,16 @@ public class SpawnCommand extends FPMSubCmd {
                 }
             }
 
-            World world = loc.getWorld();
             UUID owner = FakePlayerSaver.NO_OWNER_UUID;
 
             if (commandSender instanceof Player p) {
                 owner = p.getUniqueId();
             }
 
-            IFPMPlayer player = FPMRecoded.fakePlayerManager.create(name, owner, world.getName());
+            IFPMPlayer player = FPMRecoded.fakePlayerManager.create(owner, name);
+
+            String finalName = name;
             FPMRecoded.fakePlayerManager.join(name);
-
-            FPMRecoded.fakePlayerSaver.saveFakePlayer(player);
-
-            Player bk = FPMImplements.getCurrent().toBukkit(player);
-            bk.teleport(loc);
         }
     }
 }

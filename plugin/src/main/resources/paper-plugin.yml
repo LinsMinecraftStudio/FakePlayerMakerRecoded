@@ -5,8 +5,8 @@ api-version: "1.19"
 authors: ["mmmjjkx"]
 description: "create fake players in minecraft"
 website: "https://github.com/LinsMinecraftStudio/FakePlayerMaker-Recoded"
+loader: "org.lins.mmmjjkx.fakeplayermaker.paper.FPMLoader"
 has-open-classloader: true
-folia-supported: true
 dependencies:
   server:
     Polymer:

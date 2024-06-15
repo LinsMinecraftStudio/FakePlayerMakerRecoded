@@ -35,7 +35,7 @@ public class FullReloadCommand extends FPMSubCmd implements ICommand.INeedsCoold
         if (this.hasPermission()) {
             if (hasCooldown(sender)) {
                 FPMRecoded.INSTANCE.reload();
-                FPMRecoded.fakePlayerManager.reload();
+                //FPMRecoded.fakePlayerManager.reload();
                 FPMRecoded.INSTANCE.getMessageHandler().sendMessage(sender, "command.reload-success");
                 cooldownMap.remove(sender);
             } else {
