@@ -4,6 +4,7 @@ player_already_joined: "&cThe fake player has already joined the server."
 no_fake_players_u_have: "&cYou do not have any fake players."
 player_not_yours: "&cThat's not your fake player."
 command:
+  player_not_in_server: "&cThe fake player is not in the server. Please check if it has joined the server or in another server."
   name_taken: "&cThe name you entered is already taken. Please choose another one."
   reload-expired: "&e&lYour full reload request has expired."
   reload-config-now: |-

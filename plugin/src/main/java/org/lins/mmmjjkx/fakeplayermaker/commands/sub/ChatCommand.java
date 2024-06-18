@@ -9,7 +9,6 @@ import org.lins.mmmjjkx.fakeplayermaker.commons.objects.IFPMPlayer;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 public class ChatCommand extends FPMSubCmd {
     public ChatCommand() {
@@ -51,7 +50,7 @@ public class ChatCommand extends FPMSubCmd {
             if (fakePlayer != null) {
                 String[] msg = Arrays.copyOfRange(getArgs().args(), 1, getArgs().size());
                 String msgStr = String.join(" ", msg);
-                Objects.requireNonNull(fakePlayer.getFakePlayerProfile().getPlayer()).chat(msgStr);
+                run(fakePlayer, p -> p.chat(msgStr));
             }
         }
     }

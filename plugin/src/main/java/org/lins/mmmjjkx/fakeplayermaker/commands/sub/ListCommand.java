@@ -27,7 +27,7 @@ public class ListCommand extends FPMSubCmd {
 
     @Override
     public Map<Integer, List<String>> tabCompletion(CommandSender commandSender) {
-        List<String> players = Bukkit.getOnlinePlayers().stream().map(Player::getName).filter(name -> FPMRecoded.fakePlayerManager.getExactly(name) == null).toList();
+        List<String> players = Bukkit.getOnlinePlayers().stream().map(Player::getName).filter(name -> FPMRecoded.fakePlayerManager.get(name) == null).toList();
         return Map.of(0, players);
     }
 

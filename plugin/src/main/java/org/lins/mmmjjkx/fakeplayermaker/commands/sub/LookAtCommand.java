@@ -1,6 +1,7 @@
 package org.lins.mmmjjkx.fakeplayermaker.commands.sub;
 
 import io.github.linsminecraftstudio.polymer.objectutils.CommandArgumentType;
+import io.papermc.paper.entity.LookAnchor;
 import org.bukkit.command.CommandSender;
 import org.lins.mmmjjkx.fakeplayermaker.FPMRecoded;
 import org.lins.mmmjjkx.fakeplayermaker.commands.FPMSubCmd;
@@ -62,7 +63,9 @@ public class LookAtCommand extends FPMSubCmd {
                     return;
                 }
 
-                //.lookAt(player, x1, y1, z1);
+                run(player, p -> {
+                    p.lookAt(x1, y1, z1, LookAnchor.EYES);
+                });
             }
         }
     }

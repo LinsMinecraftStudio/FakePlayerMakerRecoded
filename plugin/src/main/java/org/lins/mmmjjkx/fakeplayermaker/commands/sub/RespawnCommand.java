@@ -2,7 +2,6 @@ package org.lins.mmmjjkx.fakeplayermaker.commands.sub;
 
 import io.github.linsminecraftstudio.polymer.objectutils.CommandArgumentType;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import org.lins.mmmjjkx.fakeplayermaker.FPMRecoded;
 import org.lins.mmmjjkx.fakeplayermaker.commands.FPMSubCmd;
 import org.lins.mmmjjkx.fakeplayermaker.commons.objects.IFPMPlayer;
@@ -41,8 +40,7 @@ public class RespawnCommand extends FPMSubCmd {
                 return;
             }
 
-            Player bk = player.getFakePlayerProfile().getPlayer();
-            bk.spigot().respawn();
+            run(player, p -> p.spigot().respawn());
         }
     }
 }

@@ -1,6 +1,11 @@
 package org.lins.mmmjjkx.fakeplayermaker.commands;
 
+import com.github.steveice10.mc.protocol.codec.MinecraftCodec;
+import com.github.steveice10.mc.protocol.codec.MinecraftCodecHelper;
 import io.github.linsminecraftstudio.polymer.command.SubCommand;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.CompositeByteBuf;
+import io.netty.buffer.PooledByteBufAllocator;
 import org.apache.commons.lang3.tuple.Pair;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -9,6 +14,7 @@ import org.lins.mmmjjkx.fakeplayermaker.FPMRecoded;
 import org.lins.mmmjjkx.fakeplayermaker.commons.objects.IFPMPlayer;
 
 import java.util.UUID;
+import java.util.function.Consumer;
 
 public abstract class FPMSubCmd extends SubCommand {
     public FPMSubCmd(@NotNull String name) {
@@ -46,7 +52,24 @@ public abstract class FPMSubCmd extends SubCommand {
         return null;
     }
 
-    public boolean isHisOwn(CommandSender sender, UUID ownerUUID) {
+    protected final ByteBuf newByteBuf() {
+        return new CompositeByteBuf(new PooledByteBufAllocator(), false, 16);
+    }
+
+    protected final MinecraftCodecHelper getCodecHelper() {
+        return MinecraftCodec.CODEC.getHelperFactory().get();
+    }
+
+    protected final void run(IFPMPlayer fakePlayer, Consumer<Player> consumer) {
+        Player player1 = fakePlayer.getFakePlayerProfile().getPlayer();
+        if (player1 != null) {
+            consumer.accept(player1);
+        } else {
+            sendMessage("command.player_not_in_server");
+        }
+    }
+
+    protected boolean isHisOwn(CommandSender sender, UUID ownerUUID) {
         if (sender instanceof Player p) {
             if (p.hasPermission("fakeplayermaker.bypassowner")) {
                 return true;

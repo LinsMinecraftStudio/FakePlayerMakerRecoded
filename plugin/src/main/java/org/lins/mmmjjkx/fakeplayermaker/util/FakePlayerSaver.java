@@ -75,7 +75,7 @@ public class FakePlayerSaver extends SingleFileStorage {
 
             String ip = FPMRecoded.INSTANCE.getConfig().getString("entrance.ip", "127.0.0.1");
             int port = FPMRecoded.INSTANCE.getConfig().getInt("entrance.port", 25565);
-            fakePlayers.put(name, new MCClient(new GameProfile(uuid, name), ip, port, owner, CommonUtils.getUnAllocatedIPPort()));
+            fakePlayers.put(name, new MCClient(ip, port, owner, CommonUtils.getUnAllocatedIPPort(), new GameProfile(uuid, name)));
         }
     }
 

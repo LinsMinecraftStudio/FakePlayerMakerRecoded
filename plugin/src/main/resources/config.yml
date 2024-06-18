@@ -30,14 +30,14 @@ fakePlayer:
   pickupItems: true
 
 #console: run commands by console
-#self: run commands by the fake player itself
+#self: run commands by the fake player itself(you can also type commands in the list directly)
 #chat: chat something using the fake player
 #use %fakePlayer% to replace with the fake player's name
 #use %owner% to replace with the fake player's owner's name
 runCommands:
   onJoin:
     - "console say &aFake player joined the server!"
-    - "self reg 123456 123456"
+    - "self register 123456 123456"
     - "self login 123456"
   onQuit:
     - "console say &cFake player left the server!"
@@ -50,7 +50,7 @@ entrance:
 #For bind fake players to a specific address.
 #Don't set it to empty. Otherwise, the fake players won't be able to join the server.
 usable_ip:
-  - "0.0.0.0"
+  - "192.168.1.254"
   - "192.168.1.255"
 
 #For make fake players more realistic, you can use this feature.

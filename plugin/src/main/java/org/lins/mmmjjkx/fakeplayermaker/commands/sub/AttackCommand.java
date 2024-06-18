@@ -1,12 +1,14 @@
 package org.lins.mmmjjkx.fakeplayermaker.commands.sub;
 
+import com.github.steveice10.mc.protocol.data.game.entity.player.Hand;
+import com.github.steveice10.mc.protocol.data.game.entity.player.InteractAction;
+import com.github.steveice10.mc.protocol.packet.ingame.serverbound.player.ServerboundInteractPacket;
 import io.github.linsminecraftstudio.polymer.objectutils.CommandArgumentType;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
 import org.lins.mmmjjkx.fakeplayermaker.FPMRecoded;
 import org.lins.mmmjjkx.fakeplayermaker.commands.FPMSubCmd;
 import org.lins.mmmjjkx.fakeplayermaker.commons.objects.IFPMPlayer;
+import org.lins.mmmjjkx.fakeplayermaker.objects.MCClient;
 
 import java.util.List;
 import java.util.Map;
@@ -36,13 +38,14 @@ public class AttackCommand extends FPMSubCmd {
                 return;
             }
 
-            Player bk = player.getFakePlayerProfile().getPlayer();
+            //Player bk = player.getFakePlayerProfile().getPlayer();
 
-            int entityAttackRadius = FPMRecoded.INSTANCE.getConfig().getInt("fakePlayer.entityAttackRadius", 3);
+            //int entityAttackRadius = FPMRecoded.INSTANCE.getConfig().getInt("fakePlayer.entityAttackRadius", 3);
 
-            List<Entity> targets = bk.getNearbyEntities(entityAttackRadius, entityAttackRadius, entityAttackRadius);
-
-            //.attack(player, targets.get(0));
+            run(player, p -> {
+                MCClient client = (MCClient) player;
+                client.send(new ServerboundInteractPacket(p.getEntityId(), InteractAction.ATTACK, Hand.MAIN_HAND, p.isSneaking()));
+            });
         }
     }
 

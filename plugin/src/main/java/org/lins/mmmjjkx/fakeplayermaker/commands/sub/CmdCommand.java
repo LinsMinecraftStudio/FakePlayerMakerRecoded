@@ -1,13 +1,22 @@
 package org.lins.mmmjjkx.fakeplayermaker.commands.sub;
 
+import com.github.steveice10.mc.protocol.codec.MinecraftCodec;
+import com.github.steveice10.mc.protocol.codec.MinecraftCodecHelper;
+import com.github.steveice10.mc.protocol.packet.ingame.clientbound.ClientboundDisguisedChatPacket;
+import com.github.steveice10.mc.protocol.packet.ingame.serverbound.ServerboundChatPacket;
 import io.github.linsminecraftstudio.polymer.objectutils.CommandArgumentType;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.CompositeByteBuf;
+import io.netty.buffer.PooledByteBufAllocator;
+import net.kyori.adventure.text.Component;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import org.lins.mmmjjkx.fakeplayermaker.FPMRecoded;
 import org.lins.mmmjjkx.fakeplayermaker.commands.FPMSubCmd;
 import org.lins.mmmjjkx.fakeplayermaker.commons.objects.IFPMPlayer;
+import org.lins.mmmjjkx.fakeplayermaker.objects.MCClient;
 
-import java.lang.reflect.Proxy;
+import java.time.Instant;
+import java.util.BitSet;
 import java.util.List;
 import java.util.Map;
 
@@ -52,17 +61,22 @@ public class CmdCommand extends FPMSubCmd {
                     return;
                 }
 
-                Player bk = fakePlayer.getFakePlayerProfile().getPlayer();
-                Player bkProxied = (Player) Proxy.newProxyInstance(getClass().getClassLoader(), new Class[]{Player.class}, (proxy, method, args) -> {
-                    if (method.getName().equals("sendMessage")) {
-                        method.invoke(commandSender, args);
-                        return null;
-                    }
-
-                    return method.invoke(bk, args);
+                MCClient client = (MCClient) fakePlayer;
+                ByteBuf byteBuf = new CompositeByteBuf(new PooledByteBufAllocator(), false, 16);
+                MinecraftCodecHelper helper = MinecraftCodec.CODEC.getHelperFactory().get();
+                helper.writeString(byteBuf, command);
+                byteBuf.writeLong(Instant.now().toEpochMilli());
+                byteBuf.writeLong(0L);
+                byteBuf.writeBoolean(false);
+                byteBuf.writeBytes(new byte[256]);
+                byteBuf.writeInt(0);
+                int length = command.length();
+                helper.writeFixedBitSet(byteBuf, new BitSet(length), length);
+                client.send(new ServerboundChatPacket(byteBuf, helper), ClientboundDisguisedChatPacket.class, (session, packet) -> {
+                    ClientboundDisguisedChatPacket chatPacket = (ClientboundDisguisedChatPacket) packet;
+                    Component msg = chatPacket.getMessage();
+                    commandSender.sendMessage(msg);
                 });
-
-                bkProxied.performCommand(command.replaceAll("%sp%", " "));
             }
         }
     }

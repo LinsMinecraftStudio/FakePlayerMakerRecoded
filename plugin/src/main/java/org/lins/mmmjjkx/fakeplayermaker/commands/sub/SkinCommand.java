@@ -2,7 +2,6 @@ package org.lins.mmmjjkx.fakeplayermaker.commands.sub;
 
 import io.github.linsminecraftstudio.polymer.objectutils.CommandArgumentType;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import org.lins.mmmjjkx.fakeplayermaker.FPMRecoded;
 import org.lins.mmmjjkx.fakeplayermaker.commands.FPMSubCmd;
 import org.lins.mmmjjkx.fakeplayermaker.commons.objects.IFPMPlayer;
@@ -50,14 +49,15 @@ public class SkinCommand extends FPMSubCmd {
                 return;
             }
 
-            Player bk = fakePlayer.getFakePlayerProfile().getPlayer();
-            boolean success = SkinUtils.changeSkin(commandSender, bk, skinName);
-            if (success) {
-                FPMRecoded.fakePlayerSaver.saveFakePlayer(fakePlayer);
-                FPMRecoded.INSTANCE.getMessageHandler().sendMessage(commandSender, "command.skin_changed");
-            } else {
-                FPMRecoded.INSTANCE.getMessageHandler().sendMessage(commandSender, "command.skin_error");
-            }
+            run(fakePlayer, bk -> {
+                boolean success = SkinUtils.changeSkin(commandSender, bk, skinName);
+                if (success) {
+                    FPMRecoded.fakePlayerSaver.saveFakePlayer(fakePlayer);
+                    FPMRecoded.INSTANCE.getMessageHandler().sendMessage(commandSender, "command.skin_changed");
+                } else {
+                    FPMRecoded.INSTANCE.getMessageHandler().sendMessage(commandSender, "command.skin_error");
+                }
+            });
         }
     }
 }

@@ -1,11 +1,13 @@
 package org.lins.mmmjjkx.fakeplayermaker.commands.sub;
 
+import com.github.steveice10.mc.protocol.data.game.entity.player.PlayerState;
+import com.github.steveice10.mc.protocol.packet.ingame.serverbound.player.ServerboundPlayerCommandPacket;
 import io.github.linsminecraftstudio.polymer.objectutils.CommandArgumentType;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import org.lins.mmmjjkx.fakeplayermaker.FPMRecoded;
 import org.lins.mmmjjkx.fakeplayermaker.commands.FPMSubCmd;
 import org.lins.mmmjjkx.fakeplayermaker.commons.objects.IFPMPlayer;
+import org.lins.mmmjjkx.fakeplayermaker.objects.MCClient;
 
 import java.util.List;
 import java.util.Map;
@@ -40,8 +42,10 @@ public class SneakCommand extends FPMSubCmd {
                 return;
             }
 
-            Player bk = player.getFakePlayerProfile().getPlayer();
-            bk.setSneaking(!bk.isSneaking());
+            run(player, bk -> {
+                MCClient client = (MCClient) player;
+                client.send(new ServerboundPlayerCommandPacket(bk.getEntityId(), bk.isSneaking() ? PlayerState.STOP_SNEAKING : PlayerState.START_SNEAKING));
+            });
         }
     }
 }

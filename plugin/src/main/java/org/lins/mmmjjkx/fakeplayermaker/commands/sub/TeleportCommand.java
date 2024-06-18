@@ -45,8 +45,7 @@ public class TeleportCommand extends FPMSubCmd {
                 return;
             }
 
-            Player p2 = player.getFakePlayerProfile().getPlayer();
-            p.teleport(p2);
+            run(player, p::teleport);
         }
     }
 }

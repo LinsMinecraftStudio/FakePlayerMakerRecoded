@@ -45,8 +45,7 @@ public class TeleportHereCommand extends FPMSubCmd {
                 return;
             }
 
-            Player p2 = player.getFakePlayerProfile().getPlayer();
-            p2.teleport(p);
+            run(player, p2 -> p2.teleport(p));
         }
     }
 }

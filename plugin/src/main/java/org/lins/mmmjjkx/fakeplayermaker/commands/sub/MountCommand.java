@@ -2,6 +2,8 @@ package org.lins.mmmjjkx.fakeplayermaker.commands.sub;
 
 import io.github.linsminecraftstudio.polymer.objectutils.CommandArgumentType;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Vehicle;
 import org.lins.mmmjjkx.fakeplayermaker.FPMRecoded;
 import org.lins.mmmjjkx.fakeplayermaker.commands.FPMSubCmd;
 import org.lins.mmmjjkx.fakeplayermaker.commons.objects.IFPMPlayer;
@@ -40,7 +42,15 @@ public class MountCommand extends FPMSubCmd {
             }
 
             int distance = FPMRecoded.INSTANCE.getConfig().getInt("mount-distance", 3);
-            //.mountNearest(player, distance);
+
+            run(player, p -> {
+                List<Entity> entities = p.getNearbyEntities(distance, distance, distance);
+                for (Entity entity : entities) {
+                    if (entity instanceof Vehicle v) {
+                        v.addPassenger(p);
+                    }
+                }
+            });
         }
     }
 }

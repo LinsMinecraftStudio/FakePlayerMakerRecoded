@@ -2,6 +2,7 @@ package org.lins.mmmjjkx.fakeplayermaker.commands.sub;
 
 import io.github.linsminecraftstudio.polymer.objectutils.CommandArgumentType;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Entity;
 import org.lins.mmmjjkx.fakeplayermaker.FPMRecoded;
 import org.lins.mmmjjkx.fakeplayermaker.commands.FPMSubCmd;
 import org.lins.mmmjjkx.fakeplayermaker.commons.objects.IFPMPlayer;
@@ -39,7 +40,7 @@ public class DismountCommand extends FPMSubCmd {
                 return;
             }
 
-            //.dismount(player);
+            run(player, Entity::eject);
         }
     }
 }

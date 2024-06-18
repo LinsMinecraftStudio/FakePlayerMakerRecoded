@@ -1,13 +1,14 @@
 package org.lins.mmmjjkx.fakeplayermaker.util;
 
 import com.github.steveice10.mc.auth.data.GameProfile;
-import com.github.steveice10.mc.protocol.data.game.command.CommandNode;
-import com.github.steveice10.mc.protocol.data.game.command.CommandParser;
-import com.github.steveice10.mc.protocol.data.game.command.CommandType;
-import com.github.steveice10.mc.protocol.data.game.command.properties.StringProperties;
-import com.github.steveice10.mc.protocol.packet.ingame.clientbound.ClientboundCommandsPacket;
+import com.github.steveice10.mc.protocol.codec.MinecraftCodec;
+import com.github.steveice10.mc.protocol.codec.MinecraftCodecHelper;
+import com.github.steveice10.mc.protocol.packet.ingame.serverbound.ServerboundChatCommandPacket;
 import com.github.steveice10.mc.protocol.packet.ingame.serverbound.ServerboundChatPacket;
 import com.github.steveice10.packetlib.Session;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.CompositeByteBuf;
+import io.netty.buffer.PooledByteBufAllocator;
 import it.unimi.dsi.fastutil.objects.ObjectImmutableList;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
@@ -20,6 +21,7 @@ import org.lins.mmmjjkx.fakeplayermaker.commons.objects.IFPMPlayer;
 import org.lins.mmmjjkx.fakeplayermaker.commons.objects.IFakePlayerManager;
 import org.lins.mmmjjkx.fakeplayermaker.objects.MCClient;
 
+import java.time.Instant;
 import java.util.*;
 
 public class NewFakePlayerManager implements IFakePlayerManager {
@@ -34,7 +36,7 @@ public class NewFakePlayerManager implements IFakePlayerManager {
         GameProfile profile = new GameProfile(owner, name);
         String ip = FPMRecoded.INSTANCE.getConfig().getString("entrance.ip", "127.0.0.1");
         int port = FPMRecoded.INSTANCE.getConfig().getInt("entrance.port", 60000);
-        MCClient client = new MCClient(profile, ip, port, owner, CommonUtils.getUnAllocatedIPPort());
+        MCClient client = new MCClient(ip, port, owner, CommonUtils.getUnAllocatedIPPort(), profile);
         clients.put(name, client);
         return client;
     }
@@ -71,7 +73,7 @@ public class NewFakePlayerManager implements IFakePlayerManager {
     public void join(IFPMPlayer player, Runnable callback) {
         MCClient client = (MCClient) player;
         client.connect(session -> {
-            joinActions(client, session);
+            actions("Join", client, session);
             callback.run();
         });
     }
@@ -98,60 +100,57 @@ public class NewFakePlayerManager implements IFakePlayerManager {
     public void leave(String name) {
         MCClient client = clients.get(name);
         if (client != null) {
-            client.disconnect();
+            client.disconnect(s -> actions("Quit", client, s));
         }
     }
 
-    private void joinActions(MCClient client, Session session) {
-        FPMRecoded.INSTANCE.getConfig().getStringList("runCommands.onJoin").forEach(c -> {
-            String[] split = c.split(" ");
-            String command = split.length > 1 ? c.replace(split[0] + " ", "") : split[0];
-            String head = split[0];
-            OfflinePlayer owner = Bukkit.getOfflinePlayer(client.getOwnerUUID());
-            command = command.replaceAll("%fakePlayer%", client.getFakePlayerProfile().name());
-            if (owner.getName() != null) {
-                command = command.replaceAll("%owner%", owner.getName());
-            }
-            switch (head) {
-                default -> {
-                    CommandNode commandNode = new CommandNode(CommandType.ROOT, true, new int[]{1,2}, OptionalInt.empty(), head, CommandParser.STRING,
-                            StringProperties.SINGLE_WORD, null);
-                    List<CommandNode> children = new ArrayList<>();
-                    for (int i = 1; i < split.length - 1; i++) {
-                        String arg = split[i];
-                        children.add(new CommandNode(CommandType.ARGUMENT, false, new int[]{0}, OptionalInt.empty(), arg, CommandParser.STRING,
-                                StringProperties.SINGLE_WORD, null));
-                    }
-                    children.add(0, commandNode);
-                    session.send(new ClientboundCommandsPacket(children.toArray(new CommandNode[0]), 0));
+    private void actions(String key, MCClient client, Session session) {
+        List<Runnable> temp = new ArrayList<>();
+        FPMRecoded.INSTANCE.getConfig().getStringList("runCommands.on" + key).forEach(c -> {
+            Runnable runnable = () -> {
+                String[] split = c.split(" ");
+                String command = split.length > 1 ? c.replace(split[0] + " ", "") : split[0];
+                String head = split[0];
+                OfflinePlayer owner = Bukkit.getOfflinePlayer(client.getOwnerUUID());
+                command = command.replaceAll("%fakePlayer%", client.getFakePlayerProfile().name());
+                if (owner.getName() != null) {
+                    command = command.replaceAll("%owner%", owner.getName());
                 }
-                case "self" -> {
-                    String[] split2 = command.split(" ");
-                    String head1 = split2[0];
-                    CommandNode commandNode = new CommandNode(CommandType.ROOT, true, new int[]{1,2}, OptionalInt.empty(), head1, CommandParser.STRING,
-                            StringProperties.SINGLE_WORD, null);
-                    List<CommandNode> children = new ArrayList<>();
-                    for (int i = 1; i < split.length - 1; i++) {
-                        String arg = split2[i];
-                        children.add(new CommandNode(CommandType.ARGUMENT, false, new int[]{0}, OptionalInt.empty(), arg, CommandParser.STRING,
-                                StringProperties.SINGLE_WORD, null));
+                String finalCommand = command;
+                switch (head) {
+                    case "chat" -> {
+                        ByteBuf byteBuf = new CompositeByteBuf(new PooledByteBufAllocator(), false, 16);
+                        MinecraftCodecHelper helper = MinecraftCodec.CODEC.getHelperFactory().get();
+                        helper.writeString(byteBuf, finalCommand);
+                        byteBuf.writeLong(Instant.now().toEpochMilli());
+                        byteBuf.writeLong(0L);
+                        byteBuf.writeBoolean(false);
+                        byteBuf.writeBytes(new byte[256]);
+                        byteBuf.writeInt(0);
+                        helper.writeFixedBitSet(byteBuf, new BitSet(finalCommand.length()), finalCommand.length());
+                        session.send(new ServerboundChatPacket(byteBuf, helper));
                     }
-                    children.add(0, commandNode);
-                    session.send(new ClientboundCommandsPacket(children.toArray(new CommandNode[0]), 0));
+                    case "console" -> Bukkit.getScheduler().runTask(FPMRecoded.INSTANCE, () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), finalCommand));
+                    default -> {
+                        ByteBuf byteBuf = new CompositeByteBuf(new PooledByteBufAllocator(), false, 16);
+                        MinecraftCodecHelper helper = MinecraftCodec.CODEC.getHelperFactory().get();
+                        helper.writeString(byteBuf, finalCommand);
+                        byteBuf.writeLong(Instant.now().toEpochMilli());
+                        byteBuf.writeLong(0L);
+                        byteBuf.writeInt(0);
+                        byteBuf.writeInt(0);
+                        helper.writeFixedBitSet(byteBuf, new BitSet(finalCommand.length()), finalCommand.length());
+                        session.send(new ServerboundChatCommandPacket(byteBuf, helper));
+                    }
                 }
-                case "console" -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
-                case "chat" -> session.send(new ServerboundChatPacket(command, System.currentTimeMillis(), 1, generateSignature(command), 0, new BitSet()));
-            }
+            };
+            temp.add(runnable);
         });
-    }
 
-    private byte[] generateSignature(String message) {
-        byte[] signature = new byte[256];
-
-        for (int i = 0; i < 256; i++) {
-            signature[i] = (byte) (i ^ message.charAt(i % message.length()));
+        for (int i = 0; i < temp.size(); i++) {
+            Runnable future = temp.get(i);
+            //avoid sending too many packets at once
+            Bukkit.getScheduler().runTaskLater(FPMRecoded.INSTANCE, future, i * 20L);
         }
-
-        return signature;
     }
 }
