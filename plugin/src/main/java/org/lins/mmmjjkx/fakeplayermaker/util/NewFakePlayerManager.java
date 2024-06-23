@@ -126,7 +126,7 @@ public class NewFakePlayerManager implements IFakePlayerManager {
                         byteBuf.writeLong(0L);
                         byteBuf.writeBoolean(false);
                         byteBuf.writeBytes(new byte[256]);
-                        byteBuf.writeInt(0);
+                        helper.writeVarInt(byteBuf, 0);
                         helper.writeFixedBitSet(byteBuf, new BitSet(finalCommand.length()), finalCommand.length());
                         session.send(new ServerboundChatPacket(byteBuf, helper));
                     }
@@ -137,8 +137,8 @@ public class NewFakePlayerManager implements IFakePlayerManager {
                         helper.writeString(byteBuf, finalCommand);
                         byteBuf.writeLong(Instant.now().toEpochMilli());
                         byteBuf.writeLong(0L);
-                        byteBuf.writeInt(0);
-                        byteBuf.writeInt(0);
+                        helper.writeVarInt(byteBuf, 0);
+                        helper.writeVarInt(byteBuf, 0);
                         helper.writeFixedBitSet(byteBuf, new BitSet(finalCommand.length()), finalCommand.length());
                         session.send(new ServerboundChatCommandPacket(byteBuf, helper));
                     }
@@ -149,7 +149,6 @@ public class NewFakePlayerManager implements IFakePlayerManager {
 
         for (int i = 0; i < temp.size(); i++) {
             Runnable future = temp.get(i);
-            //avoid sending too many packets at once
             Bukkit.getScheduler().runTaskLater(FPMRecoded.INSTANCE, future, i * 20L);
         }
     }

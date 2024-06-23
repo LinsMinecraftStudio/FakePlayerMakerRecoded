@@ -17,14 +17,14 @@ public class FPMLoader implements PluginLoader {
 
     static {
         PACKETLIB_VERSIONS = Map.of(
-                "1.19.4", "1.19.4-1",
-                "1.20", "1.20-2",
-                "1.20.1", "1.20-2",
-                "1.20.2", "1.20.2-1",
-                "1.20.3", "1.20.4-1",
-                "1.20.4", "1.20.4-1",
-                "1.20.5", "1.20.6-1",
-                "1.20.6", "1.20.6-1"
+                "1.19.4", "com.github.steveice10:mcprotocollib:1.19.4-1",
+                "1.20", "com.github.steveice10:mcprotocollib:1.20-2",
+                "1.20.1", "com.github.steveice10:mcprotocollib:1.20-2",
+                "1.20.2", "com.github.steveice10:mcprotocollib:1.20.2-1",
+                "1.20.3", "com.github.steveice10:mcprotocollib:1.20.4-1",
+                "1.20.4", "com.github.steveice10:mcprotocollib:1.20.4-1",
+                "1.20.5", "org.geysermc.mcprotocollib:protocol:1.20.6-2-SNAPSHOT",
+                "1.20.6", "org.geysermc.mcprotocollib:protocol:1.20.6-2-SNAPSHOT"
         );
     }
 
@@ -43,7 +43,7 @@ public class FPMLoader implements PluginLoader {
         resolver.addRepository(new RemoteRepository.Builder("opencollab", "default", "https://repo.opencollab.dev/maven-releases/").build());
         resolver.addRepository(new RemoteRepository.Builder("opencollab-snapshot", "default", "https://repo.opencollab.dev/maven-snapshots/").build());
 
-        resolver.addDependency(new Dependency(new DefaultArtifact("com.github.steveice10", "mcprotocollib", "jar", packetLibVersion), null));
+        resolver.addDependency(new Dependency(new DefaultArtifact(packetLibVersion), null));
 
         pluginClasspathBuilder.addLibrary(resolver);
     }

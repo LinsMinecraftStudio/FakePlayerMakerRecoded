@@ -4,6 +4,10 @@ player_already_joined: "&c该假人已经加入了服务器。"
 no_fake_players_u_have: "&c你没有拥有任何一个假人。"
 player_not_yours: "&c那不是你的假人！"
 command:
+  missing_coordinates: "&c缺少坐标参数！"
+  invalid_coordinates: "&c无效的坐标！"
+  invalid_direction: "&c无效的方向！"
+  missing_direction: "&c缺失方向参数！"
   name_taken: "&c该名称已被使用。请选择另一个名称。"
   reload-expired: "&e&l你的完整重载请求已过期。"
   skin_changed: "&a假人的皮肤已更换。"
@@ -14,6 +18,8 @@ command:
   no_command: "&c你必须输入一个指令！"
   not_allowed_command: "&c你不能使用假人去执行此指令！"
   skin_not_found: "&c找不到该皮肤。"
+  list_entry: "&e%num%. "
+  list_entry_2: "&b%name%"
   reload-config-now: |-
     &c&l该插件现在只重载配置文件（1.0.5 及以上）。
     &b&l如需重大更改，请重启服务器或 /fpm full-reload（非常不建议）。
@@ -27,6 +33,7 @@ command:
     &a正在运行 FakePlayerMaker-Recoded v%1$s 作者 %2$s. 
     &b输入 /fpm help 获取帮助.
   help:
+    actions: "让假人执行动作"
     full-reload: "重载插件的几乎一切"
     cmd: "让假人执行指令"
     respawn: "让假人重生"

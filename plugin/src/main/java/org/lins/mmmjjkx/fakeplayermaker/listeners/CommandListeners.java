@@ -8,7 +8,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.lins.mmmjjkx.fakeplayermaker.FPMRecoded;
 import org.lins.mmmjjkx.fakeplayermaker.commons.objects.IFPMPlayer;
@@ -28,36 +27,12 @@ public class CommandListeners implements Listener {
 
         //run using fake players
         if (FPMRecoded.fakePlayerManager.get(player.getName()) != null) {
-            List<String> bannedCommandsPrefix = FPMRecoded.INSTANCE.getConfig().getStringList("bannedCommandsPrefix");
+            List<String> bannedCommandsPrefix = FPMRecoded.getSettingValues().bannedCommandsPrefix();
             boolean find = bannedCommandsPrefix.stream().anyMatch(commandHead::equalsIgnoreCase);
             if (find) {
                 e.setCancelled(true);
                 FPMRecoded.INSTANCE.getMessageHandler().sendMessage(player, "command.not_allowed_command");
             }
-        }
-    }
-
-    @EventHandler
-    public void onJoin(PlayerJoinEvent e) {
-        Player player = e.getPlayer();
-        Pair<Boolean, IFPMPlayer> nmsPlayer = FPMRecoded.fakePlayerManager.getExactly(player.getName());
-        if (nmsPlayer.getRight() != null) {
-            FPMRecoded.INSTANCE.getConfig().getStringList("runCommands.onJoin").forEach(c -> {
-                String[] split = c.split(" ");
-                String command = split[0];
-                String head = split.length > 1 ? split[1] : "";
-                IFPMPlayer IFPMPlayer = nmsPlayer.getRight();
-                OfflinePlayer owner = Bukkit.getOfflinePlayer(IFPMPlayer.getOwnerUUID());
-                command = command.replaceAll("%fakePlayer%", player.getName());
-                if (owner.getName() != null) {
-                    command = command.replaceAll("%owner%", owner.getName());
-                }
-                switch (head) {
-                    default -> player.performCommand(c);
-                    case "console" -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
-                    case "chat" -> player.chat(command);
-                }
-            });
         }
     }
 

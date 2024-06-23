@@ -25,6 +25,17 @@ public class CommonUtils {
     }
 
     @Nullable
+    public static Class<?> getClass(String... classPath) {
+        for (String path : classPath) {
+            try {
+                return Class.forName(path);
+            } catch (ClassNotFoundException ignore) {
+            }
+        }
+        return null;
+    }
+
+    @Nullable
     public static Pair<String, Integer> getUnAllocatedIPPort() {
         List<String> usableIP = FPMRecoded.INSTANCE.getConfig().getStringList("usable_ip");
         if (usableIP.isEmpty()) {

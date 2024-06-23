@@ -5,9 +5,11 @@ import io.github.linsminecraftstudio.polymer.objects.plugin.PolymerPlugin;
 import io.github.linsminecraftstudio.polymer.utils.FileUtil;
 import io.github.linsminecraftstudio.polymer.utils.ObjectConverter;
 import io.github.linsminecraftstudio.polymer.utils.OtherUtils;
+import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.lins.mmmjjkx.fakeplayermaker.commands.FPMMainCommand;
 import org.lins.mmmjjkx.fakeplayermaker.commons.Instances;
 import org.lins.mmmjjkx.fakeplayermaker.commons.objects.IFakePlayerManager;
+import org.lins.mmmjjkx.fakeplayermaker.commons.objects.collections.SettingValuesCollection;
 import org.lins.mmmjjkx.fakeplayermaker.listeners.CommandListeners;
 import org.lins.mmmjjkx.fakeplayermaker.listeners.FakePlayerListener;
 import org.lins.mmmjjkx.fakeplayermaker.listeners.Scheduling;
@@ -24,6 +26,7 @@ public final class FPMRecoded extends PolymerPlugin {
 
     public void onLoad() {
         Instances.setFPM(this);
+        ConfigurationSerialization.registerClass(SettingValuesCollection.class);
     }
 
     @Override
@@ -69,6 +72,10 @@ public final class FPMRecoded extends PolymerPlugin {
                 }
             });
         }
+    }
+
+    public static SettingValuesCollection getSettingValues() {
+        return INSTANCE.getConfig().getSerializable("fakePlayer", SettingValuesCollection.class, new SettingValuesCollection(true, true, 3, true, List.of()));
     }
 
     @Override

@@ -4,6 +4,10 @@ player_already_joined: "&cThe fake player has already joined the server."
 no_fake_players_u_have: "&cYou do not have any fake players."
 player_not_yours: "&cThat's not your fake player."
 command:
+  missing_coordinates: "&cMissing coordinates."
+  invalid_coordinates: "&cInvalid coordinates."
+  invalid_direction: "&cInvalid direction."
+  missing_direction: "&cMissing direction."
   player_not_in_server: "&cThe fake player is not in the server. Please check if it has joined the server or in another server."
   name_taken: "&cThe name you entered is already taken. Please choose another one."
   reload-expired: "&e&lYour full reload request has expired."
@@ -18,6 +22,8 @@ command:
   no_command: "&cYou must enter a command to execute."
   not_allowed_command: "&cYou are not allowed to execute this command using fake players."
   skin_not_found: "&cThe skin you entered does not exist."
+  list_entry: "&e%num%. "
+  list_entry_2: "&b%name%"
   reload-confirm: |-
     &c&lARE YOU SURE TO MAKE A FULL RELOAD?
     &cThis will reload almost every things of the plugin, including the configuration file.
@@ -28,6 +34,7 @@ command:
     &aRunning FakePlayerMaker-Recoded v%1$s by %2$s. 
     &bRun /fpm help to get help.
   help:
+    actions: "Let a fake player perform actions"
     full-reload: "Reload the plugin almost every things"
     cmd: "Let a fake player perform a command"
     respawn: "Respawn a fake player"

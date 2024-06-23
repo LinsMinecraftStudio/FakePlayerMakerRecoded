@@ -69,7 +69,7 @@ public class CmdCommand extends FPMSubCmd {
                 byteBuf.writeLong(0L);
                 byteBuf.writeBoolean(false);
                 byteBuf.writeBytes(new byte[256]);
-                byteBuf.writeInt(0);
+                helper.writeVarInt(byteBuf, 0);
                 int length = command.length();
                 helper.writeFixedBitSet(byteBuf, new BitSet(length), length);
                 client.send(new ServerboundChatPacket(byteBuf, helper), ClientboundDisguisedChatPacket.class, (session, packet) -> {
