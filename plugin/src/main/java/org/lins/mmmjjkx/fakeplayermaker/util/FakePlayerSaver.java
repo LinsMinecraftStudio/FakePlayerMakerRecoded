@@ -1,9 +1,9 @@
 package org.lins.mmmjjkx.fakeplayermaker.util;
 
-import com.github.steveice10.mc.auth.data.GameProfile;
 import io.github.linsminecraftstudio.polymer.objects.plugin.file.SingleFileStorage;
 import lombok.Getter;
 import lombok.SneakyThrows;
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
@@ -12,6 +12,7 @@ import org.lins.mmmjjkx.fakeplayermaker.FPMRecoded;
 import org.lins.mmmjjkx.fakeplayermaker.commons.objects.FakePlayerProfile;
 import org.lins.mmmjjkx.fakeplayermaker.commons.objects.IFPMPlayer;
 import org.lins.mmmjjkx.fakeplayermaker.objects.MCClient;
+import org.lins.mmmjjkx.fakeplayermaker.objects.WrappedGameProfile;
 
 import java.io.File;
 import java.util.HashMap;
@@ -67,15 +68,15 @@ public class FakePlayerSaver extends SingleFileStorage {
 
             UUID owner = owner_str.isBlank() ? NO_OWNER_UUID : UUID.fromString(owner_str);
 
-            GameProfile profile = new GameProfile(uuid, name);
+            WrappedGameProfile profile = WrappedGameProfile.create(uuid, name);
 
             if (url != null && !url.isBlank() && (signature != null && !signature.isBlank())) {
-                profile.getProperties().add(new GameProfile.Property("textures", url, signature));
+                profile.putProperty("textures", url, signature);
             }
 
             String ip = FPMRecoded.INSTANCE.getConfig().getString("entrance.ip", "127.0.0.1");
             int port = FPMRecoded.INSTANCE.getConfig().getInt("entrance.port", 25565);
-            fakePlayers.put(name, new MCClient(ip, port, owner, CommonUtils.getUnAllocatedIPPort(), new GameProfile(uuid, name)));
+            fakePlayers.put(name, new MCClient(ip, port, owner, CommonUtils.getUnAllocatedIPPort(), new ImmutablePair<>(name, uuid)));
         }
     }
 

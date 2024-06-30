@@ -1,11 +1,5 @@
 package org.lins.mmmjjkx.fakeplayermaker.util;
 
-import com.github.steveice10.mc.auth.data.GameProfile;
-import com.github.steveice10.mc.protocol.codec.MinecraftCodec;
-import com.github.steveice10.mc.protocol.codec.MinecraftCodecHelper;
-import com.github.steveice10.mc.protocol.packet.ingame.serverbound.ServerboundChatCommandPacket;
-import com.github.steveice10.mc.protocol.packet.ingame.serverbound.ServerboundChatPacket;
-import com.github.steveice10.packetlib.Session;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.CompositeByteBuf;
 import io.netty.buffer.PooledByteBufAllocator;
@@ -19,12 +13,24 @@ import org.jetbrains.annotations.Nullable;
 import org.lins.mmmjjkx.fakeplayermaker.FPMRecoded;
 import org.lins.mmmjjkx.fakeplayermaker.commons.objects.IFPMPlayer;
 import org.lins.mmmjjkx.fakeplayermaker.commons.objects.IFakePlayerManager;
+import org.lins.mmmjjkx.fakeplayermaker.objects.CodecHelperMethod;
 import org.lins.mmmjjkx.fakeplayermaker.objects.MCClient;
+import org.lins.mmmjjkx.fakeplayermaker.objects.WrappedSession;
 
 import java.time.Instant;
 import java.util.*;
 
 public class NewFakePlayerManager implements IFakePlayerManager {
+    public static final Class<?> chatPacketClass = CommonUtils.getClass(
+            "com.github.steveice10.mc.protocol.packet.ingame.serverbound.ServerboundChatPacket",
+            "org.geysermc.mcprotocollib.protocol.packet.ingame.serverbound.ServerboundChatPacket"
+    );
+
+    private static final Class<?> chatCommandPacketClass = CommonUtils.getClass(
+            "com.github.steveice10.mc.protocol.packet.ingame.serverbound.ServerboundChatCommandPacket",
+            "org.geysermc.mcprotocollib.protocol.packet.ingame.serverbound.ServerboundChatCommandPacket"
+    );
+
     private final Map<String, MCClient> clients;
 
     public NewFakePlayerManager() {
@@ -33,10 +39,10 @@ public class NewFakePlayerManager implements IFakePlayerManager {
 
     @Override
     public @NotNull IFPMPlayer create(UUID owner, String name) {
-        GameProfile profile = new GameProfile(owner, name);
         String ip = FPMRecoded.INSTANCE.getConfig().getString("entrance.ip", "127.0.0.1");
         int port = FPMRecoded.INSTANCE.getConfig().getInt("entrance.port", 60000);
-        MCClient client = new MCClient(ip, port, owner, CommonUtils.getUnAllocatedIPPort(), profile);
+        UUID uuid = UUID.nameUUIDFromBytes(name.getBytes());
+        MCClient client = new MCClient(ip, port, owner, CommonUtils.getUnAllocatedIPPort(), new ImmutablePair<>(name, uuid));
         clients.put(name, client);
         return client;
     }
@@ -104,7 +110,7 @@ public class NewFakePlayerManager implements IFakePlayerManager {
         }
     }
 
-    private void actions(String key, MCClient client, Session session) {
+    private void actions(String key, MCClient client, WrappedSession session) {
         List<Runnable> temp = new ArrayList<>();
         FPMRecoded.INSTANCE.getConfig().getStringList("runCommands.on" + key).forEach(c -> {
             Runnable runnable = () -> {
@@ -119,28 +125,20 @@ public class NewFakePlayerManager implements IFakePlayerManager {
                 String finalCommand = command;
                 switch (head) {
                     case "chat" -> {
-                        ByteBuf byteBuf = new CompositeByteBuf(new PooledByteBufAllocator(), false, 16);
-                        MinecraftCodecHelper helper = MinecraftCodec.CODEC.getHelperFactory().get();
-                        helper.writeString(byteBuf, finalCommand);
-                        byteBuf.writeLong(Instant.now().toEpochMilli());
-                        byteBuf.writeLong(0L);
+                        ByteBuf byteBuf = writeBase(finalCommand);
                         byteBuf.writeBoolean(false);
                         byteBuf.writeBytes(new byte[256]);
-                        helper.writeVarInt(byteBuf, 0);
-                        helper.writeFixedBitSet(byteBuf, new BitSet(finalCommand.length()), finalCommand.length());
-                        session.send(new ServerboundChatPacket(byteBuf, helper));
+                        Reflections.codecHelperOperation(byteBuf, CodecHelperMethod.WRITE_VAR_INT, 0);
+                        Reflections.codecHelperOperation(byteBuf, CodecHelperMethod.WRITE_FIXED_BITSET, new BitSet(finalCommand.length()), finalCommand.length());
+                        session.send(Reflections.createPacket(chatPacketClass, byteBuf));
                     }
                     case "console" -> Bukkit.getScheduler().runTask(FPMRecoded.INSTANCE, () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), finalCommand));
                     default -> {
-                        ByteBuf byteBuf = new CompositeByteBuf(new PooledByteBufAllocator(), false, 16);
-                        MinecraftCodecHelper helper = MinecraftCodec.CODEC.getHelperFactory().get();
-                        helper.writeString(byteBuf, finalCommand);
-                        byteBuf.writeLong(Instant.now().toEpochMilli());
-                        byteBuf.writeLong(0L);
-                        helper.writeVarInt(byteBuf, 0);
-                        helper.writeVarInt(byteBuf, 0);
-                        helper.writeFixedBitSet(byteBuf, new BitSet(finalCommand.length()), finalCommand.length());
-                        session.send(new ServerboundChatCommandPacket(byteBuf, helper));
+                        ByteBuf byteBuf = writeBase(finalCommand);
+                        Reflections.codecHelperOperation(byteBuf, CodecHelperMethod.WRITE_VAR_INT, 0);
+                        Reflections.codecHelperOperation(byteBuf, CodecHelperMethod.WRITE_VAR_INT, 0);
+                        Reflections.codecHelperOperation(byteBuf, CodecHelperMethod.WRITE_FIXED_BITSET, new BitSet(finalCommand.length()), finalCommand.length());
+                        session.send(Reflections.createPacket(chatCommandPacketClass, byteBuf));
                     }
                 }
             };
@@ -151,5 +149,13 @@ public class NewFakePlayerManager implements IFakePlayerManager {
             Runnable future = temp.get(i);
             Bukkit.getScheduler().runTaskLater(FPMRecoded.INSTANCE, future, i * 20L);
         }
+    }
+
+    public static ByteBuf writeBase(String str) {
+        ByteBuf byteBuf = new CompositeByteBuf(new PooledByteBufAllocator(), false, 16);
+        Reflections.codecHelperOperation(byteBuf, CodecHelperMethod.WRITE_STRING, str);
+        byteBuf.writeLong(Instant.now().toEpochMilli());
+        byteBuf.writeLong(0L);
+        return byteBuf;
     }
 }

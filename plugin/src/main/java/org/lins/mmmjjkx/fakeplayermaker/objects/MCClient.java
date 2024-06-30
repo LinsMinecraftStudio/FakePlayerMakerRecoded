@@ -1,13 +1,5 @@
 package org.lins.mmmjjkx.fakeplayermaker.objects;
 
-import com.github.steveice10.mc.auth.data.GameProfile;
-import com.github.steveice10.mc.auth.service.SessionService;
-import com.github.steveice10.mc.protocol.MinecraftConstants;
-import com.github.steveice10.mc.protocol.MinecraftProtocol;
-import com.github.steveice10.mc.protocol.codec.MinecraftCodec;
-import com.github.steveice10.packetlib.Session;
-import com.github.steveice10.packetlib.packet.Packet;
-import com.github.steveice10.packetlib.tcp.TcpClientSession;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.tuple.ImmutablePair;
@@ -16,6 +8,7 @@ import org.bukkit.Bukkit;
 import org.lins.mmmjjkx.fakeplayermaker.FPMRecoded;
 import org.lins.mmmjjkx.fakeplayermaker.commons.objects.FakePlayerProfile;
 import org.lins.mmmjjkx.fakeplayermaker.commons.objects.IFPMPlayer;
+import org.lins.mmmjjkx.fakeplayermaker.util.CommonUtils;
 
 import java.net.Proxy;
 import java.util.HashMap;
@@ -32,37 +25,40 @@ public class MCClient implements IFPMPlayer {
     private final String ip;
     private final int serverPort;
     private final UUID owner;
-    private final SessionService sessionService = new SessionService();
+    private final WrappedSessionService sessionService = WrappedSessionService.create();
     @Getter
     private final Pair<String, Integer> bindAddress;
-    private final GameProfile gameProfile;
+    private final Pair<String, UUID> gameProfilePair;
 
-    private final Map<Pair<Packet, Class<? extends Packet>>, BiConsumer<Session, Packet>> callbacks = new HashMap<>();
+    private final Map<Pair<Object, Class<?>>, BiConsumer<WrappedSession, Object>> callbacks = new HashMap<>();
 
-    private Session session;
+    private WrappedSession session;
 
-    public void connect(Consumer<Session> callback) {
+    public void connect(Consumer<WrappedSession> callback) {
         sessionService.setProxy(Proxy.NO_PROXY);
 
-        MinecraftProtocol protocol = new MinecraftProtocol(MinecraftCodec.CODEC, gameProfile, gameProfile.getIdAsString());
+        Object protocol = WrappedSession.newProtocol(WrappedGameProfile.create(gameProfilePair.getRight(), gameProfilePair.getLeft()).getHandle(), null);
+        WrappedSession session = WrappedSession.newSession(ip, serverPort, bindAddress.getLeft(), bindAddress.getRight(), protocol);
 
         /*
         if (Bukkit.getOnlineMode()) {
             FPMRecoded.INSTANCE.getLogger().severe("The plugin is not compatible with online mode servers.");
             return;
         }
-
          */
-        Session session = new TcpClientSession(ip, serverPort, bindAddress.getLeft(), bindAddress.getRight(), protocol);
 
         this.session = session;
 
         session.setFlag("print-packetlib-debug", FPMRecoded.INSTANCE.getConfig().getBoolean("print-connection-debug"));
-        session.setFlag(MinecraftConstants.SESSION_SERVICE_KEY, sessionService);
-        session.setFlag(MinecraftConstants.SERVER_COMPRESSION_THRESHOLD, 256);
-        session.setFlag(MinecraftConstants.VERIFY_USERS_KEY, Bukkit.getOnlineMode());
+        session.setFlag("session-service", sessionService.getHandle());
+        session.setFlag("compression-threshold", 256);
+        session.setFlag("verify-users", Bukkit.getOnlineMode());
 
-        session.addListener(new ImplSessionAdapter(getFakePlayerProfile().getId(), callback, () -> callbacks));
+        if (!CommonUtils.isOnMinecraftVersion(1,20,5)) {
+            session.addListener(new ImplSessionAdapter(getFakePlayerProfile().getId(), callback, () -> callbacks));
+        } else {
+            session.addListener(new ImplSessionAdapterN2(getFakePlayerProfile().getId(), callback, () -> callbacks));
+        }
 
         session.connect();
 
@@ -79,20 +75,20 @@ public class MCClient implements IFPMPlayer {
         }
     }
 
-    public void disconnect(Consumer<Session> callback) {
+    public void disconnect(Consumer<WrappedSession> callback) {
         if (session != null) {
             callback.accept(session);
             session.disconnect("");
         }
     }
 
-    public void send(Packet packet) {
+    public void send(Object packet) {
         if (session != null && session.isConnected()) {
             session.send(packet);
         }
     }
 
-    public void send(Packet packet, Class<? extends Packet> responseType, BiConsumer<Session, Packet> callback) {
+    public void send(Object packet, Class<?> responseType, BiConsumer<WrappedSession, Object> callback) {
         if (session != null && session.isConnected()) {
             session.send(packet);
             callbacks.put(new ImmutablePair<>(packet, responseType), callback);
@@ -106,6 +102,6 @@ public class MCClient implements IFPMPlayer {
 
     @Override
     public FakePlayerProfile getFakePlayerProfile() {
-        return new FakePlayerProfile(gameProfile.getName(), gameProfile.getId());
+        return new FakePlayerProfile(gameProfilePair.getLeft(), gameProfilePair.getRight());
     }
 }

@@ -1,45 +1,36 @@
 package org.lins.mmmjjkx.fakeplayermaker.objects;
 
-import com.github.steveice10.mc.protocol.codec.MinecraftCodec;
-import com.github.steveice10.mc.protocol.codec.MinecraftCodecHelper;
-import com.github.steveice10.mc.protocol.packet.common.serverbound.ServerboundResourcePackPacket;
-import com.github.steveice10.mc.protocol.packet.ingame.clientbound.ClientboundLoginPacket;
-import com.github.steveice10.mc.protocol.packet.login.serverbound.ServerboundHelloPacket;
-import com.github.steveice10.packetlib.Session;
-import com.github.steveice10.packetlib.event.session.DisconnectedEvent;
-import com.github.steveice10.packetlib.event.session.PacketSendingEvent;
-import com.github.steveice10.packetlib.event.session.SessionAdapter;
-import com.github.steveice10.packetlib.packet.Packet;
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.CompositeByteBuf;
-import io.netty.buffer.PooledByteBufAllocator;
 import lombok.SneakyThrows;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.apache.commons.lang3.tuple.Pair;
 import org.bukkit.Bukkit;
+import org.geysermc.mcprotocollib.network.Session;
+import org.geysermc.mcprotocollib.network.event.session.DisconnectedEvent;
+import org.geysermc.mcprotocollib.network.event.session.PacketSendingEvent;
+import org.geysermc.mcprotocollib.network.event.session.SessionAdapter;
+import org.geysermc.mcprotocollib.network.packet.Packet;
+import org.geysermc.mcprotocollib.protocol.packet.ingame.clientbound.ClientboundLoginPacket;
+import org.geysermc.mcprotocollib.protocol.packet.login.serverbound.ServerboundHelloPacket;
 import org.lins.mmmjjkx.fakeplayermaker.FPMRecoded;
 import org.lins.mmmjjkx.fakeplayermaker.util.CommonUtils;
 import org.lins.mmmjjkx.fakeplayermaker.util.Reflections;
 
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.logging.Level;
 
-public class ImplSessionAdapter extends SessionAdapter {
+public class ImplSessionAdapterN2 extends SessionAdapter {
     private final UUID uuid;
     private final Consumer<WrappedSession> callback;
     private final Supplier<Map<Pair<Object, Class<?>>, BiConsumer<WrappedSession, Object>>> callbackMap;
 
     private boolean loggedIn = false;
 
-    public ImplSessionAdapter(UUID uuid, Consumer<WrappedSession> callback, Supplier<Map<Pair<Object, Class<?>>, BiConsumer<WrappedSession, Object>>> callbacks) {
+    public ImplSessionAdapterN2(UUID uuid, Consumer<WrappedSession> callback, Supplier<Map<Pair<Object, Class<?>>, BiConsumer<WrappedSession, Object>>> callbacks) {
         this.uuid = uuid;
         this.callback = callback;
         this.callbackMap = callbacks;
@@ -64,20 +55,12 @@ public class ImplSessionAdapter extends SessionAdapter {
             if (isValidResourcePackUrl(url)) {
                 session.send((Packet) Reflections.createServerBoundResourcePackPacket(id, 3));
                 if (is1205) {
-                    ByteBuf buf = new CompositeByteBuf(new PooledByteBufAllocator(), false, 16);
-                    MinecraftCodecHelper helper = MinecraftCodec.CODEC.getHelperFactory().get();
-                    helper.writeVarInt(buf, 4);
-                    try {session.send(new ServerboundResourcePackPacket(buf, helper));
-                    } catch (IOException ignored) {}
+                    session.send((Packet) Reflections.createServerBoundResourcePackPacket(id, 4));
                 }
                 session.send((Packet) Reflections.createServerBoundResourcePackPacket(id, 0));
             } else {
                 if (is1205) {
-                    ByteBuf buf = new CompositeByteBuf(new PooledByteBufAllocator(), false, 16);
-                    MinecraftCodecHelper helper = MinecraftCodec.CODEC.getHelperFactory().get();
-                    helper.writeVarInt(buf, 5);
-                    try {session.send(new ServerboundResourcePackPacket(buf, helper));
-                    } catch (IOException ignored) {}
+                    session.send((Packet) Reflections.createServerBoundResourcePackPacket(id, 5));
                 } else {
                     session.send((Packet) Reflections.createServerBoundResourcePackPacket(id, 2));
                 }
@@ -86,12 +69,19 @@ public class ImplSessionAdapter extends SessionAdapter {
 
         var callbackMap = this.callbackMap.get();
         Set<Pair<Object, Class<?>>> keys = callbackMap.keySet();
-        keys.stream().map(Pair::getRight).filter(c -> c.isAssignableFrom(packet.getClass())).forEach(c -> {
-            if (c.isAssignableFrom(packet.getClass())) {
-                callbackMap.getOrDefault(Pair.of(packet, c), (s, p) -> {}).accept(new WrappedSession(session), packet);
-                keys.stream().filter(p -> p.getRight().isAssignableFrom(packet.getClass())).findFirst().ifPresent(callbackMap::remove);
+        List<Class<?>> list = new ArrayList<>(keys.stream().map(Pair::getRight).filter(c -> c.equals(packet.getClass())).distinct().toList());
+        if (!list.isEmpty()) {
+            if (list.contains(packet.getClass())) {
+                for (Pair<Object, Class<?>> pair : keys) {
+                    if (pair.getRight().equals(packet.getClass())) {
+                        BiConsumer<WrappedSession, Object> consumer = callbackMap.get(pair);
+                        consumer.accept(new WrappedSession(session), packet);
+                        callbackMap.remove(pair);
+                    }
+                }
+                list.remove(packet.getClass());
             }
-        });
+        }
     }
 
     private boolean isValidResourcePackUrl(String url) {

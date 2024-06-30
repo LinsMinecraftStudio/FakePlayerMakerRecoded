@@ -2,6 +2,7 @@ package org.lins.mmmjjkx.fakeplayermaker.util;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
+import org.bukkit.Bukkit;
 import org.jetbrains.annotations.Nullable;
 import org.lins.mmmjjkx.fakeplayermaker.FPMRecoded;
 
@@ -81,5 +82,21 @@ public class CommonUtils {
         }
 
         return unallocatedIPPorts;
+    }
+
+    public static boolean isOnMinecraftVersion(int major, int minor, int patch) {
+        String version = Bukkit.getMinecraftVersion();
+        String[] versionParts = version.split("-")[0].split("\\.");
+        int majorVersion, minorVersion, patchVersion;
+        if (versionParts.length == 2) {
+            patchVersion = 0;
+        } else if (versionParts.length == 3) {
+            patchVersion = Integer.parseInt(versionParts[2]);
+        } else {
+            return false;
+        }
+        majorVersion = Integer.parseInt(versionParts[0]);
+        minorVersion = Integer.parseInt(versionParts[1]);
+        return majorVersion > major || (majorVersion == major && minorVersion > minor) || (majorVersion == major && minorVersion == minor && patchVersion >= patch);
     }
 }

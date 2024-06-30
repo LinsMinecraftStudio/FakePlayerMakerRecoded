@@ -1,11 +1,6 @@
 package org.lins.mmmjjkx.fakeplayermaker.commands;
 
-import com.github.steveice10.mc.protocol.codec.MinecraftCodec;
-import com.github.steveice10.mc.protocol.codec.MinecraftCodecHelper;
 import io.github.linsminecraftstudio.polymer.command.SubCommand;
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.CompositeByteBuf;
-import io.netty.buffer.PooledByteBufAllocator;
 import org.apache.commons.lang3.tuple.Pair;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -50,14 +45,6 @@ public abstract class FPMSubCmd extends SubCommand {
         }
 
         return null;
-    }
-
-    protected final ByteBuf newByteBuf() {
-        return new CompositeByteBuf(new PooledByteBufAllocator(), false, 16);
-    }
-
-    protected final MinecraftCodecHelper getCodecHelper() {
-        return MinecraftCodec.CODEC.getHelperFactory().get();
     }
 
     protected final void run(IFPMPlayer fakePlayer, Consumer<Player> consumer) {
