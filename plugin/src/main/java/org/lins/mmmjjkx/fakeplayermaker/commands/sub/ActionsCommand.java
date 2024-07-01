@@ -1,21 +1,44 @@
 package org.lins.mmmjjkx.fakeplayermaker.commands.sub;
 
-import com.github.steveice10.mc.protocol.data.game.entity.object.Direction;
-import com.github.steveice10.mc.protocol.data.game.entity.player.PlayerAction;
-import com.github.steveice10.mc.protocol.packet.ingame.serverbound.player.ServerboundPlayerActionPacket;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.CompositeByteBuf;
+import io.netty.buffer.PooledByteBufAllocator;
 import org.bukkit.command.CommandSender;
 import org.cloudburstmc.math.vector.Vector3i;
 import org.lins.mmmjjkx.fakeplayermaker.FPMRecoded;
 import org.lins.mmmjjkx.fakeplayermaker.commands.FPMSubCmd;
 import org.lins.mmmjjkx.fakeplayermaker.commons.objects.IFPMPlayer;
+import org.lins.mmmjjkx.fakeplayermaker.objects.CodecHelperMethod;
 import org.lins.mmmjjkx.fakeplayermaker.objects.MCClient;
+import org.lins.mmmjjkx.fakeplayermaker.util.CommonUtils;
+import org.lins.mmmjjkx.fakeplayermaker.util.Reflections;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class ActionsCommand extends FPMSubCmd {
+    private static final Class<?> playerActionclass = CommonUtils.getClass(
+            "com.github.steveice10.mc.protocol.data.game.entity.player.PlayerAction",
+            "com.github.steveice10.mc.protocol.data.game.entity.player.PlayerAction"
+    );
+
+    private static final Class<?> directionclass = CommonUtils.getClass(
+            "com.github.steveice10.mc.protocol.data.game.entity.object.Direction",
+            "org.geysermc.mcprotocollib.protocol.data.game.entity.object.Direction"
+    );
+
+    private static final Class<?> packetClass = Reflections.getServerboundPacketClass(
+            "player.ServerboundPlayerActionPacket"
+    );
+
     private static final List<String> directions = List.of("DOWN", "UP", "NORTH", "SOUTH", "WEST", "EAST");
     private static final List<String> actions = List.of("START_DIGGING", "CANCEL_DIGGING", "FINISH_DIGGING", "DROP_ITEM_STACK", "DROP_ITEM", "RELEASE_USE_ITEM", "SWAP_HANDS");
+
+    static {
+        assert playerActionclass != null && directionclass != null && packetClass != null;
+    }
 
     public ActionsCommand() {
         super("actions");
@@ -94,8 +117,17 @@ public class ActionsCommand extends FPMSubCmd {
                 }
             }
 
-            PlayerAction playerAction = PlayerAction.valueOf(action);
-            Direction direction1 = Direction.valueOf(direction);
+            AtomicReference<Object> playerAction = new AtomicReference<>();
+            AtomicReference<Object> directionObj = new AtomicReference<>();
+
+            Object[] actionConstants = playerActionclass.getEnumConstants();
+            String finalAction = action;
+            Arrays.stream(actionConstants).filter(c -> c.toString().equalsIgnoreCase(finalAction)).findFirst().ifPresent(playerAction::set);
+
+            Object[] directionConstants = directionclass.getEnumConstants();
+            String finalDirection = direction;
+            Arrays.stream(directionConstants).filter(c -> c.toString().equalsIgnoreCase(finalDirection)).findFirst().ifPresent(directionObj::set);
+
             int x, y, z;
             try {
                 String[] coords = v3i.split(",");
@@ -110,7 +142,12 @@ public class ActionsCommand extends FPMSubCmd {
             Vector3i vec = Vector3i.from(x, y, z);
 
             run(player, p -> {
-                ServerboundPlayerActionPacket packet = new ServerboundPlayerActionPacket(playerAction, vec, direction1, sequence);
+                ByteBuf byteBuf = new CompositeByteBuf(new PooledByteBufAllocator(), false , 16);
+                Reflections.codecHelperOperation(byteBuf, CodecHelperMethod.WRITE_VAR_INT, Reflections.getEnumOrdinal(playerAction.get()));
+                Reflections.codecHelperOperation(byteBuf, CodecHelperMethod.WRITE_POSITION, vec);
+                Reflections.codecHelperOperation(byteBuf, CodecHelperMethod.WRITE_VAR_INT, Reflections.getEnumOrdinal(directionObj.get()));
+                Reflections.codecHelperOperation(byteBuf, CodecHelperMethod.WRITE_VAR_INT, sequence);
+                Object packet = Reflections.createPacket(packetClass, byteBuf);
                 MCClient mcClient = (MCClient) player;
                 mcClient.send(packet);
             });

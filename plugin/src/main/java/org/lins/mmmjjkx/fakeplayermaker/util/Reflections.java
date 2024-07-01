@@ -153,4 +153,13 @@ public class Reflections {
             throw new RuntimeException(e);
         }
     }
+
+    public static int getEnumOrdinal(Object e) {
+        try {
+            Method ordinalMethod = e.getClass().getDeclaredMethod("ordinal");
+            return (int) ordinalMethod.invoke(e);
+        } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e1) {
+            throw new RuntimeException(e1);
+        }
+    }
 }
