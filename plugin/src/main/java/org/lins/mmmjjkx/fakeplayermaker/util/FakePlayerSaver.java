@@ -12,7 +12,7 @@ import org.lins.mmmjjkx.fakeplayermaker.FPMRecoded;
 import org.lins.mmmjjkx.fakeplayermaker.commons.objects.FakePlayerProfile;
 import org.lins.mmmjjkx.fakeplayermaker.commons.objects.IFPMPlayer;
 import org.lins.mmmjjkx.fakeplayermaker.objects.MCClient;
-import org.lins.mmmjjkx.fakeplayermaker.objects.WrappedGameProfile;
+import org.lins.mmmjjkx.fakeplayermaker.objects.wrapped.WrappedGameProfile;
 
 import java.io.File;
 import java.util.HashMap;

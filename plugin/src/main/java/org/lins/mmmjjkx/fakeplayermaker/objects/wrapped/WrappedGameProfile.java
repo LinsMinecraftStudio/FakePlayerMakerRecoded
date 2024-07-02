@@ -1,4 +1,4 @@
-package org.lins.mmmjjkx.fakeplayermaker.objects;
+package org.lins.mmmjjkx.fakeplayermaker.objects.wrapped;
 
 import lombok.RequiredArgsConstructor;
 import org.lins.mmmjjkx.fakeplayermaker.util.CommonUtils;
@@ -10,24 +10,27 @@ import java.util.UUID;
 
 @RequiredArgsConstructor
 public class WrappedGameProfile {
-    public static final Class<?> GAME_PROFILE_CLASS = CommonUtils.getClass(
-            "org.geysermc.mcprotocollib.auth.GameProfile",
-            "com.github.steveice10.mc.auth.data.GameProfile"
-    );
+    public static Class<?> GAME_PROFILE_CLASS;
 
-    public static final Class<?> GAME_PROFILE_PROPERTIES_CLASS = CommonUtils.getClass(
-            "org.geysermc.mcprotocollib.auth.GameProfile$Property",
-            "com.github.steveice10.mc.auth.data.GameProfile$Property"
-    );
+    public static Class<?> GAME_PROFILE_PROPERTIES_CLASS;
 
-    private static final Method getNameMethod;
-    private static final Method getUUIDMethod;
-    private static final Constructor<?> gameProfileConstructor;
-    private static final Method getPropertiesMethod;
-    private static final Constructor<?> gameProfilePropertyConstructor;
+    private static Method getNameMethod;
+    private static Method getUUIDMethod;
+    private static Constructor<?> gameProfileConstructor;
+    private static Method getPropertiesMethod;
+    private static Constructor<?> gameProfilePropertyConstructor;
 
-    static {
-        assert GAME_PROFILE_CLASS != null && GAME_PROFILE_PROPERTIES_CLASS != null;
+    public static void init() {
+        GAME_PROFILE_CLASS = CommonUtils.getClass(
+                "org.geysermc.mcprotocollib.auth.GameProfile",
+                "com.github.steveice10.mc.auth.data.GameProfile"
+        );
+
+        GAME_PROFILE_PROPERTIES_CLASS = CommonUtils.getClass(
+                "org.geysermc.mcprotocollib.auth.GameProfile$Property",
+                "com.github.steveice10.mc.auth.data.GameProfile$Property"
+        );
+
         try {
             getNameMethod = GAME_PROFILE_CLASS.getMethod("getName");
             getUUIDMethod = GAME_PROFILE_CLASS.getMethod("getId");

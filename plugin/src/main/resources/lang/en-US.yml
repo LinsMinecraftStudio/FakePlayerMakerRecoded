@@ -43,7 +43,7 @@ command:
     spawn: "Spawn a fake player of your own"
     remove: "Remove a fake player from the server and delete his data(only FPM)"
     leave: "Let a fake player leave the server"
-    join: "Let a fake player join the server"
+    join: "Let a existing fake player join the server"
     sneak: "Toggle sneak mode for a fake player"
     skin: "Change the skin of a fake player"
     dismount: "Let a fake player dismount"

@@ -16,12 +16,14 @@ import java.util.List;
 import java.util.Map;
 
 public class SneakCommand extends FPMSubCmd {
-    private static final Class<?> playerCommandPacketClass = Reflections.getServerboundPacketClass("player.ServerboundPlayerCommandPacket");
+    private final Class<?> playerCommandPacketClass;
 
     public SneakCommand() {
         super("sneak");
 
         addArgument("player", CommandArgumentType.REQUIRED);
+
+        playerCommandPacketClass = Reflections.getServerboundPacketClass("player.ServerboundPlayerCommandPacket");
     }
 
     @Override

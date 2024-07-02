@@ -17,23 +17,22 @@ import java.util.List;
 import java.util.Map;
 
 public class AttackCommand extends FPMSubCmd {
-    private static final Class<?> packetClass = Reflections.getServerboundPacketClass(
-            "player.ServerboundInteractPacket"
-    );
-
-    private static final Class<? extends Enum> interactActionClass = (Class<? extends Enum>) CommonUtils.getClass(
-            "com.github.steveice10.mc.protocol.data.game.entity.player.InteractAction",
-            "org.geysermc.mcprotocollib.protocol.data.game.entity.player.InteractAction"
-    );
-
-    static {
-        assert packetClass != null && interactActionClass != null;
-    }
+    private final Class<?> packetClass;
+    private final Class<? extends Enum> interactActionClass;
 
     public AttackCommand() {
         super("attack");
 
         addArgument("player", CommandArgumentType.REQUIRED);
+
+        packetClass = Reflections.getServerboundPacketClass(
+                "player.ServerboundInteractPacket"
+        );
+
+        interactActionClass = (Class<? extends Enum>) CommonUtils.getClass(
+                "com.github.steveice10.mc.protocol.data.game.entity.player.InteractAction",
+                "org.geysermc.mcprotocollib.protocol.data.game.entity.player.InteractAction"
+        );
     }
 
     @Override

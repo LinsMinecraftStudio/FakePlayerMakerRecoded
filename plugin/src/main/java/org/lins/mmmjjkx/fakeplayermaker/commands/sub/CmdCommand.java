@@ -18,11 +18,15 @@ import java.util.List;
 import java.util.Map;
 
 public class CmdCommand extends FPMSubCmd {
+    private final Class<?> destPacketClass;
+
     public CmdCommand() {
-        super("command");
+        super("command", "cmd");
 
         addArgument("player", CommandArgumentType.REQUIRED);
         addArgument("command", CommandArgumentType.REQUIRED);
+
+        destPacketClass = Reflections.getClientboundPacketClass("ClientboundDisguisedChatPacket");
     }
 
     @Override
@@ -60,10 +64,11 @@ public class CmdCommand extends FPMSubCmd {
 
                 MCClient client = (MCClient) fakePlayer;
                 ByteBuf byteBuf = NewFakePlayerManager.writeBase(command);
-                int length = command.length();
-                Reflections.codecHelperOperation(byteBuf, CodecHelperMethod.WRITE_FIXED_BITSET, new BitSet(length), length);
+                byteBuf.writeBoolean(false);
+                byteBuf.writeBytes(new byte[256]);
+                Reflections.codecHelperOperation(byteBuf, CodecHelperMethod.WRITE_VAR_INT, 0);
+                Reflections.codecHelperOperation(byteBuf, CodecHelperMethod.WRITE_FIXED_BITSET, new BitSet(20), 20);
 
-                Class<?> destPacketClass = Reflections.getClientboundPacketClass("ClientboundDisguisedChatPacket");
                 Object packet = Reflections.createPacket(NewFakePlayerManager.chatPacketClass, byteBuf);
 
                 client.send(packet, destPacketClass, (session, p) -> {

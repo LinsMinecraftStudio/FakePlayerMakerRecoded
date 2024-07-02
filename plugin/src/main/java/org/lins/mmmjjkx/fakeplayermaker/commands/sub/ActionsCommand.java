@@ -19,29 +19,29 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class ActionsCommand extends FPMSubCmd {
-    private static final Class<?> playerActionclass = CommonUtils.getClass(
-            "com.github.steveice10.mc.protocol.data.game.entity.player.PlayerAction",
-            "com.github.steveice10.mc.protocol.data.game.entity.player.PlayerAction"
-    );
-
-    private static final Class<?> directionclass = CommonUtils.getClass(
-            "com.github.steveice10.mc.protocol.data.game.entity.object.Direction",
-            "org.geysermc.mcprotocollib.protocol.data.game.entity.object.Direction"
-    );
-
-    private static final Class<?> packetClass = Reflections.getServerboundPacketClass(
-            "player.ServerboundPlayerActionPacket"
-    );
+    private final Class<?> playerActionclass;
+    private final Class<?> directionclass;
+    private final Class<?> packetClass;
 
     private static final List<String> directions = List.of("DOWN", "UP", "NORTH", "SOUTH", "WEST", "EAST");
     private static final List<String> actions = List.of("START_DIGGING", "CANCEL_DIGGING", "FINISH_DIGGING", "DROP_ITEM_STACK", "DROP_ITEM", "RELEASE_USE_ITEM", "SWAP_HANDS");
 
-    static {
-        assert playerActionclass != null && directionclass != null && packetClass != null;
-    }
-
     public ActionsCommand() {
         super("actions");
+
+        playerActionclass = CommonUtils.getClass(
+                "com.github.steveice10.mc.protocol.data.game.entity.player.PlayerAction",
+                "com.github.steveice10.mc.protocol.data.game.entity.player.PlayerAction"
+        );
+
+        directionclass = CommonUtils.getClass(
+                "com.github.steveice10.mc.protocol.data.game.entity.object.Direction",
+                "org.geysermc.mcprotocollib.protocol.data.game.entity.object.Direction"
+        );
+
+        packetClass = Reflections.getServerboundPacketClass(
+                "player.ServerboundPlayerActionPacket"
+        );
     }
 
     @Override

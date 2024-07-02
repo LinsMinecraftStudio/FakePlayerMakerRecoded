@@ -8,6 +8,9 @@ import org.bukkit.Bukkit;
 import org.lins.mmmjjkx.fakeplayermaker.FPMRecoded;
 import org.lins.mmmjjkx.fakeplayermaker.commons.objects.FakePlayerProfile;
 import org.lins.mmmjjkx.fakeplayermaker.commons.objects.IFPMPlayer;
+import org.lins.mmmjjkx.fakeplayermaker.objects.wrapped.WrappedGameProfile;
+import org.lins.mmmjjkx.fakeplayermaker.objects.wrapped.WrappedSession;
+import org.lins.mmmjjkx.fakeplayermaker.objects.wrapped.WrappedSessionService;
 import org.lins.mmmjjkx.fakeplayermaker.util.CommonUtils;
 
 import java.net.Proxy;
@@ -37,7 +40,9 @@ public class MCClient implements IFPMPlayer {
     public void connect(Consumer<WrappedSession> callback) {
         sessionService.setProxy(Proxy.NO_PROXY);
 
-        Object protocol = WrappedSession.newProtocol(WrappedGameProfile.create(gameProfilePair.getRight(), gameProfilePair.getLeft()).getHandle(), null);
+        Object gameProfile = WrappedGameProfile.create(gameProfilePair.getRight(), gameProfilePair.getLeft()).getHandle();
+
+        Object protocol = WrappedSession.newProtocol(gameProfile, null);
         WrappedSession session = WrappedSession.newSession(ip, serverPort, bindAddress.getLeft(), bindAddress.getRight(), protocol);
 
         /*
@@ -53,6 +58,8 @@ public class MCClient implements IFPMPlayer {
         session.setFlag("session-service", sessionService.getHandle());
         session.setFlag("compression-threshold", 256);
         session.setFlag("verify-users", Bukkit.getOnlineMode());
+        session.setFlag("profile", gameProfile);
+        session.setFlag("access-token", null);
 
         if (!CommonUtils.isOnMinecraftVersion(1,20,5)) {
             session.addListener(new ImplSessionAdapter(getFakePlayerProfile().getId(), callback, () -> callbacks));

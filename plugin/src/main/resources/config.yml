@@ -7,6 +7,8 @@ checkUpdate: true
 print-connection-debug: false
 
 default-spawn-location:
+  #DO NOT CHANGE THIS OR REMOVE THIS!
+  ==: org.bukkit.Location
   world: world
   x: 0
   y: 64
@@ -14,13 +16,15 @@ default-spawn-location:
   yaw: 0
   pitch: 0
 
-#Total mc name length limit is 16 characters!
+#The total mc name length limit is 16 characters!
 #To disable the name prefix, set it to "" (empty string)
 namePrefix: "fak_"
 randomNameLength: 10
 
 #Fake player settings
 fakePlayer:
+  #DO NOT CHANGE THIS OR REMOVE THIS!
+  ==: org.lins.mmmjjkx.fakeplayermaker.commons.objects.collections.SettingValuesCollection
   invulnerable: true
   mount-distance: 3
   auto-respawn: true

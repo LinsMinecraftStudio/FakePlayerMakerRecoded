@@ -13,8 +13,14 @@ import org.lins.mmmjjkx.fakeplayermaker.commons.objects.collections.SettingValue
 import org.lins.mmmjjkx.fakeplayermaker.listeners.CommandListeners;
 import org.lins.mmmjjkx.fakeplayermaker.listeners.FakePlayerListener;
 import org.lins.mmmjjkx.fakeplayermaker.listeners.Scheduling;
+import org.lins.mmmjjkx.fakeplayermaker.objects.providers.DefObjectProvider;
+import org.lins.mmmjjkx.fakeplayermaker.objects.providers.GeyserObjectProvider;
+import org.lins.mmmjjkx.fakeplayermaker.objects.wrapped.WrappedGameProfile;
+import org.lins.mmmjjkx.fakeplayermaker.objects.wrapped.WrappedSession;
+import org.lins.mmmjjkx.fakeplayermaker.util.CommonUtils;
 import org.lins.mmmjjkx.fakeplayermaker.util.FakePlayerSaver;
 import org.lins.mmmjjkx.fakeplayermaker.util.NewFakePlayerManager;
+import org.lins.mmmjjkx.fakeplayermaker.util.Reflections;
 
 import java.util.List;
 
@@ -27,6 +33,13 @@ public final class FPMRecoded extends PolymerPlugin {
     public void onLoad() {
         Instances.setFPM(this);
         ConfigurationSerialization.registerClass(SettingValuesCollection.class);
+
+        boolean is1205 = CommonUtils.isOnMinecraftVersion(1, 20, 5);
+        if (is1205) {
+            Reflections.setObjectProvider(new GeyserObjectProvider());
+        } else {
+            Reflections.setObjectProvider(new DefObjectProvider());
+        }
     }
 
     @Override
@@ -34,6 +47,10 @@ public final class FPMRecoded extends PolymerPlugin {
         INSTANCE = this;
 
         startMetrics(21829);
+
+        Reflections.init();
+        WrappedGameProfile.init();
+        WrappedSession.init();
 
         getLogger().info("""
                 

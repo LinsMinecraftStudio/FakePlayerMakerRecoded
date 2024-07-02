@@ -1,5 +1,6 @@
 package org.lins.mmmjjkx.fakeplayermaker.listeners;
 
+import com.destroystokyo.paper.event.player.PlayerHandshakeEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -14,6 +15,11 @@ import org.lins.mmmjjkx.fakeplayermaker.commons.objects.IFPMPlayer;
 public class FakePlayerListener implements Listener {
     public FakePlayerListener() {
         Bukkit.getPluginManager().registerEvents(this, FPMRecoded.INSTANCE);
+    }
+
+    @EventHandler
+    public void playerHandShake(PlayerHandshakeEvent e) {
+        FPMRecoded.INSTANCE.getLogger().info("originalHandshake: " + e.getOriginalHandshake());
     }
 
     @EventHandler

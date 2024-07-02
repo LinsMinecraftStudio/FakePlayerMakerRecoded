@@ -4,7 +4,9 @@ import com.github.steveice10.mc.protocol.codec.MinecraftCodec;
 import com.github.steveice10.mc.protocol.codec.MinecraftCodecHelper;
 import com.github.steveice10.mc.protocol.packet.common.serverbound.ServerboundResourcePackPacket;
 import com.github.steveice10.mc.protocol.packet.ingame.clientbound.ClientboundLoginPacket;
+import com.github.steveice10.mc.protocol.packet.login.clientbound.ClientboundHelloPacket;
 import com.github.steveice10.mc.protocol.packet.login.serverbound.ServerboundHelloPacket;
+import com.github.steveice10.mc.protocol.packet.login.serverbound.ServerboundKeyPacket;
 import com.github.steveice10.packetlib.Session;
 import com.github.steveice10.packetlib.event.session.DisconnectedEvent;
 import com.github.steveice10.packetlib.event.session.PacketSendingEvent;
@@ -18,15 +20,17 @@ import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.apache.commons.lang3.tuple.Pair;
 import org.bukkit.Bukkit;
 import org.lins.mmmjjkx.fakeplayermaker.FPMRecoded;
+import org.lins.mmmjjkx.fakeplayermaker.objects.wrapped.WrappedSession;
 import org.lins.mmmjjkx.fakeplayermaker.util.CommonUtils;
 import org.lins.mmmjjkx.fakeplayermaker.util.Reflections;
 
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.security.PublicKey;
+import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -48,6 +52,16 @@ public class ImplSessionAdapter extends SessionAdapter {
     @SneakyThrows
     @Override
     public void packetReceived(Session session, Packet packet) {
+        if (packet instanceof ClientboundHelloPacket helloPacket) {
+            PublicKey key = helloPacket.getPublicKey();
+            byte[] challenge = helloPacket.getChallenge();
+            KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
+            keyGenerator.init(128);
+            SecretKey secretKey = keyGenerator.generateKey();
+            ServerboundKeyPacket keyPacket = new ServerboundKeyPacket(key, secretKey, challenge);
+            session.send(keyPacket);
+        }
+        
         if (packet instanceof ClientboundLoginPacket) {
             if (!loggedIn) {
                 callback.accept(new WrappedSession(session));
@@ -86,12 +100,19 @@ public class ImplSessionAdapter extends SessionAdapter {
 
         var callbackMap = this.callbackMap.get();
         Set<Pair<Object, Class<?>>> keys = callbackMap.keySet();
-        keys.stream().map(Pair::getRight).filter(c -> c.isAssignableFrom(packet.getClass())).forEach(c -> {
-            if (c.isAssignableFrom(packet.getClass())) {
-                callbackMap.getOrDefault(Pair.of(packet, c), (s, p) -> {}).accept(new WrappedSession(session), packet);
-                keys.stream().filter(p -> p.getRight().isAssignableFrom(packet.getClass())).findFirst().ifPresent(callbackMap::remove);
+        List<Class<?>> list = new ArrayList<>(keys.stream().map(Pair::getRight).filter(c -> c.equals(packet.getClass())).distinct().toList());
+        if (!list.isEmpty()) {
+            if (list.contains(packet.getClass())) {
+                for (Pair<Object, Class<?>> pair : keys) {
+                    if (pair.getRight().equals(packet.getClass())) {
+                        BiConsumer<WrappedSession, Object> consumer = callbackMap.get(pair);
+                        consumer.accept(new WrappedSession(session), packet);
+                        callbackMap.remove(pair);
+                    }
+                }
+                list.remove(packet.getClass());
             }
-        });
+        }
     }
 
     private boolean isValidResourcePackUrl(String url) {

@@ -57,6 +57,10 @@
 
   <repositories>
       <repository>
+          <id>codemc</id>
+          <url>https://repo.codemc.io/repository/nms/</url>
+      </repository>
+      <repository>
           <id>jitpack.io</id>
           <url>https://jitpack.io</url>
       </repository>
@@ -99,6 +103,12 @@
                 <artifactId>Polymer-Core</artifactId>
                 <version>1.4.7-SNAPSHOT</version>
                 <scope>provided</scope>
+                <exclusions>
+                    <exclusion>
+                        <groupId>io.papermc.paper</groupId>
+                        <artifactId>paper-api</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>com.mojang</groupId>

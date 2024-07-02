@@ -1,4 +1,4 @@
-package org.lins.mmmjjkx.fakeplayermaker.objects;
+package org.lins.mmmjjkx.fakeplayermaker.objects.wrapped;
 
 import lombok.RequiredArgsConstructor;
 import org.lins.mmmjjkx.fakeplayermaker.util.CommonUtils;
@@ -6,49 +6,58 @@ import org.lins.mmmjjkx.fakeplayermaker.util.CommonUtils;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 @RequiredArgsConstructor
 public class WrappedSession {
-    private static final Class<?> sessionClass = CommonUtils.getClass(
-            "com.github.steveice10.packetlib.tcp.TcpClientSession",
-            "org.geysermc.mcprotocollib.network.tcp.TcpClientSession"
-    );
+    private static Class<?> sessionClass;
+    private static Method connectMethod;
+    private static Method disconnectMethod;
+    private static Method sendMethod;
+    private static Method setFlagMethod;
+    private static Method isConnectedMethod;
+    private static Method addListenerMethod;
+    private static Constructor<?> protocolConstructor;
+    private static Constructor<?> sessionConstructor;
 
-    private static final Class<?> packetClass = CommonUtils.getClass(
-            "org.geysermc.mcprotocollib.protocol.codec.MinecraftPacket",
-            "com.github.steveice10.mc.protocol.codec.MinecraftPacket"
-    );
+    public static void init() {
+        sessionClass = CommonUtils.getClass(
+                "com.github.steveice10.packetlib.Session",
+                "org.geysermc.mcprotocollib.network.Session"
+        );
+        Class<?> tcpSessionClass = CommonUtils.getClass(
+                "com.github.steveice10.packetlib.tcp.TcpClientSession",
+                "org.geysermc.mcprotocollib.network.tcp.TcpClientSession"
+        );
+        Class<?> packetClass = CommonUtils.getClass(
+                "org.geysermc.mcprotocollib.network.packet.Packet",
+                "com.github.steveice10.packetlib.packet.Packet"
+        );
+        Class<?> sessionAdapterClass = CommonUtils.getClass(
+                "org.geysermc.mcprotocollib.network.event.session.SessionListener",
+                "com.github.steveice10.packetlib.event.session.SessionListener"
+        );
+        Class<?> minecraftProtocolClass = CommonUtils.getClass(
+                "com.github.steveice10.mc.protocol.MinecraftProtocol",
+                "org.geysermc.mcprotocollib.protocol.MinecraftProtocol"
+        );
+        Class<?> packetProtocolClass = CommonUtils.getClass(
+                "com.github.steveice10.packetlib.packet.PacketProtocol",
+                "org.geysermc.mcprotocollib.network.packet.PacketProtocol"
+        );
 
-    private static final Class<?> sessionAdapterClass = CommonUtils.getClass(
-            "com.github.steveice10.packetlib.event.session.SessionAdapter",
-            "org.geysermc.mcprotocollib.network.event.session.SessionAdapter"
-    );
-
-    private static final Class<?> minecraftProtocolClass = CommonUtils.getClass(
-            "com.github.steveice10.mc.protocol.MinecraftProtocol",
-            "org.geysermc.mcprotocollib.protocol.MinecraftProtocol"
-    );
-
-    private static final Method connectMethod;
-    private static final Method disconnectMethod;
-    private static final Method sendMethod;
-    private static final Method setFlagMethod;
-    private static final Method isConnectedMethod;
-    private static final Method addListenerMethod;
-    private static final Constructor<?> protocolConstructor;
-    private static final Constructor<?> sessionConstructor;
-
-    static {
         try {
-            assert sessionClass != null && packetClass != null && sessionAdapterClass != null && minecraftProtocolClass != null;
+            assert sessionClass != null && packetClass != null && sessionAdapterClass != null && minecraftProtocolClass != null && tcpSessionClass != null;
             connectMethod = sessionClass.getDeclaredMethod("connect");
             sendMethod = sessionClass.getDeclaredMethod("send", packetClass);
             disconnectMethod = sessionClass.getDeclaredMethod("disconnect", String.class);
-            setFlagMethod = sessionClass.getDeclaredMethod("setFlag", String.class, Object.class);
+            setFlagMethod = Arrays.stream(sessionClass.getDeclaredMethods()).filter(m -> m.getName().equalsIgnoreCase("setFlag") && m.getParameterTypes()[0] == String.class).findFirst().orElse(null);
             isConnectedMethod = sessionClass.getDeclaredMethod("isConnected");
             addListenerMethod = sessionClass.getDeclaredMethod("addListener", sessionAdapterClass);
 
-            sessionConstructor = sessionClass.getConstructor(String.class, int.class, String.class, int.class, Object.class);
+            sessionConstructor = tcpSessionClass.getConstructor(String.class, int.class, String.class, int.class, packetProtocolClass);
             protocolConstructor = minecraftProtocolClass.getConstructor(WrappedGameProfile.GAME_PROFILE_CLASS, String.class);
         } catch (NoSuchMethodException e) {
             throw new RuntimeException(e);
@@ -83,8 +92,15 @@ public class WrappedSession {
 
     public void setFlag(String key, Object value) {
         try {
-            setFlagMethod.invoke(session, key, value);
-        } catch (IllegalAccessException | InvocationTargetException e) {
+            if (setFlagMethod != null) {
+                setFlagMethod.invoke(session, key, value);
+            } else {
+                Method setFlagsMethod = sessionClass.getDeclaredMethod("setFlags", Map.class);
+                Map<String, Object> flags = new HashMap<>();
+                flags.put(key, value);
+                setFlagsMethod.invoke(session, flags);
+            }
+        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
             throw new RuntimeException(e);
         }
     }

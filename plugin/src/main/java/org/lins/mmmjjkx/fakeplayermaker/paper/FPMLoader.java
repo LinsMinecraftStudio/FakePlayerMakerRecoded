@@ -15,6 +15,8 @@ import java.util.Map;
 public class FPMLoader implements PluginLoader {
     private static final Map<String, String> PACKETLIB_VERSIONS;
 
+    public FPMLoader() {}
+
     static {
         PACKETLIB_VERSIONS = Map.of(
                 "1.19.4", "com.github.steveice10:mcprotocollib:1.19.4-1",
@@ -42,6 +44,7 @@ public class FPMLoader implements PluginLoader {
         resolver.addRepository(new RemoteRepository.Builder("papermc", "default", "https://papermc.io/repo/repository/maven-public/").build());
         resolver.addRepository(new RemoteRepository.Builder("opencollab", "default", "https://repo.opencollab.dev/maven-releases/").build());
         resolver.addRepository(new RemoteRepository.Builder("opencollab-snapshot", "default", "https://repo.opencollab.dev/maven-snapshots/").build());
+        resolver.addRepository(new RemoteRepository.Builder("jitpack", "default", "https://jitpack.io/").build());
 
         resolver.addDependency(new Dependency(new DefaultArtifact(packetLibVersion), null));
 

@@ -1,8 +1,7 @@
 package org.lins.mmmjjkx.fakeplayermaker.util;
 
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.CompositeByteBuf;
-import io.netty.buffer.PooledByteBufAllocator;
+import io.netty.buffer.UnpooledByteBufAllocator;
 import it.unimi.dsi.fastutil.objects.ObjectImmutableList;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
@@ -15,7 +14,7 @@ import org.lins.mmmjjkx.fakeplayermaker.commons.objects.IFPMPlayer;
 import org.lins.mmmjjkx.fakeplayermaker.commons.objects.IFakePlayerManager;
 import org.lins.mmmjjkx.fakeplayermaker.objects.CodecHelperMethod;
 import org.lins.mmmjjkx.fakeplayermaker.objects.MCClient;
-import org.lins.mmmjjkx.fakeplayermaker.objects.WrappedSession;
+import org.lins.mmmjjkx.fakeplayermaker.objects.wrapped.WrappedSession;
 
 import java.time.Instant;
 import java.util.*;
@@ -129,7 +128,7 @@ public class NewFakePlayerManager implements IFakePlayerManager {
                         byteBuf.writeBoolean(false);
                         byteBuf.writeBytes(new byte[256]);
                         Reflections.codecHelperOperation(byteBuf, CodecHelperMethod.WRITE_VAR_INT, 0);
-                        Reflections.codecHelperOperation(byteBuf, CodecHelperMethod.WRITE_FIXED_BITSET, new BitSet(finalCommand.length()), finalCommand.length());
+                        Reflections.codecHelperOperation(byteBuf, CodecHelperMethod.WRITE_FIXED_BITSET, new BitSet(20), 20);
                         session.send(Reflections.createPacket(chatPacketClass, byteBuf));
                     }
                     case "console" -> Bukkit.getScheduler().runTask(FPMRecoded.INSTANCE, () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), finalCommand));
@@ -137,7 +136,7 @@ public class NewFakePlayerManager implements IFakePlayerManager {
                         ByteBuf byteBuf = writeBase(finalCommand);
                         Reflections.codecHelperOperation(byteBuf, CodecHelperMethod.WRITE_VAR_INT, 0);
                         Reflections.codecHelperOperation(byteBuf, CodecHelperMethod.WRITE_VAR_INT, 0);
-                        Reflections.codecHelperOperation(byteBuf, CodecHelperMethod.WRITE_FIXED_BITSET, new BitSet(finalCommand.length()), finalCommand.length());
+                        Reflections.codecHelperOperation(byteBuf, CodecHelperMethod.WRITE_FIXED_BITSET, new BitSet(20), 20);
                         session.send(Reflections.createPacket(chatCommandPacketClass, byteBuf));
                     }
                 }
@@ -152,7 +151,8 @@ public class NewFakePlayerManager implements IFakePlayerManager {
     }
 
     public static ByteBuf writeBase(String str) {
-        ByteBuf byteBuf = new CompositeByteBuf(new PooledByteBufAllocator(), false, 16);
+        UnpooledByteBufAllocator allocator = new UnpooledByteBufAllocator(true);
+        ByteBuf byteBuf = allocator.compositeDirectBuffer(32);
         Reflections.codecHelperOperation(byteBuf, CodecHelperMethod.WRITE_STRING, str);
         byteBuf.writeLong(Instant.now().toEpochMilli());
         byteBuf.writeLong(0L);

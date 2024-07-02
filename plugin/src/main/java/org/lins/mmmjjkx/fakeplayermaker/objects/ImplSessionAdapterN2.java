@@ -10,13 +10,19 @@ import org.geysermc.mcprotocollib.network.event.session.PacketSendingEvent;
 import org.geysermc.mcprotocollib.network.event.session.SessionAdapter;
 import org.geysermc.mcprotocollib.network.packet.Packet;
 import org.geysermc.mcprotocollib.protocol.packet.ingame.clientbound.ClientboundLoginPacket;
+import org.geysermc.mcprotocollib.protocol.packet.login.clientbound.ClientboundHelloPacket;
 import org.geysermc.mcprotocollib.protocol.packet.login.serverbound.ServerboundHelloPacket;
+import org.geysermc.mcprotocollib.protocol.packet.login.serverbound.ServerboundKeyPacket;
 import org.lins.mmmjjkx.fakeplayermaker.FPMRecoded;
+import org.lins.mmmjjkx.fakeplayermaker.objects.wrapped.WrappedSession;
 import org.lins.mmmjjkx.fakeplayermaker.util.CommonUtils;
 import org.lins.mmmjjkx.fakeplayermaker.util.Reflections;
 
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
 import java.net.MalformedURLException;
 import java.net.URI;
+import java.security.PublicKey;
 import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -39,6 +45,16 @@ public class ImplSessionAdapterN2 extends SessionAdapter {
     @SneakyThrows
     @Override
     public void packetReceived(Session session, Packet packet) {
+        if (packet instanceof ClientboundHelloPacket helloPacket) {
+            PublicKey key = helloPacket.getPublicKey();
+            byte[] challenge = helloPacket.getChallenge();
+            KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
+            keyGenerator.init(128);
+            SecretKey secretKey = keyGenerator.generateKey();
+            ServerboundKeyPacket keyPacket = new ServerboundKeyPacket(key, secretKey, challenge);
+            session.send(keyPacket);
+        }
+
         if (packet instanceof ClientboundLoginPacket) {
             if (!loggedIn) {
                 callback.accept(new WrappedSession(session));
