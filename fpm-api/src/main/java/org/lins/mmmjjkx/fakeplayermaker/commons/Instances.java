@@ -14,6 +14,7 @@ public class Instances {
 
     public static void setFPM(PolymerPlugin FPM) {
         Preconditions.checkNotNull(FPM);
+        Preconditions.checkArgument(FPM.getPluginName().equals("FakePlayerMaker-Recoded"), "FPM is not an instance of FakePlayerMaker-Recoded");
         Instances.FPM = FPM;
     }
 

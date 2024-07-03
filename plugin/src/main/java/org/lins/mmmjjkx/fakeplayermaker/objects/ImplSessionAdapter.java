@@ -74,7 +74,7 @@ public class ImplSessionAdapter extends SessionAdapter {
         if (Reflections.RESOURCE_PACK_PACKET_CLASS.isInstance(packet)) {
             Object rp = Reflections.RESOURCE_PACK_PACKET_CLASS.cast(packet);
             String url = (String) Reflections.RESOURCE_PACK_GET_URL.invoke(rp);
-            UUID id = (UUID) Reflections.RESOURCE_PACK_GET_ID.invoke(rp);
+            UUID id = Reflections.RESOURCE_PACK_GET_ID == null ? null : (UUID) Reflections.RESOURCE_PACK_GET_ID.invoke(rp);
             if (isValidResourcePackUrl(url)) {
                 session.send((Packet) Reflections.createServerBoundResourcePackPacket(id, 3));
                 if (is1205) {

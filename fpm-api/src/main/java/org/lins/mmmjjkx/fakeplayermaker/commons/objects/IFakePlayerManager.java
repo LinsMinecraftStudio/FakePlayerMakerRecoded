@@ -21,6 +21,18 @@ public interface IFakePlayerManager {
     IFPMPlayer create(UUID owner, String name);
 
     /**
+     * Create a new fake player with the given UUID and name, and save it to the plugin data file.<br>
+     * <b>Note: the player isn't automatically join the server, you need to do it manually.</b>
+     * @param owner The UUID of the owner of the fake player.
+     * @param name The name of the fake player.
+     * @return a new fake player
+     *
+     * @see #join(IFPMPlayer)
+     */
+    @NotNull
+    IFPMPlayer createAndSave(UUID owner, String name);
+
+    /**
      * Get a fake player by its name.
      * @param name The name or UUID of the fake player.
      * @return the fake player or null if not found.

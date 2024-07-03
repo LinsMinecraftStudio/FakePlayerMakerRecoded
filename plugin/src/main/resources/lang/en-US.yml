@@ -4,6 +4,7 @@ player_already_joined: "&cThe fake player has already joined the server."
 no_fake_players_u_have: "&cYou do not have any fake players."
 player_not_yours: "&cThat's not your fake player."
 command:
+  warn_real_player_named: "&c&lYou cannot name a real player's name as a fake player's name."
   missing_coordinates: "&cMissing coordinates."
   invalid_coordinates: "&cInvalid coordinates."
   invalid_direction: "&cInvalid direction."

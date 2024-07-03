@@ -1,13 +1,12 @@
 package org.lins.mmmjjkx.fakeplayermaker.util;
 
+import com.github.steveice10.mc.auth.data.GameProfile;
 import io.github.linsminecraftstudio.polymer.objects.plugin.file.SingleFileStorage;
+import io.github.linsminecraftstudio.polymer.utils.IterableUtil;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.entity.Player;
 import org.lins.mmmjjkx.fakeplayermaker.FPMRecoded;
 import org.lins.mmmjjkx.fakeplayermaker.commons.objects.FakePlayerProfile;
 import org.lins.mmmjjkx.fakeplayermaker.commons.objects.IFPMPlayer;
@@ -17,13 +16,14 @@ import org.lins.mmmjjkx.fakeplayermaker.objects.wrapped.WrappedGameProfile;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 @Getter
 public class FakePlayerSaver extends SingleFileStorage {
     public static final UUID NO_OWNER_UUID = UUID.fromString("00000000-0000-0000-0000-000000000000");
 
-    private final Map<String, IFPMPlayer> fakePlayers;
+    private final Map<String, MCClient> fakePlayers;
 
     public FakePlayerSaver(FPMRecoded fpm) {
         super(fpm, new File(fpm.getDataFolder(), "fakeplayers.yml"));
@@ -39,14 +39,19 @@ public class FakePlayerSaver extends SingleFileStorage {
         section.set("uuid", profile.getId().toString());
         section.set("owner", player.getOwnerUUID().toString());
 
-        Player bk = Bukkit.getPlayer(profile.getId());
-        Pair<String, String> skinInfo = SkinUtils.getSkinInfo(bk);
-        String url = skinInfo.getLeft();
-        String signature = skinInfo.getRight();
-        if (!url.isBlank() && !signature.isBlank()) {
-            section.set("skin", url);
-            section.set("skin_signature", signature);
-        }
+        MCClient client = (MCClient) player;
+        WrappedGameProfile wrappedProfile = client.getGameProfile();
+        GameProfile gameProfile = (GameProfile) wrappedProfile.getHandle();
+
+        Optional<GameProfile.Property> skinInfo = IterableUtil.getIf(gameProfile.getProperties(), prop -> prop.getName().equals("textures"));
+        skinInfo.ifPresent(s -> {
+            String url = s.getValue();
+            String signature = s.getSignature();
+            if (!url.isBlank() && !signature.isBlank()) {
+                section.set("skin", url);
+                section.set("skin_signature", signature);
+            }
+        });
     }
 
     private void setup() {

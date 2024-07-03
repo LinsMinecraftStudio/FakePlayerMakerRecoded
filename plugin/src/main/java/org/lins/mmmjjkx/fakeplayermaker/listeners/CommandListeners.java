@@ -22,13 +22,12 @@ public class CommandListeners implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onCommand(PlayerCommandPreprocessEvent e) {
         Player player = e.getPlayer();
-        String[] command = e.getMessage().split(" ");
-        String commandHead = command[0];
+        String command = e.getMessage().replaceFirst("/", "");
 
         //run using fake players
         if (FPMRecoded.fakePlayerManager.get(player.getName()) != null) {
-            List<String> bannedCommandsPrefix = FPMRecoded.getSettingValues().bannedCommandsPrefix();
-            boolean find = bannedCommandsPrefix.stream().anyMatch(commandHead::equalsIgnoreCase);
+            List<String> bannedCommands = FPMRecoded.getSettingValues().bannedCommands();
+            boolean find = bannedCommands.stream().anyMatch(command::matches);
             if (find) {
                 e.setCancelled(true);
                 FPMRecoded.INSTANCE.getMessageHandler().sendMessage(player, "command.not_allowed_command");

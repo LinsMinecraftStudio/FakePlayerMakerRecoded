@@ -19,7 +19,7 @@ import org.lins.mmmjjkx.fakeplayermaker.objects.wrapped.WrappedSession;
 import java.time.Instant;
 import java.util.*;
 
-public class NewFakePlayerManager implements IFakePlayerManager {
+public class FakePlayerManager implements IFakePlayerManager {
     public static final Class<?> chatPacketClass = CommonUtils.getClass(
             "com.github.steveice10.mc.protocol.packet.ingame.serverbound.ServerboundChatPacket",
             "org.geysermc.mcprotocollib.protocol.packet.ingame.serverbound.ServerboundChatPacket"
@@ -32,8 +32,10 @@ public class NewFakePlayerManager implements IFakePlayerManager {
 
     private final Map<String, MCClient> clients;
 
-    public NewFakePlayerManager() {
+    public FakePlayerManager() {
         clients = new HashMap<>();
+
+        clients.putAll(FPMRecoded.fakePlayerSaver.getFakePlayers());
     }
 
     @Override
@@ -44,6 +46,13 @@ public class NewFakePlayerManager implements IFakePlayerManager {
         MCClient client = new MCClient(ip, port, owner, CommonUtils.getUnAllocatedIPPort(), new ImmutablePair<>(name, uuid));
         clients.put(name, client);
         return client;
+    }
+
+    @Override
+    public @NotNull IFPMPlayer createAndSave(UUID owner, String name) {
+        IFPMPlayer player = create(owner, name);
+        FPMRecoded.fakePlayerSaver.saveFakePlayer(player);
+        return player;
     }
 
     @Override

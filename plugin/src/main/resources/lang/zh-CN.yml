@@ -4,6 +4,7 @@ player_already_joined: "&c该假人已经加入了服务器。"
 no_fake_players_u_have: "&c你没有拥有任何一个假人。"
 player_not_yours: "&c那不是你的假人！"
 command:
+  warn_real_player_named: "&c&l你输入的假人名称是一个真实的玩家的名称！你不能用他的名字创建假人！"
   missing_coordinates: "&c缺少坐标参数！"
   invalid_coordinates: "&c无效的坐标！"
   invalid_direction: "&c无效的方向！"

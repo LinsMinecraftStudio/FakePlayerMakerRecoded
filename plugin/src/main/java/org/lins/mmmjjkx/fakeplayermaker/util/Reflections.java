@@ -13,9 +13,6 @@ import java.lang.reflect.Method;
 import java.util.Objects;
 import java.util.UUID;
 
-import static org.lins.mmmjjkx.fakeplayermaker.util.CommonUtils.deobfString;
-import static org.lins.mmmjjkx.fakeplayermaker.util.CommonUtils.deobfStrings;
-
 public class Reflections {
     private Reflections() {}
 
@@ -43,7 +40,7 @@ public class Reflections {
                 "org.geysermc.mcprotocollib.protocol.data.game.ResourcePackStatus"
         );
 
-        SERVERBOUND_RESOURCE_PACK_PACKET_CLASS = getServerboundPacketClass(deobfString("Serverbound%Resource%Pack%Packet"));
+        SERVERBOUND_RESOURCE_PACK_PACKET_CLASS = getServerboundPacketClass("ServerboundResourcePackPacket");
         RESOURCE_PACK_PACKET_CLASS = CommonUtils.getClass(
                 "org.geysermc.mcprotocollib.protocol.packet.common.clientbound.ClientboundResourcePackPushPacket",
                 "com.github.steveice10.mc.protocol.packet.common.clientbound.ClientboundResourcePackPushPacket",
@@ -70,7 +67,12 @@ public class Reflections {
 
         try {
             RESOURCE_PACK_GET_URL = RESOURCE_PACK_PACKET_CLASS.getDeclaredMethod("getUrl");
-            RESOURCE_PACK_GET_ID = RESOURCE_PACK_PACKET_CLASS.getDeclaredMethod("getId");
+
+            try {
+                RESOURCE_PACK_GET_ID = RESOURCE_PACK_PACKET_CLASS.getDeclaredMethod("getId");
+            } catch (NoSuchMethodException e) {
+                RESOURCE_PACK_GET_ID = null;
+            }
 
             MINECRAFT_CODEC = objectProvider.minecraftCodec();
             MINECRAFT_CODEC_HELPER = objectProvider.codecHelper();
@@ -82,10 +84,10 @@ public class Reflections {
     @SneakyThrows
     public static Object createServerBoundResourcePackPacket(UUID uuid, int status) {
         if (SERVERBOUND_RESOURCE_PACK_PACKET_CLASS == null) {
-            SERVERBOUND_RESOURCE_PACK_PACKET_CLASS = getServerboundPacketClass(deobfString("ServerboundRe%sourcePackPacket"));
+            SERVERBOUND_RESOURCE_PACK_PACKET_CLASS = getServerboundPacketClass("ServerboundResourcePackPacket");
         }
         if (RESOURCE_PACK_PACKET_CLASS == null) {
-            RESOURCE_PACK_PACKET_CLASS = getClientboundPacketClass(deobfStrings("Clientbo%undResourcePac%kPacket", "Clientbo%undRes%%ourcePackPushPacket"));
+            RESOURCE_PACK_PACKET_CLASS = getClientboundPacketClass("ClientboundResourcePackPacket", "ClientboundResourcePackPushPacket");
         }
 
         assert SERVERBOUND_RESOURCE_PACK_PACKET_CLASS != null && RESOURCE_PACK_STATUS_CLASS != null && RESOURCE_PACK_PACKET_CLASS != null;

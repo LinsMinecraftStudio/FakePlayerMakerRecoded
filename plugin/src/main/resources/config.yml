@@ -6,16 +6,6 @@ checkUpdate: true
 #You can join our discord server to ask for help if needed.
 print-connection-debug: false
 
-default-spawn-location:
-  #DO NOT CHANGE THIS OR REMOVE THIS!
-  ==: org.bukkit.Location
-  world: world
-  x: 0
-  y: 64
-  z: 0
-  yaw: 0
-  pitch: 0
-
 #The total mc name length limit is 16 characters!
 #To disable the name prefix, set it to "" (empty string)
 namePrefix: "fak_"
@@ -28,9 +18,15 @@ fakePlayer:
   invulnerable: true
   mount-distance: 3
   auto-respawn: true
+  #Use regex to match the commands that the fake player can't use.
+  #You can test your regex on https://regex101.com/ or https://regexr.com/
   bannedCommandsPrefix:
-    - "example"
+    - "^example$"
   pickupItems: true
+  #Server restart required if you change this value.
+  quitIfOwnerQuit: false
+  #Server restart required if you change this value.
+  joinIfOwnerJoin: false
 
 #console: run commands by console
 #self: run commands by the fake player itself(you can also type commands in the list directly)

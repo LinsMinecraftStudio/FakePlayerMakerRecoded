@@ -18,8 +18,8 @@ import org.lins.mmmjjkx.fakeplayermaker.objects.providers.GeyserObjectProvider;
 import org.lins.mmmjjkx.fakeplayermaker.objects.wrapped.WrappedGameProfile;
 import org.lins.mmmjjkx.fakeplayermaker.objects.wrapped.WrappedSession;
 import org.lins.mmmjjkx.fakeplayermaker.util.CommonUtils;
+import org.lins.mmmjjkx.fakeplayermaker.util.FakePlayerManager;
 import org.lins.mmmjjkx.fakeplayermaker.util.FakePlayerSaver;
-import org.lins.mmmjjkx.fakeplayermaker.util.NewFakePlayerManager;
 import org.lins.mmmjjkx.fakeplayermaker.util.Reflections;
 
 import java.util.List;
@@ -64,7 +64,7 @@ public final class FPMRecoded extends PolymerPlugin {
                 Made by mmmjjkx(lijinhong11).""");
 
         fakePlayerSaver = new FakePlayerSaver(this);
-        fakePlayerManager = new NewFakePlayerManager();
+        fakePlayerManager = new FakePlayerManager();
 
         Instances.setFakePlayerManager(fakePlayerManager);
 
@@ -92,7 +92,7 @@ public final class FPMRecoded extends PolymerPlugin {
     }
 
     public static SettingValuesCollection getSettingValues() {
-        return INSTANCE.getConfig().getSerializable("fakePlayer", SettingValuesCollection.class, new SettingValuesCollection(true, true, 3, true, List.of()));
+        return INSTANCE.getConfig().getSerializable("fakePlayer", SettingValuesCollection.class);
     }
 
     @Override

@@ -9,7 +9,7 @@ import org.lins.mmmjjkx.fakeplayermaker.commands.FPMSubCmd;
 import org.lins.mmmjjkx.fakeplayermaker.commons.objects.IFPMPlayer;
 import org.lins.mmmjjkx.fakeplayermaker.objects.CodecHelperMethod;
 import org.lins.mmmjjkx.fakeplayermaker.objects.MCClient;
-import org.lins.mmmjjkx.fakeplayermaker.util.NewFakePlayerManager;
+import org.lins.mmmjjkx.fakeplayermaker.util.FakePlayerManager;
 import org.lins.mmmjjkx.fakeplayermaker.util.Reflections;
 
 import java.lang.reflect.Method;
@@ -63,13 +63,13 @@ public class CmdCommand extends FPMSubCmd {
                 }
 
                 MCClient client = (MCClient) fakePlayer;
-                ByteBuf byteBuf = NewFakePlayerManager.writeBase(command);
+                ByteBuf byteBuf = FakePlayerManager.writeBase(command);
                 byteBuf.writeBoolean(false);
                 byteBuf.writeBytes(new byte[256]);
                 Reflections.codecHelperOperation(byteBuf, CodecHelperMethod.WRITE_VAR_INT, 0);
                 Reflections.codecHelperOperation(byteBuf, CodecHelperMethod.WRITE_FIXED_BITSET, new BitSet(20), 20);
 
-                Object packet = Reflections.createPacket(NewFakePlayerManager.chatPacketClass, byteBuf);
+                Object packet = Reflections.createPacket(FakePlayerManager.chatPacketClass, byteBuf);
 
                 client.send(packet, destPacketClass, (session, p) -> {
                     try {

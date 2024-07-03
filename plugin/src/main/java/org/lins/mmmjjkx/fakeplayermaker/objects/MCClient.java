@@ -1,7 +1,6 @@
 package org.lins.mmmjjkx.fakeplayermaker.objects;
 
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.bukkit.Bukkit;
@@ -23,7 +22,6 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 
-@RequiredArgsConstructor
 public class MCClient implements IFPMPlayer {
     private final String ip;
     private final int serverPort;
@@ -32,25 +30,34 @@ public class MCClient implements IFPMPlayer {
     @Getter
     private final Pair<String, Integer> bindAddress;
     private final Pair<String, UUID> gameProfilePair;
-
+    @Getter
+    private final WrappedGameProfile gameProfile;
     private final Map<Pair<Object, Class<?>>, BiConsumer<WrappedSession, Object>> callbacks = new HashMap<>();
 
     private WrappedSession session;
 
+    public MCClient(String ip, int serverPort, UUID owner, Pair<String, Integer> bindAddress, Pair<String, UUID> gameProfilePair) {
+        this.ip = ip;
+        this.serverPort = serverPort;
+        this.owner = owner;
+        this.bindAddress = bindAddress;
+        this.gameProfilePair = gameProfilePair;
+
+        this.gameProfile = WrappedGameProfile.create(gameProfilePair.getRight(), gameProfilePair.getLeft());
+    }
+
     public void connect(Consumer<WrappedSession> callback) {
         sessionService.setProxy(Proxy.NO_PROXY);
 
-        Object gameProfile = WrappedGameProfile.create(gameProfilePair.getRight(), gameProfilePair.getLeft()).getHandle();
+        String accessToken = "Bareer" + gameProfilePair.getRight();
 
-        Object protocol = WrappedSession.newProtocol(gameProfile, null);
+        Object protocol = WrappedSession.newProtocol(gameProfile.getHandle(), accessToken);
         WrappedSession session = WrappedSession.newSession(ip, serverPort, bindAddress.getLeft(), bindAddress.getRight(), protocol);
 
-        /*
         if (Bukkit.getOnlineMode()) {
             FPMRecoded.INSTANCE.getLogger().severe("The plugin is not compatible with online mode servers.");
             return;
         }
-         */
 
         this.session = session;
 
@@ -59,7 +66,7 @@ public class MCClient implements IFPMPlayer {
         session.setFlag("compression-threshold", 256);
         session.setFlag("verify-users", Bukkit.getOnlineMode());
         session.setFlag("profile", gameProfile);
-        session.setFlag("access-token", null);
+        session.setFlag("access-token", accessToken);
 
         if (!CommonUtils.isOnMinecraftVersion(1,20,5)) {
             session.addListener(new ImplSessionAdapter(getFakePlayerProfile().getId(), callback, () -> callbacks));
