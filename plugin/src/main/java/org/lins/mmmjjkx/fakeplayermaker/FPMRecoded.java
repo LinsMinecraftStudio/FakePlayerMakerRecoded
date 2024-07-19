@@ -1,18 +1,20 @@
 package org.lins.mmmjjkx.fakeplayermaker;
 
 import io.github.linsminecraftstudio.polymer.command.PolymerCommand;
+import io.github.linsminecraftstudio.polymer.objects.other.SimpleUpdateChecker;
 import io.github.linsminecraftstudio.polymer.objects.plugin.PolymerPlugin;
 import io.github.linsminecraftstudio.polymer.utils.FileUtil;
 import io.github.linsminecraftstudio.polymer.utils.ObjectConverter;
-import io.github.linsminecraftstudio.polymer.utils.OtherUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.lins.mmmjjkx.fakeplayermaker.commands.FPMMainCommand;
 import org.lins.mmmjjkx.fakeplayermaker.commons.Instances;
 import org.lins.mmmjjkx.fakeplayermaker.commons.objects.IFakePlayerManager;
-import org.lins.mmmjjkx.fakeplayermaker.commons.objects.collections.SettingValuesCollection;
 import org.lins.mmmjjkx.fakeplayermaker.listeners.CommandListeners;
 import org.lins.mmmjjkx.fakeplayermaker.listeners.FakePlayerListener;
 import org.lins.mmmjjkx.fakeplayermaker.listeners.Scheduling;
+import org.lins.mmmjjkx.fakeplayermaker.nmsservice.FPMAuthService;
+import org.lins.mmmjjkx.fakeplayermaker.objects.SettingValuesCollection;
 import org.lins.mmmjjkx.fakeplayermaker.objects.providers.DefObjectProvider;
 import org.lins.mmmjjkx.fakeplayermaker.objects.providers.GeyserObjectProvider;
 import org.lins.mmmjjkx.fakeplayermaker.objects.wrapped.WrappedGameProfile;
@@ -40,17 +42,21 @@ public final class FPMRecoded extends PolymerPlugin {
         } else {
             Reflections.setObjectProvider(new DefObjectProvider());
         }
+
+        Reflections.init();
+        WrappedGameProfile.init();
+        WrappedSession.init();
+
+        if (Bukkit.getOnlineMode()) {
+            FPMAuthService.setup();
+        }
     }
 
     @Override
     public void onPlEnable() {
         INSTANCE = this;
 
-        startMetrics(21829);
-
-        Reflections.init();
-        WrappedGameProfile.init();
-        WrappedSession.init();
+        getConfig().set("fakePlayer.==", SettingValuesCollection.class.getName());
 
         getLogger().info("""
                 
@@ -62,6 +68,8 @@ public final class FPMRecoded extends PolymerPlugin {
                                                   |___/                                     \s
                 
                 Made by mmmjjkx(lijinhong11).""");
+
+        startMetrics(21829);
 
         fakePlayerSaver = new FakePlayerSaver(this);
         fakePlayerManager = new FakePlayerManager();
@@ -77,17 +85,17 @@ public final class FPMRecoded extends PolymerPlugin {
         //end of register listeners
 
         if (getConfig().getBoolean("checkUpdate")) {
-            new OtherUtils.Updater(111767, (ver, success) -> {
-                if (success) {
-                    if (ver.equals(getPluginVersion())) {
-                        getComponentLogger().info(ObjectConverter.toComponent("&aYou are using the latest version!"));
-                    } else {
-                        getLogger().warning("There is a new version available! New version: " + ver + " | Your version: " + getPluginVersion());
-                    }
-                } else {
+            new SimpleUpdateChecker(this, 111767, (ver, newer) -> {
+                if (newer == null) {
                     getComponentLogger().warn(ObjectConverter.toComponent("&4Failed to check for updates!"));
                 }
-            });
+
+                if (Boolean.TRUE.equals(newer)) {
+                    getComponentLogger().info(ObjectConverter.toComponent("&aYou are using the latest version!"));
+                } else {
+                    getLogger().warning("There is a new version available! New version: " + ver + " | Your version: " + getPluginVersion());
+                }
+            }).check();
         }
     }
 

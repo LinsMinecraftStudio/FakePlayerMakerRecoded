@@ -1,4 +1,4 @@
-package org.lins.mmmjjkx.fakeplayermaker.commons.objects.collections;
+package org.lins.mmmjjkx.fakeplayermaker.objects;
 
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.util.NumberConversions;

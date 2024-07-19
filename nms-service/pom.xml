@@ -9,19 +9,14 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>plugin</artifactId>
+    <version>${revision}</version>
+    <artifactId>nms-service</artifactId>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-
-    <version>${revision}</version>
-    <build>
-        <defaultGoal>clean package</defaultGoal>
-        <finalName>FPMRecoded-${project.version}</finalName>
-    </build>
 
     <repositories>
         <repository>
@@ -33,51 +28,35 @@
     <dependencies>
         <dependency>
             <groupId>io.papermc.paper</groupId>
+            <artifactId>paper-api</artifactId>
+            <version>1.19.4-R0.1-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.papermc.paper</groupId>
             <artifactId>paper-server</artifactId>
             <version>1.20.2-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.github.steveice10</groupId>
-            <artifactId>mcprotocollib</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.mojang</groupId>
-            <artifactId>authlib</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.geysermc.mcprotocollib</groupId>
-            <artifactId>protocol</artifactId>
-            <version>1.20.6-2-SNAPSHOT</version>
+            <groupId>io.github.linsminecraftstudio</groupId>
+            <artifactId>fpm-api</artifactId>
+            <version>${project.version}</version>
             <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>io.papermc.paper</groupId>
-            <artifactId>paper-api</artifactId>
         </dependency>
         <dependency>
             <groupId>io.github.linsminecraftstudio</groupId>
             <artifactId>Polymer-Core</artifactId>
         </dependency>
-
         <dependency>
-            <groupId>io.github.linsminecraftstudio</groupId>
-            <artifactId>fpm-api</artifactId>
-            <version>${revision}</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>io.github.linsminecraftstudio</groupId>
-            <artifactId>nms-service</artifactId>
-            <version>${revision}</version>
-            <scope>compile</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.18.32</version>
+            <groupId>net.bytebuddy</groupId>
+            <artifactId>byte-buddy</artifactId>
+            <version>1.14.18</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.mojang</groupId>
+            <artifactId>authlib</artifactId>
         </dependency>
     </dependencies>
 </project>

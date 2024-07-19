@@ -22,12 +22,10 @@ public class WrappedGameProfile {
 
     public static void init() {
         GAME_PROFILE_CLASS = CommonUtils.getClass(
-                "org.geysermc.mcprotocollib.auth.GameProfile",
                 "com.github.steveice10.mc.auth.data.GameProfile"
         );
 
         GAME_PROFILE_PROPERTIES_CLASS = CommonUtils.getClass(
-                "org.geysermc.mcprotocollib.auth.GameProfile$Property",
                 "com.github.steveice10.mc.auth.data.GameProfile$Property"
         );
 

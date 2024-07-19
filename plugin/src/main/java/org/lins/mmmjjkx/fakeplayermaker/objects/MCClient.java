@@ -9,24 +9,26 @@ import org.lins.mmmjjkx.fakeplayermaker.commons.objects.FakePlayerProfile;
 import org.lins.mmmjjkx.fakeplayermaker.commons.objects.IFPMPlayer;
 import org.lins.mmmjjkx.fakeplayermaker.objects.wrapped.WrappedGameProfile;
 import org.lins.mmmjjkx.fakeplayermaker.objects.wrapped.WrappedSession;
-import org.lins.mmmjjkx.fakeplayermaker.objects.wrapped.WrappedSessionService;
 import org.lins.mmmjjkx.fakeplayermaker.util.CommonUtils;
+import org.lins.mmmjjkx.fakeplayermaker.util.Reflections;
 
-import java.net.Proxy;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 
 public class MCClient implements IFPMPlayer {
+    private static final ExecutorService pool = Executors.newCachedThreadPool();
+
     private final String ip;
     private final int serverPort;
     private final UUID owner;
-    private final WrappedSessionService sessionService = WrappedSessionService.create();
     @Getter
     private final Pair<String, Integer> bindAddress;
     private final Pair<String, UUID> gameProfilePair;
@@ -47,26 +49,19 @@ public class MCClient implements IFPMPlayer {
     }
 
     public void connect(Consumer<WrappedSession> callback) {
-        sessionService.setProxy(Proxy.NO_PROXY);
-
         String accessToken = "Bareer" + gameProfilePair.getRight();
 
-        Object protocol = WrappedSession.newProtocol(gameProfile.getHandle(), accessToken);
+        Object protocol = Reflections.objectProvider.createProtocol(gameProfile, accessToken);
         WrappedSession session = WrappedSession.newSession(ip, serverPort, bindAddress.getLeft(), bindAddress.getRight(), protocol);
-
-        if (Bukkit.getOnlineMode()) {
-            FPMRecoded.INSTANCE.getLogger().severe("The plugin is not compatible with online mode servers.");
-            return;
-        }
 
         this.session = session;
 
         session.setFlag("print-packetlib-debug", FPMRecoded.INSTANCE.getConfig().getBoolean("print-connection-debug"));
-        session.setFlag("session-service", sessionService.getHandle());
         session.setFlag("compression-threshold", 256);
         session.setFlag("verify-users", Bukkit.getOnlineMode());
         session.setFlag("profile", gameProfile);
         session.setFlag("access-token", accessToken);
+        session.setFlag("session-service", Reflections.objectProvider.sessionService().getHandle());
 
         if (!CommonUtils.isOnMinecraftVersion(1,20,5)) {
             session.addListener(new ImplSessionAdapter(getFakePlayerProfile().getId(), callback, () -> callbacks));
@@ -76,14 +71,14 @@ public class MCClient implements IFPMPlayer {
 
         session.connect();
 
-        CompletableFuture<?> waiter = CompletableFuture.runAsync(() -> {
+        Future<?> waiter = pool.submit(() -> {
             do {
                 FPMRecoded.INSTANCE.getLogger().info("Waiting for connection from " + bindAddress.getLeft() + ":" + bindAddress.getRight() + "...");
             } while (!session.isConnected());
-        }).completeOnTimeout(null, 5, TimeUnit.SECONDS);
+        });
 
         try {
-            waiter.get();
+            waiter.get(5, TimeUnit.SECONDS);
         } catch (Exception e) {
             FPMRecoded.INSTANCE.getLogger().log(Level.SEVERE, "Failed to connect (address: " + bindAddress.getLeft() + ":" + bindAddress.getRight() + ")", e);
         }

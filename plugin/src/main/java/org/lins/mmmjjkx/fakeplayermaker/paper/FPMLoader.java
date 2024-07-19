@@ -45,8 +45,10 @@ public class FPMLoader implements PluginLoader {
         resolver.addRepository(new RemoteRepository.Builder("opencollab", "default", "https://repo.opencollab.dev/maven-releases/").build());
         resolver.addRepository(new RemoteRepository.Builder("opencollab-snapshot", "default", "https://repo.opencollab.dev/maven-snapshots/").build());
         resolver.addRepository(new RemoteRepository.Builder("jitpack", "default", "https://jitpack.io/").build());
+        resolver.addRepository(new RemoteRepository.Builder("maven-central", "default", "https://repo1.maven.org/maven2/").build());
 
         resolver.addDependency(new Dependency(new DefaultArtifact(packetLibVersion), null));
+        resolver.addDependency(new Dependency(new DefaultArtifact("net.bytebuddy:byte-buddy:1.14.18"), null));
 
         pluginClasspathBuilder.addLibrary(resolver);
     }

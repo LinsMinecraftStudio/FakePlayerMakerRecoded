@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 import org.lins.mmmjjkx.fakeplayermaker.FPMRecoded;
 import org.lins.mmmjjkx.fakeplayermaker.commands.FPMSubCmd;
 import org.lins.mmmjjkx.fakeplayermaker.commons.objects.IFPMPlayer;
+import org.lins.mmmjjkx.fakeplayermaker.util.FakePlayerSaver;
 
 import java.util.List;
 import java.util.Map;
@@ -35,6 +36,19 @@ public class JoinCommand extends FPMSubCmd {
             String playerName = getArg(0);
             if (playerName == null) {
                 FPMRecoded.INSTANCE.getMessageHandler().sendMessage(commandSender, "command.no_player");
+                return;
+            }
+
+            int amount;
+            if (commandSender instanceof Player p) {
+                amount = FPMRecoded.fakePlayerManager.getFakePlayers(p.getUniqueId()).size();
+            } else {
+                amount = FPMRecoded.fakePlayerManager.getFakePlayers(FakePlayerSaver.NO_OWNER_UUID).size();
+            }
+
+            if (amount == 0) {
+                FPMRecoded.INSTANCE.getMessageHandler().sendMessage(commandSender, "command.tip_of_first_create");
+                FPMRecoded.INSTANCE.getMessageHandler().sendMessage(commandSender, "player_not_found");
                 return;
             }
 

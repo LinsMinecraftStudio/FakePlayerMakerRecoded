@@ -25,26 +25,6 @@ public class CommonUtils {
         return sb.toString();
     }
 
-    public static String deobfString(String obfString) {
-        if (obfString == null) {
-            return null;
-        }
-
-        return obfString.replaceAll("%", "");
-    }
-
-    public static String[] deobfStrings(String... obfStrings) {
-        if (obfStrings == null) {
-            return null;
-        }
-
-        String[] deobfStrings = new String[obfStrings.length];
-        for (int i = 0; i < obfStrings.length; i++) {
-            deobfStrings[i] = deobfString(obfStrings[i]);
-        }
-        return deobfStrings;
-    }
-
     @Nullable
     public static Class<?> getClass(String... classPath) {
         for (String path : classPath) {

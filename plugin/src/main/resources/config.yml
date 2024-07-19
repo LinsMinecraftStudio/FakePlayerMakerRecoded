@@ -14,7 +14,7 @@ randomNameLength: 10
 #Fake player settings
 fakePlayer:
   #DO NOT CHANGE THIS OR REMOVE THIS!
-  ==: org.lins.mmmjjkx.fakeplayermaker.commons.objects.collections.SettingValuesCollection
+  ==: org.lins.mmmjjkx.fakeplayermaker.objects.SettingValuesCollection
   invulnerable: true
   mount-distance: 3
   auto-respawn: true
@@ -23,7 +23,6 @@ fakePlayer:
   bannedCommandsPrefix:
     - "^example$"
   pickupItems: true
-  #Server restart required if you change this value.
   quitIfOwnerQuit: false
   #Server restart required if you change this value.
   joinIfOwnerJoin: false

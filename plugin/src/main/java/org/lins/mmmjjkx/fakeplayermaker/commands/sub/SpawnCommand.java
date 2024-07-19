@@ -50,8 +50,8 @@ public class SpawnCommand extends FPMSubCmd {
 
             OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(name);
             String offlinePlayerName = offlinePlayer.getName();
-            if (offlinePlayerName != null && (offlinePlayer.hasPlayedBefore() || FPMRecoded.fakePlayerManager.get(offlinePlayerName) == null)) {
-                sendMessage(commandSender, "command.warn_real_player_named");
+            if (offlinePlayerName != null && (offlinePlayer.hasPlayedBefore() && FPMRecoded.fakePlayerManager.get(offlinePlayerName) == null)) {
+                sendMessage(commandSender, "command.real_player_named");
                 sendMessage(commandSender, "command.name_taken");
                 return;
             }
@@ -62,10 +62,8 @@ public class SpawnCommand extends FPMSubCmd {
                 owner = p.getUniqueId();
             }
 
-            IFPMPlayer player = FPMRecoded.fakePlayerManager.create(owner, name);
-            FPMRecoded.fakePlayerManager.join(name);
-
-            FPMRecoded.fakePlayerSaver.saveFakePlayer(player);
+            IFPMPlayer player = FPMRecoded.fakePlayerManager.createAndSave(owner, name);
+            FPMRecoded.fakePlayerManager.join(player);
         }
     }
 }

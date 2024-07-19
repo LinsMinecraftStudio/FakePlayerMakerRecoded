@@ -1,7 +1,7 @@
 package org.lins.mmmjjkx.fakeplayermaker.util;
 
+import com.google.common.base.Preconditions;
 import io.netty.buffer.ByteBuf;
-import lombok.Setter;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.Nullable;
 import org.lins.mmmjjkx.fakeplayermaker.objects.CodecHelperMethod;
@@ -16,8 +16,7 @@ import java.util.UUID;
 public class Reflections {
     private Reflections() {}
 
-    @Setter
-    private static IObjectProvider objectProvider;
+    public static IObjectProvider objectProvider;
 
     public static Class<?> RESOURCE_PACK_PACKET_CLASS;
     public static Class<?> SERVERBOUND_RESOURCE_PACK_PACKET_CLASS;
@@ -41,11 +40,7 @@ public class Reflections {
         );
 
         SERVERBOUND_RESOURCE_PACK_PACKET_CLASS = getServerboundPacketClass("ServerboundResourcePackPacket");
-        RESOURCE_PACK_PACKET_CLASS = CommonUtils.getClass(
-                "org.geysermc.mcprotocollib.protocol.packet.common.clientbound.ClientboundResourcePackPushPacket",
-                "com.github.steveice10.mc.protocol.packet.common.clientbound.ClientboundResourcePackPushPacket",
-                "com.github.steveice10.mc.protocol.packet.common.clientbound.ClientboundResourcePackPacket"
-        );
+        RESOURCE_PACK_PACKET_CLASS = getClientboundPacketClass("ClientboundResourcePackPacket", "ClientboundResourcePackPushPacket");
 
         BASE_PACKET_CODEC_HELPER_CLASS = CommonUtils.getClass(
                 "com.github.steveice10.packetlib.codec.BasePacketCodecHelper",
@@ -86,11 +81,6 @@ public class Reflections {
         if (SERVERBOUND_RESOURCE_PACK_PACKET_CLASS == null) {
             SERVERBOUND_RESOURCE_PACK_PACKET_CLASS = getServerboundPacketClass("ServerboundResourcePackPacket");
         }
-        if (RESOURCE_PACK_PACKET_CLASS == null) {
-            RESOURCE_PACK_PACKET_CLASS = getClientboundPacketClass("ClientboundResourcePackPacket", "ClientboundResourcePackPushPacket");
-        }
-
-        assert SERVERBOUND_RESOURCE_PACK_PACKET_CLASS != null && RESOURCE_PACK_STATUS_CLASS != null && RESOURCE_PACK_PACKET_CLASS != null;
 
         Constructor<?> constructor;
         boolean newConstructor = false;
@@ -124,18 +114,19 @@ public class Reflections {
     }
 
     @Nullable
-    public static Class<?> getClientboundPacketClass(String... className) {
+    public static Class<?> getClientboundPacketClass(String... classNames) {
         if (PKG_NAMES_CLIENTBOUND == null) {
             PKG_NAMES_CLIENTBOUND = new String[]{
-                    "org.geysermc.mcprotocollib.protocol.packet.ingame.clientbound",
                     "com.github.steveice10.mc.protocol.packet.ingame.clientbound",
-                    "com.github.steveice10.mc.protocol.packet.common.clientbound"
+                    "com.github.steveice10.mc.protocol.packet.common.clientbound",
+                    "org.geysermc.mcprotocollib.protocol.packet.ingame.clientbound",
+                    "org.geysermc.mcprotocollib.protocol.packet.common.clientbound"
             };
         }
         for (String pkgName : PKG_NAMES_CLIENTBOUND) {
             try {
-                for (String classNames : className) {
-                    return Class.forName(pkgName + "." + classNames);
+                for (String className : classNames) {
+                    return Class.forName(pkgName + "." + className);
                 }
             } catch (ClassNotFoundException e) {
                 // ignore
@@ -200,5 +191,10 @@ public class Reflections {
         } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e1) {
             throw new RuntimeException(e1);
         }
+    }
+
+    public static void setObjectProvider(IObjectProvider defObjectProvider) {
+        Preconditions.checkNotNull(defObjectProvider);
+        objectProvider = defObjectProvider;
     }
 }

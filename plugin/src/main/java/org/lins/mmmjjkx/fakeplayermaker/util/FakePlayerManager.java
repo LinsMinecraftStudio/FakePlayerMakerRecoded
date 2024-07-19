@@ -36,12 +36,22 @@ public class FakePlayerManager implements IFakePlayerManager {
         clients = new HashMap<>();
 
         clients.putAll(FPMRecoded.fakePlayerSaver.getFakePlayers());
+
+        tryAutoJoin();
+    }
+
+    private void tryAutoJoin() {
+        if (!FPMRecoded.getSettingValues().joinIfOwnerJoin()) {
+            for (MCClient client : clients.values()) {
+                join(client);
+            }
+        }
     }
 
     @Override
     public @NotNull IFPMPlayer create(UUID owner, String name) {
         String ip = FPMRecoded.INSTANCE.getConfig().getString("entrance.ip", "127.0.0.1");
-        int port = FPMRecoded.INSTANCE.getConfig().getInt("entrance.port", 60000);
+        int port = FPMRecoded.INSTANCE.getConfig().getInt("entrance.port", 25565);
         UUID uuid = UUID.nameUUIDFromBytes(name.getBytes());
         MCClient client = new MCClient(ip, port, owner, CommonUtils.getUnAllocatedIPPort(), new ImmutablePair<>(name, uuid));
         clients.put(name, client);
@@ -57,6 +67,10 @@ public class FakePlayerManager implements IFakePlayerManager {
 
     @Override
     public @Nullable IFPMPlayer get(String name) {
+        if (name == null) {
+            return null;
+        }
+
         return clients.get(name);
     }
 
@@ -161,7 +175,7 @@ public class FakePlayerManager implements IFakePlayerManager {
 
     public static ByteBuf writeBase(String str) {
         UnpooledByteBufAllocator allocator = new UnpooledByteBufAllocator(true);
-        ByteBuf byteBuf = allocator.compositeDirectBuffer(32);
+        ByteBuf byteBuf = allocator.compositeDirectBuffer(25);
         Reflections.codecHelperOperation(byteBuf, CodecHelperMethod.WRITE_STRING, str);
         byteBuf.writeLong(Instant.now().toEpochMilli());
         byteBuf.writeLong(0L);

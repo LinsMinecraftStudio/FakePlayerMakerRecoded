@@ -52,6 +52,8 @@ public class FakePlayerSaver extends SingleFileStorage {
                 section.set("skin_signature", signature);
             }
         });
+
+        super.reload();
     }
 
     private void setup() {

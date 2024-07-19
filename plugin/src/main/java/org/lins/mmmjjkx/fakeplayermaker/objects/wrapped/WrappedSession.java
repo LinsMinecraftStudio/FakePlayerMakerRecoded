@@ -19,7 +19,6 @@ public class WrappedSession {
     private static Method setFlagMethod;
     private static Method isConnectedMethod;
     private static Method addListenerMethod;
-    private static Constructor<?> protocolConstructor;
     private static Constructor<?> sessionConstructor;
 
     public static void init() {
@@ -32,16 +31,12 @@ public class WrappedSession {
                 "org.geysermc.mcprotocollib.network.tcp.TcpClientSession"
         );
         Class<?> packetClass = CommonUtils.getClass(
-                "org.geysermc.mcprotocollib.network.packet.Packet",
-                "com.github.steveice10.packetlib.packet.Packet"
+                "com.github.steveice10.packetlib.packet.Packet",
+                "org.geysermc.mcprotocollib.network.packet.Packet"
         );
         Class<?> sessionAdapterClass = CommonUtils.getClass(
-                "org.geysermc.mcprotocollib.network.event.session.SessionListener",
-                "com.github.steveice10.packetlib.event.session.SessionListener"
-        );
-        Class<?> minecraftProtocolClass = CommonUtils.getClass(
-                "com.github.steveice10.mc.protocol.MinecraftProtocol",
-                "org.geysermc.mcprotocollib.protocol.MinecraftProtocol"
+                "com.github.steveice10.packetlib.event.session.SessionListener",
+                "org.geysermc.mcprotocollib.network.event.session.SessionListener"
         );
         Class<?> packetProtocolClass = CommonUtils.getClass(
                 "com.github.steveice10.packetlib.packet.PacketProtocol",
@@ -49,7 +44,7 @@ public class WrappedSession {
         );
 
         try {
-            assert sessionClass != null && packetClass != null && sessionAdapterClass != null && minecraftProtocolClass != null && tcpSessionClass != null;
+            assert sessionClass != null && packetClass != null && sessionAdapterClass != null && tcpSessionClass != null;
             connectMethod = sessionClass.getDeclaredMethod("connect");
             sendMethod = sessionClass.getDeclaredMethod("send", packetClass);
             disconnectMethod = sessionClass.getDeclaredMethod("disconnect", String.class);
@@ -58,7 +53,6 @@ public class WrappedSession {
             addListenerMethod = sessionClass.getDeclaredMethod("addListener", sessionAdapterClass);
 
             sessionConstructor = tcpSessionClass.getConstructor(String.class, int.class, String.class, int.class, packetProtocolClass);
-            protocolConstructor = minecraftProtocolClass.getConstructor(WrappedGameProfile.GAME_PROFILE_CLASS, String.class);
         } catch (NoSuchMethodException e) {
             throw new RuntimeException(e);
         }
@@ -117,14 +111,6 @@ public class WrappedSession {
         try {
             addListenerMethod.invoke(session, listener);
         } catch (IllegalAccessException | InvocationTargetException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public static Object newProtocol(Object gameProfile, String accessToken) {
-        try {
-            return protocolConstructor.newInstance(gameProfile, accessToken);
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException(e);
         }
     }
