@@ -4,6 +4,11 @@ player_already_joined: "&cThe fake player has already joined the server."
 no_fake_players_u_have: "&cYou do not have any fake players."
 player_not_yours: "&cThat's not your fake player."
 command:
+  invalid_armor_slot: "&c&lInvalid armor slot. Please choose between helmet, chestplate, leggings, and boots."
+  armor_not_armor: "&c&lYou did not hold an armor item in your hand."
+  armor_no_item: "&c&lYou must hold an item in your hand to use this command."
+  armor_usage: "&c&lUsage: /fpm armor <wear|remove> <player> <helmet|chestplate|leggings|boots>"
+  no_console: "&c&lThis command can only be used by players."
   real_player_named: "&c&lYou cannot name a real player's name as a fake player's name."
   tip_of_first_create: "&a&lYou may use /fpm spawn to create a fake player of your own."
   missing_coordinates: "&cMissing coordinates."
@@ -36,6 +41,7 @@ command:
     &aRunning FakePlayerMaker-Recoded v%1$s by %2$s. 
     &bRun /fpm help to get help.
   help:
+    armor: "Change the armor of a fake player"
     actions: "Let a fake player perform actions"
     full-reload: "Reload the plugin almost every things"
     cmd: "Let a fake player perform a command"

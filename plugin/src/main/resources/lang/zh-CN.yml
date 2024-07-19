@@ -4,6 +4,11 @@ player_already_joined: "&c该假人已经加入了服务器。"
 no_fake_players_u_have: "&c你没有拥有任何一个假人。"
 player_not_yours: "&c那不是你的假人！"
 command:
+  invalid_armor_slot: "&c&l无效的盔甲槽位。 请选择 helmet, chestplate, leggings, boots 的其中一个。"
+  armor_not_armor: "&c&l你手上拿着的不是一个盔甲！"
+  armor_no_item: "&c&l你手上必须拿着一个盔甲才能使用该命令！"
+  armor_usage: "&c&l用法：/fpm armor <wear|remove> <player> <helmet|chestplate|leggings|boots>"
+  no_console: "&c&l你必须在游戏内执行此命令！"
   real_player_named: "&c&l你输入的假人名称是一个真实的玩家的名称！你不能用他/她的名称来创建假人！"
   tip_of_first_create: "&a&l你可能需要输入 /fpm spawn 来创建一个属于自己的假人。"
   missing_coordinates: "&c缺少坐标参数！"
@@ -35,6 +40,7 @@ command:
     &a正在运行 FakePlayerMaker-Recoded v%1$s 作者 %2$s. 
     &b输入 /fpm help 获取帮助.
   help:
+    armor: "切换假人的盔甲"
     actions: "让假人执行动作"
     full-reload: "重载插件的几乎一切"
     cmd: "让假人执行指令"
