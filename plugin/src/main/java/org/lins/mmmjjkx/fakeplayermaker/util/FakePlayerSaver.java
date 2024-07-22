@@ -51,6 +51,8 @@ public class FakePlayerSaver extends SingleFileStorage {
             section.set("skin_signature", signature);
         }
         section.set("location", ObjectConverter.toLocationString(bk.getLocation()));
+
+        super.reload();
     }
 
     private void setup() {
